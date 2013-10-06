@@ -11,9 +11,18 @@ ApplicationWindow {
     color: "green";
     title: "First Window";
 
+    ImageViewer {
+        id: viewer
+    }
+
     FileOpener {
         id: fileDialog
+        onAccepted: {
+            console.log("do something else")
+//            viewer.image.source: fileDialog.fileUrl // NEXT -> not working yet.
+        }
     }
+
 
 
     menuBar: MenuBar {
@@ -28,10 +37,6 @@ ApplicationWindow {
             MenuItem {
                 text: "Close"
                 onTriggered: Qt.quit();
-            }
-            MenuItem {
-                text: "BLUB"
-                onTriggered: console.log(fileDialog.fileURL)
             }
         }
     }

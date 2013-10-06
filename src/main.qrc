@@ -2,5 +2,7 @@
     <qresource prefix="/">
         <file>qml/main.qml</file>
         <file>qml/FileOpener.qml</file>
+        <file>qml/ImageViewer.qml</file>
+        <file>image.jpeg</file>
     </qresource>
 </RCC>

@@ -17,6 +17,7 @@ set(QRC_FILES
 
 set(QML_SOURCES
    qml/main.qml
+   qml/FileOpener.qml
 )
 
 #--------------------------------------------------------------------------------

@@ -2,7 +2,9 @@
 #include <QDebug>
 #include <QString>
 
-
+#include "converter.hpp"
+#include <opencv2/core/core.hpp>
+#include <opencv2/highgui/highgui.hpp>
 
 CommonHandler::CommonHandler(ImageProvider* imageProvider, QObject *parent)
     : QObject(parent)
@@ -28,6 +30,13 @@ void CommonHandler::loadImage(QString path)
     }
 
     m_imgProvider->setNewImage(m_image);
+
+    m_image.save("/Users/sim/dev/borack_vision/src/build/qImage.png");
+    cv::Mat cvMat = Converter::QImageToCvMat(m_image);
+    cv::imwrite("/Users/sim/dev/borack_vision/src/build/cvMat.png", cvMat);
+
+    QImage img2 = Converter::CvMatToQImage(cvMat);
+    img2.save("/Users/sim/dev/borack_vision/src/build/qImage2.png");
 
     emit newImage();
 }

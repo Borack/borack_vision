@@ -10,6 +10,7 @@ project(${PROJECT_NAME})
 set(SOURCES  main.cpp
             common_handler.cpp
             image_provider.cpp
+            converter.cpp
 
 )
 
@@ -48,5 +49,6 @@ find_package(OpenCV REQUIRED)
 # Executable
 #--------------------------------------------------------------------------------
 add_executable(${PROJECT_NAME} ${SOURCES} ${QRC_OUT} ${QML_SOURCES})
+target_link_libraries(${PROJECT_NAME} ${OpenCV_LIBS})
 
 qt5_use_modules(${PROJECT_NAME} Widgets Qml Quick Core)

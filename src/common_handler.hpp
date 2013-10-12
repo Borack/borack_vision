@@ -21,6 +21,9 @@ signals:
 public slots:
 
 private:
+
+    void findFeatures();
+
     QImage m_image;
     ImageProvider* m_imgProvider;
 

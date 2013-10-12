@@ -1,37 +1,23 @@
 import QtQuick        2.0
 import QtQuick.Window 2.0
 import QtQuick.Controls 1.0
+import QtQuick.Layouts 1.0
 import QtQuick.Dialogs 1.0
 
 ApplicationWindow {
     id: mainWindow;
-    width: 320;
-    height: 240;
+    width: row.width + 20;
+    height: row.height + 20;
     visible: true;
-    color: "green";
     title: "First Window";
-
-    ImageViewer {
-        id: viewer
-    }
-
-    FileOpener {
-        id: fileDialog
-        onAccepted: {
-            console.log("do something else")
-//            viewer.image.source: fileDialog.fileUrl // NEXT -> not working yet.
-        }
-    }
-
-
-
     menuBar: MenuBar {
         Menu {
             title: "File"
             MenuItem {
                 text: "Open...";
+                shortcut: "Ctrl+O"
                 onTriggered: {
-                     fileDialog.open();
+                    fileDialog.open();
                 }
             }
             MenuItem {
@@ -40,6 +26,36 @@ ApplicationWindow {
             }
         }
     }
+
+
+    Row{
+        id: row
+        spacing: 10
+        anchors.topMargin: 20
+
+
+        ImageViewer {
+            id: viewer
+        }
+        CheckBox {
+            text: "Show features"
+        }
+    }
+
+    Button {
+        anchors.bottom:parent.bottom
+        anchors.right: parent.right
+        anchors.margins: 20
+        text: "Quit"
+        onClicked: Qt.quit()
+    }
+
+    FileOpener {
+        id: fileDialog
+    }
+
+
+
 
 
 }

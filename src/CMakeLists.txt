@@ -8,6 +8,8 @@ set(PROJECT_NAME borack_vision)
 project(${PROJECT_NAME})
 
 set(SOURCES  main.cpp
+            common_handler.cpp
+            image_provider.cpp
 
 )
 
@@ -27,6 +29,11 @@ set(QML_SOURCES
 find_package(Qt5Core REQUIRED)
 find_package(Qt5Widgets REQUIRED)
 
+# Enable automoc
+set(CMAKE_AUTOMOC ON)
+
+set(CMAKE_INCLUDE_CURRENT_DIR ON)
+
 QT5_ADD_RESOURCES(QRC_OUT ${QRC_FILES})
 
 
@@ -35,4 +42,4 @@ QT5_ADD_RESOURCES(QRC_OUT ${QRC_FILES})
 #--------------------------------------------------------------------------------
 add_executable(${PROJECT_NAME} ${SOURCES} ${QRC_OUT} ${QML_SOURCES})
 
-qt5_use_modules(${PROJECT_NAME} Widgets Qml Quick)
+qt5_use_modules(${PROJECT_NAME} Widgets Qml Quick Core)

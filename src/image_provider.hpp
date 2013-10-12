@@ -2,12 +2,21 @@
 #define IMAGE_PROVIDER_HPP
 #include <QObject>
 
-class ImageProvider : public QObject
-{
-    Q_OBJECT
+#include <QQuickImageProvider>
+#include <QImage>
 
+class ImageProvider : public QQuickImageProvider
+{
 public:
-    explicit ImageProvider(QObject* parent = 0);
+    explicit ImageProvider();
+
+    QImage requestImage(const QString &id, QSize *size, const QSize &requestedSize);
+
+    void setNewImage(const QImage &img);
+
+private:
+    QImage m_img;
+
 };
 
 #endif // IMAGE_PROVIDER_HPP

@@ -4,8 +4,9 @@
 
 
 
-CommonHandler::CommonHandler(QObject *parent)
+CommonHandler::CommonHandler(ImageProvider* imageProvider, QObject *parent)
     : QObject(parent)
+    , m_imgProvider(imageProvider)
 {
 
 }
@@ -26,6 +27,9 @@ void CommonHandler::loadImage(QString path)
         qCritical("Loading the image from %s was not possible", path.toStdString().c_str());
     }
 
+    m_imgProvider->setNewImage(m_image);
+
+    emit newImage();
 }
 
 

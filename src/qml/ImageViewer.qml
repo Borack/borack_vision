@@ -5,12 +5,19 @@ Rectangle {
     height: 500
     color: "transparent"
 
-    property alias source: image.source
+    property alias image: image
 
     Image {
         id: image
         anchors.fill: parent
         fillMode: Image.PreserveAspectFit
-        source: "../image.jpeg"
+        source: "image://imageprovider/current"
+
+        function reload() {
+            var oldSource = source;
+            source = "";
+            source = oldSource;
+        }
+
     }
 }

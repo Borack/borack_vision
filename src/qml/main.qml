@@ -54,6 +54,12 @@ ApplicationWindow {
         id: fileDialog
     }
 
+    Connections {
+        target: _commonHandler
+        onNewImage:  viewer.image.reload();
+    }
+
+
 
 
 

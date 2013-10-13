@@ -51,14 +51,18 @@ void CommonHandler::findFeatures()
     std::vector<cv::KeyPoint> keyPoints;
 
     cv::Mat mat = Converter::QImageToCvMat(m_image);
+//    cv::Mat mask= cv::Mat::ones(mat.cols, mat.rows,  CV_8U);
+
 
     cv::SIFT siftDetector(20);
     siftDetector(mat,cv::Mat(),keyPoints,descriptors);
+//    siftDetector(mat,mask,keyPoints,descriptors);
 
     qDebug() << "Found " << keyPoints.size() << " features";
-//    foreach (cv::KeyPoint keyPoint, keyPoints) {
-//        qDebug("x: %d, y: %d", keyPoint.pt.x, keyPoint.pt.y);
-//    }
+    qDebug() << "Descriptor size: " << descriptors.cols <<" x " << descriptors.rows;
+    foreach (cv::KeyPoint keyPoint, keyPoints) {
+//        qDebug("x: %f, y: %f", keyPoint.pt.x, keyPoint.pt.y);
+    }
 }
 
 

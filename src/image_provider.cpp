@@ -12,10 +12,20 @@ ImageProvider::ImageProvider()
 QImage ImageProvider::requestImage(const QString &id, QSize *size, const QSize &requestedSize)
 {
 
-    size->setWidth(m_img.width());
-    size->setHeight(m_img.height());
+    if(id == "features")
+    {
+        size->setWidth(m_featureOverlay.width());
+        size->setHeight(m_featureOverlay.height());
 
-    return m_img;
+        return m_featureOverlay;
+    }
+    else
+    {
+        size->setWidth(m_img.width());
+        size->setHeight(m_img.height());
+
+        return m_img;
+    }
 }
 
 //-----------------------------------------------------------------------------
@@ -24,4 +34,9 @@ void ImageProvider::setNewImage(const QImage &img)
 {
     qDebug() << Q_FUNC_INFO;
     m_img = img;
+}
+
+void ImageProvider::setFeatureOverlay(const QImage &featureOverlay)
+{
+    m_featureOverlay = featureOverlay;
 }

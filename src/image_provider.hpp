@@ -13,9 +13,11 @@ public:
     QImage requestImage(const QString &id, QSize *size, const QSize &requestedSize);
 
     void setNewImage(const QImage &img);
+    void setFeatureOverlay(const QImage &featureOverlay);
 
 private:
     QImage m_img;
+    QImage m_featureOverlay;
 
 };
 

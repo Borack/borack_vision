@@ -1,6 +1,9 @@
 #include "common_handler.hpp"
 #include <QDebug>
 #include <QString>
+#include <QColor>
+#include <QPainter>
+#include <QPen>
 
 #include "converter.hpp"
 #include <opencv2/core/core.hpp>
@@ -22,7 +25,7 @@ CommonHandler::~CommonHandler()
 
 void CommonHandler::loadImage(QString path)
 {
-    path.remove(0,7);
+    path.remove(0,7); // remove the 'file://' part
     qDebug() << "The selected path is " << path;
     m_image = QImage(path);
     if(m_image.width() == 0
@@ -47,6 +50,17 @@ void CommonHandler::loadImage(QString path)
 
 void CommonHandler::findFeatures()
 {
+
+    m_featureOverlay = QPixmap(m_image.size());
+    m_featureOverlay.fill(QColor(0,0,0,0));
+
+    QPainter painter(&m_featureOverlay);
+    QPen pen;
+    pen.setColor(QColor(0,255,0,125));
+    pen.setWidth(15);
+    painter.setPen(pen);
+
+
     cv::Mat descriptors;
     std::vector<cv::KeyPoint> keyPoints;
 
@@ -56,13 +70,16 @@ void CommonHandler::findFeatures()
 
     cv::SIFT siftDetector(20);
     siftDetector(mat,cv::Mat(),keyPoints,descriptors);
-//    siftDetector(mat,mask,keyPoints,descriptors);
 
     qDebug() << "Found " << keyPoints.size() << " features";
     qDebug() << "Descriptor size: " << descriptors.cols <<" x " << descriptors.rows;
     foreach (cv::KeyPoint keyPoint, keyPoints) {
 //        qDebug("x: %f, y: %f", keyPoint.pt.x, keyPoint.pt.y);
+        painter.drawPoint(keyPoint.pt.x, keyPoint.pt.y);
     }
+
+    m_imgProvider->setFeatureOverlay(m_featureOverlay.toImage());
+
 }
 
 

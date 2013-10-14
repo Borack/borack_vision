@@ -13,12 +13,14 @@ int main(int argc, char *argv[])
     ImageProvider* imageProvider = new ImageProvider;
     CommonHandler cH(imageProvider);
 
-    QQmlApplicationEngine engine(QUrl("qrc:///qml/main.qml"));
+    QQmlApplicationEngine engine;
+    QQmlContext *ctxt = engine.rootContext();
+    ctxt->setContextProperty("_commonHandler", &cH);
 
     engine.addImageProvider(QLatin1String("imageprovider"), imageProvider);
 
-    QQmlContext *ctxt = engine.rootContext();
-    ctxt->setContextProperty("_commonHandler", &cH);
+
+    engine.load(QUrl("qrc:///qml/main.qml"));
 
     return app.exec();
 

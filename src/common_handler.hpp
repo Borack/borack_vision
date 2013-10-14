@@ -3,6 +3,7 @@
 
 #include <QObject>
 #include <QImage>
+#include <QPixmap>
 
 #include "image_provider.hpp"
 
@@ -25,6 +26,7 @@ private:
     void findFeatures();
 
     QImage m_image;
+    QPixmap m_featureOverlay;
     ImageProvider* m_imgProvider;
 
 };

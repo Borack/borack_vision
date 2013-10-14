@@ -35,10 +35,13 @@ ApplicationWindow {
 
 
         ImageViewer {
-            id: viewer
+            id: viewerRef
         }
+
         CheckBox {
             text: "Show features"
+            checked: true
+            onClicked: viewerRef.featureIimage.visible = checked;
         }
     }
 
@@ -56,12 +59,18 @@ ApplicationWindow {
 
     Connections {
         target: _commonHandler
-        onNewImage:  viewer.image.reload();
+        onNewImage:
+        {
+            viewerRef.image.reload();
+            viewerRef.featureIimage.reload();
+        }
     }
 
 
 
-
+    Component.onCompleted: {
+        _commonHandler.loadImage("file:///Users/sim/Desktop/hugin1/image-1.jpg");
+    }
 
 
 }

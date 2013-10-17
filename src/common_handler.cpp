@@ -52,13 +52,14 @@ void CommonHandler::loadImage(QString p)
     }
 
     findFeatures();
+    visualizeMatches(0,1);
 
     emit newImage();
 }
 
 void CommonHandler::findFeatures()
 {
-        qDebug() << Q_FUNC_INFO;
+    qDebug() << Q_FUNC_INFO;
     foreach(QImage img, m_images)
     {
 
@@ -74,7 +75,7 @@ void CommonHandler::findFeatures()
 
 
         cv::Mat descriptors;
-        std::vector<cv::KeyPoint> keyPoints;
+        KeyPoints keyPoints;
 
         cv::Mat mat = Converter::QImageToCvMat(img);
         //    cv::Mat mask= cv::Mat::ones(mat.cols, mat.rows,  CV_8U);
@@ -82,6 +83,9 @@ void CommonHandler::findFeatures()
 
         cv::SIFT siftDetector(20);
         siftDetector(mat,cv::Mat(),keyPoints,descriptors);
+
+        m_vecOfKeypoints.push_back(keyPoints);
+        m_vecOfDescriptors.push_back(descriptors);
 
         qDebug() << "Found " << keyPoints.size() << " features";
         qDebug() << "Descriptor size: " << descriptors.cols <<" x " << descriptors.rows;
@@ -95,6 +99,25 @@ void CommonHandler::findFeatures()
 
     m_imgProvider->setFeatureOverlay(m_featureOverlays);
 
+}
+
+void CommonHandler::visualizeMatches(int indexOfRef, int indexOfObs)
+{
+    if(indexOfRef >= m_images.size()
+            || indexOfObs >= m_images.size())
+    {
+        return;
+    }
+
+    cv::Mat ref = Converter::QImageToCvMat(m_images.at(indexOfRef));
+    cv::Mat obs = Converter::QImageToCvMat(m_images.at(indexOfObs));
+
+    cv::Mat out;//(ref.cols + obs.cols, std::max(ref.rows, ref.cols), CV_8UC4);
+//    ref.copyTo(out(cv::Rect(0,0,ref.cols,ref.rows)));
+//    obs.copyTo(out(cv::Rect(ref.cols,0,obs.cols,obs.rows)));
+                cv::hconcat(ref,obs,out);
+            m_matchImage = Converter::CvMatToQImage(out);
+    m_imgProvider->setMatchImage(m_matchImage);
 }
 
 

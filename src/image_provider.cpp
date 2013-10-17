@@ -14,12 +14,17 @@ QImage ImageProvider::requestImage(const QString &id, QSize *size, const QSize &
 {
 
     QStringList l = id.split("/");
-    const bool featureRequest = l.at(0) == "features";
-    const int index =  l.at(1).toInt();
-    qDebug("Request feature: %d from index %d", featureRequest, index);
+    const QString type= l.at(0);
+    int index=0;
+    if(l.size() > 1)
+    {
+        index =  l.at(1).toInt();
+    }
+
+    qDebug("Id %s",id.toStdString().c_str());
 
 
-    if(featureRequest)
+    if(type == "features")
     {
         if(index >= m_featureOverlay.size())
         {
@@ -29,6 +34,13 @@ QImage ImageProvider::requestImage(const QString &id, QSize *size, const QSize &
         size->setHeight(m_featureOverlay.at(index).height());
 
         return m_featureOverlay.at(index);
+    }
+    else if(type == "matches")
+    {
+        size->setWidth(m_matchImage.width());
+        size->setHeight(m_matchImage.height());
+
+        return m_matchImage;
     }
     else
     {
@@ -44,11 +56,16 @@ QImage ImageProvider::requestImage(const QString &id, QSize *size, const QSize &
 }
 
 //-----------------------------------------------------------------------------
-
 void ImageProvider::setNewImage(const QImages &images)
 {
     qDebug() << Q_FUNC_INFO;
     m_img = images;
+}
+
+//-----------------------------------------------------------------------------
+void ImageProvider::setMatchImage(const QImage &matchImage)
+{
+    m_matchImage = matchImage;
 }
 
 void ImageProvider::setFeatureOverlay(const QImages& images)

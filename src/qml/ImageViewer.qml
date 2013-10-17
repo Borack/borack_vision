@@ -9,11 +9,16 @@ Rectangle {
     property alias featureIimage: featureIimage
     property int index: 0
 
+    function reloadAll() {
+        image.reload();
+        featureIimage.reload();
+    }
+
     Image {
         id: image
         anchors.fill: parent
         fillMode: Image.PreserveAspectFit
-        source: "image://imageprovider/current/" + index
+        source: "image://imageprovider/image/" + index
 
         function reload() {
             var oldSource = source;

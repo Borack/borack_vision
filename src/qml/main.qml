@@ -7,7 +7,7 @@ import QtQuick.Dialogs 1.0
 ApplicationWindow {
     id: mainWindow;
     width: row.width + 20;
-    height: row.height + 20;
+    height: column.height + 20;
     visible: true;
     title: "First Window";
     menuBar: MenuBar {
@@ -27,30 +27,41 @@ ApplicationWindow {
         }
     }
 
-
-    Row{
-        id: row
-        spacing: 10
+    Column {
+        id: column
+        spacing:10
         anchors.topMargin: 20
 
+        Row{
+            id: row
+            spacing: 10
 
-        ImageViewer {
-            id: viewerRef
-            index: 0
-        }
 
-        ImageViewer {
-            id: viewerObs
-            index: 1
-        }
-
-        CheckBox {
-            text: "Show features"
-            checked: true
-            onClicked:  {
-                viewerRef.featureIimage.visible = checked;
-                viewerObs.featureIimage.visible = checked;
+            ImageViewer {
+                id: viewerRef
+                index: 0
             }
+
+            ImageViewer {
+                id: viewerObs
+                index: 1
+            }
+
+            CheckBox {
+                text: "Show features"
+                checked: true
+                onClicked:  {
+                    viewerRef.featureIimage.visible = checked;
+                    viewerObs.featureIimage.visible = checked;
+                    matching.featureIimage.visible = checked;
+                }
+            }
+        }
+
+        ImageViewer {
+            id: matching
+            image.source:  "image://imageprovider/matches"
+            featureIimage.source:  "image://imageprovider/matches/ölkjöl"
         }
     }
 
@@ -71,10 +82,9 @@ ApplicationWindow {
         target: _commonHandler
         onNewImage:
         {
-            viewerRef.image.reload();
-            viewerRef.featureIimage.reload();
-            viewerObs.image.reload();
-            viewerObs.featureIimage.reload();
+            viewerRef.reloadAll()
+            viewerObs.reloadAll();
+            matching.reloadAll();
         }
     }
 

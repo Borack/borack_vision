@@ -23,10 +23,16 @@ public slots:
 private:
 
     void findFeatures();
+    void visualizeMatches(int indexOfRef, int indexOfObs);
 
+
+    QImage m_matchImage;
     QImages m_images;
     QImages m_featureOverlays;
     ImageProvider* m_imgProvider;
+    Mats m_vecOfDescriptors;
+    VectorOfKeypoints m_vecOfKeypoints;
+
 
 };
 

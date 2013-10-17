@@ -1,5 +1,6 @@
 #include "image_provider.hpp"
 #include <QDebug>
+#include <QString>
 
 ImageProvider::ImageProvider()
     : QQuickImageProvider(QQuickImageProvider::Image)
@@ -12,31 +13,45 @@ ImageProvider::ImageProvider()
 QImage ImageProvider::requestImage(const QString &id, QSize *size, const QSize &requestedSize)
 {
 
-    if(id == "features")
-    {
-        size->setWidth(m_featureOverlay.width());
-        size->setHeight(m_featureOverlay.height());
+    QStringList l = id.split("/");
+    const bool featureRequest = l.at(0) == "features";
+    const int index =  l.at(1).toInt();
+    qDebug("Request feature: %d from index %d", featureRequest, index);
 
-        return m_featureOverlay;
+
+    if(featureRequest)
+    {
+        if(index >= m_featureOverlay.size())
+        {
+            return QImage();
+        }
+        size->setWidth(m_featureOverlay.at(index).width());
+        size->setHeight(m_featureOverlay.at(index).height());
+
+        return m_featureOverlay.at(index);
     }
     else
     {
-        size->setWidth(m_img.width());
-        size->setHeight(m_img.height());
+        if(index >= m_img.size())
+        {
+            return QImage();
+        }
+        size->setWidth(m_img.at(index).width());
+        size->setHeight(m_img.at(index).height());
 
-        return m_img;
+        return m_img.at(index);
     }
 }
 
 //-----------------------------------------------------------------------------
 
-void ImageProvider::setNewImage(const QImage &img)
+void ImageProvider::setNewImage(const QImages &images)
 {
     qDebug() << Q_FUNC_INFO;
-    m_img = img;
+    m_img = images;
 }
 
-void ImageProvider::setFeatureOverlay(const QImage &featureOverlay)
+void ImageProvider::setFeatureOverlay(const QImages& images)
 {
-    m_featureOverlay = featureOverlay;
+    m_featureOverlay = images;
 }

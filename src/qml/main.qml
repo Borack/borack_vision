@@ -36,12 +36,21 @@ ApplicationWindow {
 
         ImageViewer {
             id: viewerRef
+            index: 0
+        }
+
+        ImageViewer {
+            id: viewerObs
+            index: 1
         }
 
         CheckBox {
             text: "Show features"
             checked: true
-            onClicked: viewerRef.featureIimage.visible = checked;
+            onClicked:  {
+                viewerRef.featureIimage.visible = checked;
+                viewerObs.featureIimage.visible = checked;
+            }
         }
     }
 
@@ -57,12 +66,15 @@ ApplicationWindow {
         id: fileDialog
     }
 
+
     Connections {
         target: _commonHandler
         onNewImage:
         {
             viewerRef.image.reload();
             viewerRef.featureIimage.reload();
+            viewerObs.image.reload();
+            viewerObs.featureIimage.reload();
         }
     }
 

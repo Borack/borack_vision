@@ -3,7 +3,7 @@
 #include <QObject>
 
 #include <QQuickImageProvider>
-#include <QImage>
+#include <types.hpp>
 
 class ImageProvider : public QQuickImageProvider
 {
@@ -12,12 +12,12 @@ public:
 
     QImage requestImage(const QString &id, QSize *size, const QSize &requestedSize);
 
-    void setNewImage(const QImage &img);
-    void setFeatureOverlay(const QImage &featureOverlay);
+    void setNewImage(const QImages &img);
+    void setFeatureOverlay(const QImages &featureOverlay);
 
 private:
-    QImage m_img;
-    QImage m_featureOverlay;
+    QImages m_img;
+    QImages m_featureOverlay;
 
 };
 

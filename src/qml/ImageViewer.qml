@@ -7,12 +7,13 @@ Rectangle {
 
     property alias image: image
     property alias featureIimage: featureIimage
+    property int index: 0
 
     Image {
         id: image
         anchors.fill: parent
         fillMode: Image.PreserveAspectFit
-        source: "image://imageprovider/current"
+        source: "image://imageprovider/current/" + index
 
         function reload() {
             var oldSource = source;
@@ -26,7 +27,7 @@ Rectangle {
         id: featureIimage
         anchors.fill: parent
         fillMode: Image.PreserveAspectFit
-        source: "image://imageprovider/features"
+        source: "image://imageprovider/features/" + index
 
         function reload() {
             var oldSource = source;

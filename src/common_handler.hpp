@@ -2,8 +2,7 @@
 #define COMMON_HANDLER_HPP
 
 #include <QObject>
-#include <QImage>
-#include <QPixmap>
+#include <types.hpp>
 
 #include "image_provider.hpp"
 
@@ -25,8 +24,8 @@ private:
 
     void findFeatures();
 
-    QImage m_image;
-    QPixmap m_featureOverlay;
+    QImages m_images;
+    QImages m_featureOverlays;
     ImageProvider* m_imgProvider;
 
 };

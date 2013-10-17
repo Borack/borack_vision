@@ -11,6 +11,7 @@ set(SOURCES  main.cpp
             common_handler.cpp
             image_provider.cpp
             converter.cpp
+            types.hpp
 )
 
 set(QRC_FILES

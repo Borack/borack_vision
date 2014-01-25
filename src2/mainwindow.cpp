@@ -1,12 +1,17 @@
 #include "mainwindow.hpp"
 #include "ui_mainwindow.h"
 #include <QFileDialog>
+#include <QWidget>
+#include <QVBoxLayout>
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+
+    QVBoxLayout *layout = new QVBoxLayout;
+    ui->centralwidget->setLayout(layout);
 }
 
 MainWindow::~MainWindow()

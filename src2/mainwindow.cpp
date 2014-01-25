@@ -1,8 +1,15 @@
 #include "mainwindow.hpp"
 #include "ui_mainwindow.h"
+
 #include <QFileDialog>
-#include <QWidget>
+#include <QGraphicsView>
+#include <QImage>
+#include <QLabel>
+#include <QString>
 #include <QVBoxLayout>
+#include <QWidget>
+#include <QGraphicsScene>
+
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -21,10 +28,17 @@ MainWindow::~MainWindow()
 
 void MainWindow::on_actionOpen_source_triggered()
 {
-    QFileDialog::getOpenFileName(this,"Open source image", "","Images (*.png *.jpg)");
+    QString sourcePath = QFileDialog::getOpenFileName(this,"Open source image", "","Images (*.png *.jpg)");
+    QPixmap sourceImage(sourcePath);
+
+    QGraphicsScene* scene = new QGraphicsScene(this);
+    scene->addPixmap(sourceImage);
+
+    ui->graphicsView->setScene(scene);
 }
 
 void MainWindow::on_actionOpen_target_triggered()
 {
-    QFileDialog::getOpenFileName(this,"Open target image", "","Images (*.png *.jpg)");
+    QString targetPath  = QFileDialog::getOpenFileName(this,"Open target image", "","Images (*.png *.jpg)");
+    QPixmap targetImage(targetPath);
 }

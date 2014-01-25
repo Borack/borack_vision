@@ -2,30 +2,21 @@
 #define MAINWINDOW_HPP
 
 #include <QMainWindow>
-#include <QAction>
-#include <QMenu>
+
+namespace Ui {
+class MainWindow;
+}
 
 class MainWindow : public QMainWindow
 {
     Q_OBJECT
+
 public:
     explicit MainWindow(QWidget *parent = 0);
-
-signals:
-
-public slots:
-
-
+    ~MainWindow();
 
 private:
-
-    void setup();
-    QAction* m_openFileAct;
-    QMenu* m_fileMenu;
-
-private slots:
-    void openFile();
-
+    Ui::MainWindow *ui;
 };
 
 #endif // MAINWINDOW_HPP

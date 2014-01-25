@@ -14,18 +14,16 @@ set(SOURCES  main.cpp
 set(HEADERS mainwindow.hpp
 )
 
+set(UI_FILES mainwindow.ui)
+
 set(QRC_FILES
 #   main.qrc
 )
 
 set(QML_SOURCES
- #  qml/main.qml
- #  qml/FileOpener.qml
- #  qml/ImageViewer.qml
+
 )
 
-# Find includes in corresponding build directories
-set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
 #--------------------------------------------------------------------------------
 # QT5
@@ -33,10 +31,14 @@ set(CMAKE_INCLUDE_CURRENT_DIR ON)
 find_package(Qt5Core REQUIRED)
 find_package(Qt5Widgets REQUIRED)
 
+# Find includes in corresponding build directories
+set(CMAKE_INCLUDE_CURRENT_DIR ON)
 # Enable automoc
 set(CMAKE_AUTOMOC ON)
+QT5_WRAP_UI(UI_HEADERS ${UI_FILES})
 
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
+INCLUDE_DIRECTORIES( ${CMAKE_CURRENT_BINARY_DIR} )
 
 QT5_ADD_RESOURCES(QRC_OUT ${QRC_FILES})
 
@@ -51,7 +53,7 @@ find_package(OpenCV REQUIRED)
 #--------------------------------------------------------------------------------
 # Executable
 #--------------------------------------------------------------------------------
-add_executable(${PROJECT_NAME} ${SOURCES} ${QRC_OUT} ${QML_SOURCES})
+add_executable(${PROJECT_NAME} ${SOURCES} ${QRC_OUT} ${UI_HEADERS})
 target_link_libraries(${PROJECT_NAME} ${OpenCV_LIBS})
 
 qt5_use_modules(${PROJECT_NAME} Widgets Qml Quick Core)

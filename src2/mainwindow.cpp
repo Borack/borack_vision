@@ -1,26 +1,14 @@
 #include "mainwindow.hpp"
-#include <QMenuBar>
-#include <QKeySequence>
-
+#include "ui_mainwindow.h"
 
 MainWindow::MainWindow(QWidget *parent) :
-    QMainWindow(parent)
+    QMainWindow(parent),
+    ui(new Ui::MainWindow)
 {
-    setup();
+    ui->setupUi(this);
 }
 
-void MainWindow::setup()
+MainWindow::~MainWindow()
 {
-    m_openFileAct = new QAction(tr("&Open..."), this);
-    m_openFileAct->setShortcut(QKeySequence::Open);
-    connect(m_openFileAct, SIGNAL(triggered()), this, SLOT(openFile()));
-
-    m_fileMenu = menuBar()->addMenu("&File");
-    m_fileMenu->addAction(m_openFileAct);
-}
-
-
-void MainWindow::openFile()
-{
-
+    delete ui;
 }

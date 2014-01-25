@@ -2,6 +2,7 @@
 #define MAINWINDOW_HPP
 
 #include <QMainWindow>
+#include <QString>
 
 namespace Ui {
 class MainWindow;
@@ -21,6 +22,10 @@ private slots:
     void on_actionOpen_target_triggered();
 private:
     Ui::MainWindow *ui;
+
+    void saveToSettings(const QString&path);
+    QString m_lastImgPath;
+    static const QString SETTINGS_LAST_IMG_PATH;
 };
 
 #endif // MAINWINDOW_HPP

@@ -9,9 +9,13 @@ project(${PROJECT_NAME})
 
 set(SOURCES  main.cpp
             mainwindow.cpp
+            customscene.cpp
+            customview.cpp
 )
 
 set(HEADERS mainwindow.hpp
+            customscene.hpp
+            customview.hpp
 )
 
 set(UI_FILES mainwindow.ui)
@@ -30,6 +34,7 @@ set(QML_SOURCES
 #--------------------------------------------------------------------------------
 find_package(Qt5Core REQUIRED)
 find_package(Qt5Widgets REQUIRED)
+find_package(Qt5OpenGL REQUIRED)
 
 # Find includes in corresponding build directories
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
@@ -56,4 +61,4 @@ find_package(OpenCV REQUIRED)
 add_executable(${PROJECT_NAME} ${SOURCES} ${QRC_OUT} ${UI_HEADERS})
 target_link_libraries(${PROJECT_NAME} ${OpenCV_LIBS})
 
-qt5_use_modules(${PROJECT_NAME} Widgets Qml Quick Core)
+qt5_use_modules(${PROJECT_NAME} Widgets OpenGL Core)

@@ -25,7 +25,7 @@
        </widget>
       </item>
       <item>
-       <widget class="QGraphicsView" name="graphicsView"/>
+       <widget class="CustomView" name="graphicsView"/>
       </item>
      </layout>
     </item>
@@ -45,7 +45,7 @@
        </widget>
       </item>
       <item>
-       <widget class="QGraphicsView" name="graphicsView_2"/>
+       <widget class="CustomView" name="graphicsView_2"/>
       </item>
      </layout>
     </item>
@@ -81,6 +81,13 @@
    </property>
   </action>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>CustomView</class>
+   <extends>QGraphicsView</extends>
+   <header>customview.hpp</header>
+  </customwidget>
+ </customwidgets>
  <resources/>
  <connections/>
 </ui>

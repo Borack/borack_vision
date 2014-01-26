@@ -2,9 +2,13 @@
 
 #include <QDebug>
 #include <QGraphicsSceneMouseEvent>
+#include <QPolygonF>
+#include <QPen>
+#include <QBrush>
 
 SourceScene::SourceScene(QObject *parent)
    : CustomScene(parent)
+   , m_polygon(0)
 {
 }
 
@@ -19,9 +23,21 @@ void SourceScene::mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent)
    //   qDebug() << "Screen pos: " << mouseEvent->screenPos();
    //   qDebug() << "";
 
+   drawPolygon();
 }
 
 void SourceScene::reset()
 {
    m_boundary.clear();
+}
+
+void SourceScene::drawPolygon()
+{
+   if(m_polygon)
+   {
+      removeItem(m_polygon);
+   }
+
+   QPolygonF polygon(m_boundary);
+   m_polygon = addPolygon(polygon,QPen(Qt::green, 20, Qt::DashDotLine, Qt::RoundCap));
 }

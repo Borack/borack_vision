@@ -3,6 +3,7 @@
 
 #include "customscene.hpp"
 #include <QObject>
+#include <QGraphicsPolygonItem>
 
 class SourceScene : public CustomScene
 {
@@ -18,7 +19,12 @@ protected:
 private:
    virtual void reset();
 
+   void drawPolygon();
+
+
+   QGraphicsPolygonItem* m_polygon;
    Boundary m_boundary;
+
 };
 
 #endif // SOURCESCENE_HPP

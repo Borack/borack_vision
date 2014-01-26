@@ -5,6 +5,7 @@
 #include <QPixmap>
 #include <QVector>
 #include <QPointF>
+#include <QGraphicsPixmapItem>
 
 class CustomScene : public QGraphicsScene
 {
@@ -16,6 +17,7 @@ public:
 private:
    virtual void reset();
    QPixmap m_sceneImage;
+   QGraphicsPixmapItem* m_pixmapItem;
 };
 
 #endif // CUSTOMSCENE_HPP

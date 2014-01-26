@@ -11,7 +11,7 @@ void CustomScene::setPixmap(const QPixmap &img)
 {
       reset();
       m_sceneImage = img;
-      addPixmap(m_sceneImage);
+      m_pixmapItem = addPixmap(m_sceneImage);
 }
 
 void CustomScene::reset()

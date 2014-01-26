@@ -45,7 +45,10 @@ void MeanValueSeamlessCloning::startComputation()
    m_patch = roiInFullContext(convexHull);
 
 
-   cv::pointPolygonTest(aContour,"Point", false);
+
+
+
+//   cv::pointPolygonTest(aContour,"Point", false);
 
    cv::namedWindow( "Display window", cv::WINDOW_AUTOSIZE );
    cv::imshow("Display window", m_patch);

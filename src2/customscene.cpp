@@ -7,13 +7,14 @@ CustomScene::CustomScene(QObject* parent)
 {
 }
 
-void CustomScene::mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent)
+void CustomScene::setPixmap(const QPixmap &img)
 {
-//   qDebug() << "Button down pos: " << mouseEvent->buttonDownPos(Qt::AllButtons);
-//   qDebug() << "Button down scene pos: " << mouseEvent->buttonDownScenePos(Qt::AllButtons);
-//   qDebug() << "Button down screen pos: " << mouseEvent->buttonDownScreenPos(Qt::AllButtons);
-//   qDebug() << "Pos: " << mouseEvent->pos();
-   qDebug() << "Scene pos: " << mouseEvent->scenePos();
-//   qDebug() << "Screen pos: " << mouseEvent->screenPos();
-//   qDebug() << "";
+      reset();
+      m_sceneImage = img;
+      addPixmap(m_sceneImage);
+}
+
+void CustomScene::reset()
+{
+   // empty
 }

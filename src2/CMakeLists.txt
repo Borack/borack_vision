@@ -11,11 +11,13 @@ set(SOURCES  main.cpp
             mainwindow.cpp
             customscene.cpp
             customview.cpp
+            sourcescene.cpp
 )
 
 set(HEADERS mainwindow.hpp
             customscene.hpp
             customview.hpp
+            sourcescene.hpp
 )
 
 set(UI_FILES mainwindow.ui)

@@ -1,5 +1,6 @@
 #include "mainwindow.hpp"
 #include "ui_mainwindow.h"
+#include "sourcescene.hpp"
 
 #include <QFileDialog>
 #include <QGLWidget>
@@ -64,8 +65,9 @@ void MainWindow::loadSourceImg(const QString &path)
    {
       QPixmap sourceImage(path);
 
-      CustomScene* scene = new CustomScene(this);
-      scene->addPixmap(sourceImage);
+
+      SourceScene* scene = new SourceScene(this);
+      scene->setPixmap(sourceImage);
 
       ui->graphicsView->scale(0.25,0.25);
       ui->graphicsView->setScene(scene);
@@ -83,7 +85,7 @@ void MainWindow::loadTargetImg(const QString &path)
       QPixmap targetImage(path);
 
       CustomScene* scene = new CustomScene(this);
-      scene->addPixmap(targetImage);
+      scene->setPixmap(targetImage);
 
       ui->graphicsView_2->scale(0.25,0.25);
       ui->graphicsView_2->setScene(scene);

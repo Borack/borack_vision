@@ -2,13 +2,20 @@
 #define CUSTOMSCENE_HPP
 #include <QGraphicsScene>
 
+#include <QPixmap>
+#include <QVector>
+#include <QPointF>
+
 class CustomScene : public QGraphicsScene
 {
 public:
    CustomScene(QObject *parent = 0);
 
-protected:
-   virtual void mousePressEvent(QGraphicsSceneMouseEvent * mouseEvent);
+   virtual void setPixmap(const QPixmap&img);
+
+private:
+   virtual void reset();
+   QPixmap m_sceneImage;
 };
 
 #endif // CUSTOMSCENE_HPP

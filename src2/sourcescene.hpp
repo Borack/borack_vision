@@ -4,15 +4,16 @@
 #include "customscene.hpp"
 #include <QObject>
 #include <QGraphicsPolygonItem>
+#include <mvc_types.hpp>
 
 class SourceScene : public CustomScene
 {
    Q_OBJECT
 public:
-   typedef QVector<QPointF> Boundary;
-
    explicit SourceScene(QObject *parent = 0);
    virtual ~SourceScene() {}
+
+   MVC::Boundary getBoundary() const;
 
 protected:
    virtual void mousePressEvent(QGraphicsSceneMouseEvent * mouseEvent);
@@ -25,7 +26,7 @@ private:
 
 
    QGraphicsPolygonItem* m_polygon;
-   Boundary m_boundary;
+   MVC::Boundary m_boundary;
 
 };
 

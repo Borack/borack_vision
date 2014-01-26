@@ -8,20 +8,24 @@ set(PROJECT_NAME borack_vision_2)
 project(${PROJECT_NAME})
 
 set(SOURCES  main.cpp
-            mainwindow.cpp
+            converter.cpp
             customscene.cpp
             customview.cpp
+            mainwindow.cpp
+            meanvalue_seamless_cloning.cpp
             sourcescene.cpp
             targetscene.cpp
-            meanvalue_seamless_cloning.cpp
 )
 
-set(HEADERS mainwindow.hpp
+set(HEADERS
+            converter.hpp
             customscene.hpp
             customview.hpp
+            mainwindow.hpp
+            meanvalue_seamless_cloning.hpp
+            mvc_types.hpp
             sourcescene.hpp
             targetscene.hpp
-            meanvalue_seamless_cloning.hpp
 )
 
 set(UI_FILES mainwindow.ui)

@@ -2,7 +2,12 @@
 #define MAINWINDOW_HPP
 
 #include <QMainWindow>
+#include <QScopedPointer>
 #include <QString>
+
+#include "meanvalue_seamless_cloning.hpp"
+#include "sourcescene.hpp"
+#include "targetscene.hpp"
 
 namespace Ui {
 class MainWindow;
@@ -31,7 +36,11 @@ private:
     void loadTargetImg(const QString& path);
 
     Ui::MainWindow *ui;
-    QString m_lastImgPath;
+
+    SourceScene *m_sScene;
+    TargetScene *m_tScene;
+
+    QScopedPointer<MeanValueSeamlessCloning> m_mvcCloning;
     static const QString SETTINGS_LAST_SOURCE_PATH;
     static const QString SETTINGS_LAST_TARGET_PATH;
 };

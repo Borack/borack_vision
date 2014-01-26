@@ -12,6 +12,11 @@ SourceScene::SourceScene(QObject *parent)
 {
 }
 
+MVC::Boundary SourceScene::getBoundary() const
+{
+   return m_boundary;
+}
+
 void SourceScene::mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent)
 {
    //   qDebug() << "Button down pos: " << mouseEvent->buttonDownPos(Qt::AllButtons);

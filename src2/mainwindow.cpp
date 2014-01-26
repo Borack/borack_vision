@@ -16,9 +16,6 @@
 #include <QDebug>
 
 
-#include "sourcescene.hpp"
-#include "targetscene.hpp"
-
 
 const QString MainWindow::SETTINGS_LAST_SOURCE_PATH("last_img_source_path");
 const QString MainWindow::SETTINGS_LAST_TARGET_PATH("last_img_target_path");
@@ -26,6 +23,9 @@ const QString MainWindow::SETTINGS_LAST_TARGET_PATH("last_img_target_path");
 MainWindow::MainWindow(QWidget *parent) :
    QMainWindow(parent),
    ui(new Ui::MainWindow)
+ , m_mvcCloning(0)
+ , m_sScene(0)
+ , m_tScene(0)
 {
    ui->setupUi(this);
    setup();
@@ -54,6 +54,10 @@ void MainWindow::on_actionOpen_target_triggered()
 
 void MainWindow::on_runMVCComputation()
 {
+   m_mvcCloning.reset(new MeanValueSeamlessCloning(m_sScene->getPixmap(), m_sScene->getBoundary()));
+
+   // could be called within a new thread
+   m_mvcCloning->startComputation();
    qDebug() << "Start running mvc";
 }
 
@@ -73,11 +77,11 @@ void MainWindow::loadSourceImg(const QString &path)
       QPixmap sourceImage(path);
 
 
-      SourceScene* scene = new SourceScene(this);
-      scene->setPixmap(sourceImage);
+      m_sScene = new SourceScene(this);
+      m_sScene->setPixmap(sourceImage);
 
       ui->graphicsView->scale(0.25,0.25);
-      ui->graphicsView->setScene(scene);
+      ui->graphicsView->setScene(m_sScene);
 
       QSettings settings;
       settings.setValue(SETTINGS_LAST_SOURCE_PATH, path);
@@ -91,12 +95,12 @@ void MainWindow::loadTargetImg(const QString &path)
    {
       QPixmap targetImage(path);
 
-      TargetScene* scene = new TargetScene(this);
-      connect(scene,SIGNAL(runMVCComputation()), this, SLOT(on_runMVCComputation()));
-      scene->setPixmap(targetImage);
+      m_tScene = new TargetScene(this);
+      connect(m_tScene,SIGNAL(runMVCComputation()), this, SLOT(on_runMVCComputation()));
+      m_tScene->setPixmap(targetImage);
 
       ui->graphicsView_2->scale(0.25,0.25);
-      ui->graphicsView_2->setScene(scene);
+      ui->graphicsView_2->setScene(m_tScene);
 
       QSettings settings;
       settings.setValue(SETTINGS_LAST_TARGET_PATH, path);

@@ -15,6 +15,7 @@ public:
    virtual ~CustomScene() {}
 
    virtual void setPixmap(const QPixmap&img);
+   virtual QPixmap getPixmap() const;
 
 private:
    virtual void reset();

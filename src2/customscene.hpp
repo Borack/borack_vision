@@ -9,8 +9,10 @@
 
 class CustomScene : public QGraphicsScene
 {
+   Q_OBJECT
 public:
-   CustomScene(QObject *parent = 0);
+   explicit CustomScene(QObject *parent = 0);
+   virtual ~CustomScene() {}
 
    virtual void setPixmap(const QPixmap&img);
 

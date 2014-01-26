@@ -7,10 +7,12 @@
 
 class SourceScene : public CustomScene
 {
+   Q_OBJECT
 public:
    typedef QVector<QPointF> Boundary;
 
-   SourceScene(QObject *parent = 0);
+   explicit SourceScene(QObject *parent = 0);
+   virtual ~SourceScene() {}
 
 protected:
    virtual void mousePressEvent(QGraphicsSceneMouseEvent * mouseEvent);

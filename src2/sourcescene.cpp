@@ -18,7 +18,7 @@ void SourceScene::mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent)
    //   qDebug() << "Button down scene pos: " << mouseEvent->buttonDownScenePos(Qt::AllButtons);
    //   qDebug() << "Button down screen pos: " << mouseEvent->buttonDownScreenPos(Qt::AllButtons);
    //   qDebug() << "Pos: " << mouseEvent->pos();
-      qDebug() << "Scene pos: " << mouseEvent->scenePos();
+//      qDebug() << "Scene pos: " << mouseEvent->scenePos();
       m_boundary << mouseEvent->scenePos();
    //   qDebug() << "Screen pos: " << mouseEvent->screenPos();
    //   qDebug() << "";

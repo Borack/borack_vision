@@ -20,6 +20,10 @@ private slots:
     void on_actionOpen_source_triggered();
 
     void on_actionOpen_target_triggered();
+
+    void on_runMVCComputation();
+
+
 private:
 
     void setup();

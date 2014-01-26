@@ -12,6 +12,7 @@ public:
    virtual ~TargetScene() {}
 
 signals:
+   void runMVCComputation();
 
 public slots:
 

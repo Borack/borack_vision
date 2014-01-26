@@ -52,6 +52,11 @@ void MainWindow::on_actionOpen_target_triggered()
    loadTargetImg(targetPath);
 }
 
+void MainWindow::on_runMVCComputation()
+{
+   qDebug() << "Start running mvc";
+}
+
 
 void MainWindow::setup()
 {
@@ -87,6 +92,7 @@ void MainWindow::loadTargetImg(const QString &path)
       QPixmap targetImage(path);
 
       TargetScene* scene = new TargetScene(this);
+      connect(scene,SIGNAL(runMVCComputation()), this, SLOT(on_runMVCComputation()));
       scene->setPixmap(targetImage);
 
       ui->graphicsView_2->scale(0.25,0.25);

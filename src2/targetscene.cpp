@@ -10,5 +10,5 @@ TargetScene::TargetScene(QObject *parent) :
 void TargetScene::mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent)
 {
    m_targetLocation = mouseEvent->scenePos();
-   qDebug() << "Start computation!";
+   emit runMVCComputation();
 }

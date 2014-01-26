@@ -13,6 +13,7 @@ set(SOURCES  main.cpp
             customview.cpp
             sourcescene.cpp
             targetscene.cpp
+            meanvalue_seamless_cloning.cpp
 )
 
 set(HEADERS mainwindow.hpp
@@ -20,6 +21,7 @@ set(HEADERS mainwindow.hpp
             customview.hpp
             sourcescene.hpp
             targetscene.hpp
+            meanvalue_seamless_cloning.hpp
 )
 
 set(UI_FILES mainwindow.ui)

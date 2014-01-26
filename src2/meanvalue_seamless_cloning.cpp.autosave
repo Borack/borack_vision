@@ -42,7 +42,10 @@ void MeanValueSeamlessCloning::startComputation()
    cv::Rect convexHull = cv::boundingRect(aContour);
 
    //! Create the patch;
-   m_patch = roiInFullContext(convexHull);
+   m_patch = roiInFullContext(convexHull);  
+   
+   
+   
 
 
    cv::pointPolygonTest(aContour,"Point", false);

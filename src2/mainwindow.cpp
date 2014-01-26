@@ -17,16 +17,15 @@
 #include "customscene.hpp"
 
 
-const QString MainWindow::SETTINGS_LAST_IMG_PATH("last_img_path");
+const QString MainWindow::SETTINGS_LAST_SOURCE_PATH("last_img_source_path");
+const QString MainWindow::SETTINGS_LAST_TARGET_PATH("last_img_target_path");
 
 MainWindow::MainWindow(QWidget *parent) :
    QMainWindow(parent),
    ui(new Ui::MainWindow)
 {
    ui->setupUi(this);
-
-   QVBoxLayout *layout = new QVBoxLayout;
-   ui->centralwidget->setLayout(layout);
+   setup();
 }
 
 MainWindow::~MainWindow()
@@ -37,33 +36,51 @@ MainWindow::~MainWindow()
 void MainWindow::on_actionOpen_source_triggered()
 {
    QSettings settings;
-   QString lastPath = settings.value(SETTINGS_LAST_IMG_PATH).toString() + "/aslkjf"; // workaround;
+   QString lastPath = QFileInfo(settings.value(SETTINGS_LAST_SOURCE_PATH).toString()).absolutePath() + "/aslkjf"; // workaround;
    QString sourcePath = QFileDialog::getOpenFileName(this,"Open source image", lastPath,"Images (*.png *.jpg)");
+   loadSourceImg(sourcePath);
+}
 
-   if(!sourcePath.isEmpty())
+void MainWindow::on_actionOpen_target_triggered()
+{
+   QSettings settings;
+   QString lastPath = QFileInfo(settings.value(SETTINGS_LAST_TARGET_PATH).toString()).absolutePath() + "/aslkjf"; // workaround;
+   QString targetPath  = QFileDialog::getOpenFileName(this,"Open target image", lastPath,"Images (*.png *.jpg)");
+   loadTargetImg(targetPath);
+}
+
+
+void MainWindow::setup()
+{
+   QSettings settings;
+   loadSourceImg(settings.value(SETTINGS_LAST_SOURCE_PATH).toString());
+   loadTargetImg(settings.value(SETTINGS_LAST_TARGET_PATH).toString());
+}
+
+void MainWindow::loadSourceImg(const QString &path)
+{
+
+   if(!path.isEmpty())
    {
-      QPixmap sourceImage(sourcePath);
+      QPixmap sourceImage(path);
 
       CustomScene* scene = new CustomScene(this);
       scene->addPixmap(sourceImage);
 
       ui->graphicsView->scale(0.25,0.25);
       ui->graphicsView->setScene(scene);
-      saveToSettings(sourcePath);
+
+      QSettings settings;
+      settings.setValue(SETTINGS_LAST_SOURCE_PATH, path);
    }
+
 }
 
-void MainWindow::on_actionOpen_target_triggered()
+void MainWindow::loadTargetImg(const QString &path)
 {
-   QSettings settings;
-   QString lastPath = settings.value(SETTINGS_LAST_IMG_PATH).toString() + "/aslkjf"; // workaround;
-   QString targetPath  = QFileDialog::getOpenFileName(this,"Open target image", lastPath,"Images (*.png *.jpg)");
-
-   if(!targetPath.isEmpty())
+   if(!path.isEmpty())
    {
-      QPixmap targetImage(targetPath);
-
-
+      QPixmap targetImage(path);
 
       CustomScene* scene = new CustomScene(this);
       scene->addPixmap(targetImage);
@@ -71,15 +88,7 @@ void MainWindow::on_actionOpen_target_triggered()
       ui->graphicsView_2->scale(0.25,0.25);
       ui->graphicsView_2->setScene(scene);
 
-      saveToSettings(targetPath);
+      QSettings settings;
+      settings.setValue(SETTINGS_LAST_TARGET_PATH, path);
    }
-}
-
-void MainWindow::saveToSettings(const QString &path)
-{
-   // prepare for next time and save the current path in the settings
-   QFileInfo info(path);
-
-   QSettings settings;
-   settings.setValue(SETTINGS_LAST_IMG_PATH,info.absolutePath());
 }

@@ -21,11 +21,15 @@ private slots:
 
     void on_actionOpen_target_triggered();
 private:
-    Ui::MainWindow *ui;
 
-    void saveToSettings(const QString&path);
+    void setup();
+    void loadSourceImg(const QString& path);
+    void loadTargetImg(const QString& path);
+
+    Ui::MainWindow *ui;
     QString m_lastImgPath;
-    static const QString SETTINGS_LAST_IMG_PATH;
+    static const QString SETTINGS_LAST_SOURCE_PATH;
+    static const QString SETTINGS_LAST_TARGET_PATH;
 };
 
 #endif // MAINWINDOW_HPP

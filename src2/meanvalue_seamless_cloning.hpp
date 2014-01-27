@@ -22,13 +22,15 @@ public slots:
 
 private:
 
-   void calculateMVCValues();
+   void calculateMVCValues(const cv::Point &interiorPoint);
 
    const QPixmap m_inputSource;
    const MVC::Boundary m_sourceBoundary;
 
    cv::Mat m_cvInputFull;
    cv::Mat m_inputSub;
+
+   std::vector<cv::Point> m_contour;
    cv::Mat m_patch;
 
 };

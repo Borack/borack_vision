@@ -7,6 +7,9 @@ cmake_minimum_required(VERSION 2.8)
 set(PROJECT_NAME borack_vision_2)
 project(${PROJECT_NAME})
 
+# Setup paths
+list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/../cmake/)
+
 set(SOURCES  main.cpp
             converter.cpp
             customscene.cpp
@@ -63,6 +66,14 @@ QT5_ADD_RESOURCES(QRC_OUT ${QRC_FILES})
 #--------------------------------------------------------------------------------
 set(OpenCV_DIR /opt/dacuda/opencv-2.4.3_clang/share/OpenCV )
 find_package(OpenCV REQUIRED)
+
+
+#--------------------------------------------------------------------------------
+# Eigen
+#--------------------------------------------------------------------------------
+find_package(Eigen3 REQUIRED)
+include_directories( "${EIGEN3_INCLUDE_DIR}" )
+
 
 
 #--------------------------------------------------------------------------------

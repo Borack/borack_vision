@@ -48,8 +48,8 @@ void MeanValueSeamlessCloning::startComputation()
 
    //! Get convex hull of the contour
    //! Create the patch;
-   cv::Rect convexHull = cv::boundingRect(m_contour);
-   m_patch = roiInFullContext(convexHull);
+   cv::Rect boundingBox = cv::boundingRect(m_contour);
+   m_patch = roiInFullContext(boundingBox);
 
 
    assert(m_patch.cols > 0 && m_patch.rows > 0);
@@ -59,11 +59,11 @@ void MeanValueSeamlessCloning::startComputation()
    m_translatedContour.reserve(m_contour.size());
    for(int boundaryVerPos = 0; boundaryVerPos < m_contour.size(); boundaryVerPos++)
    {
-      cv::Point p(m_contour[boundaryVerPos].x-convexHull.x, m_contour[boundaryVerPos].y-convexHull.y);
+      cv::Point p(m_contour[boundaryVerPos].x-boundingBox.x, m_contour[boundaryVerPos].y-boundingBox.y);
       assert(p.x >= 0);
       assert(p.y >= 0);
-      assert(p.x < convexHull.width);
-      assert(p.y < convexHull.height);
+      assert(p.x < boundingBox.width);
+      assert(p.y < boundingBox.height);
       m_translatedContour.push_back(p);
    }
    assert(m_contour.size() == m_translatedContour.size());
@@ -74,7 +74,7 @@ void MeanValueSeamlessCloning::startComputation()
    {
       for(int r = 0; r< m_patch.rows; r++)
       {
-         cv::Point interiorPoint(c+convexHull.x,r+convexHull.y);
+         cv::Point interiorPoint(c+boundingBox.x,r+boundingBox.y);
          if(cv::pointPolygonTest(m_contour,interiorPoint,false) > 0) //! returns positive when inside, negative when outside and zero if on edge.
          {
             MVCoord mvcoord = calculateMVCValues(interiorPoint);
@@ -85,10 +85,10 @@ void MeanValueSeamlessCloning::startComputation()
    }
 
 
-//   cv::namedWindow( "Display window", cv::WINDOW_AUTOSIZE );
-//   cv::imshow("Display window", m_patch);
+   cv::namedWindow( "Source BB", cv::WINDOW_AUTOSIZE );
+   cv::imshow("Source BB", m_patch);
 //   cv::waitKey(0);
-//   cv::destroyAllWindows();
+//   cv::destroyWindow("Source BB");
 
 
 
@@ -101,11 +101,7 @@ void MeanValueSeamlessCloning::startComputation()
    m_cvTargetFull = Converter::QImageToCvMat(imgT);
 
    assert(m_contour.size() == m_translatedContour.size());
-   qDebug() << "Click location " << m_targetClickLocation;
    m_targetContour.reserve(m_translatedContour.size());
-
-
-
    for(int boundaryVerPos = 0; boundaryVerPos < m_translatedContour.size(); boundaryVerPos++)
    {
       cv::Point p(m_translatedContour[boundaryVerPos].x+m_targetClickLocation.x(), m_translatedContour[boundaryVerPos].y+m_targetClickLocation.y());
@@ -126,8 +122,24 @@ void MeanValueSeamlessCloning::startComputation()
    assert(m_translatedContour.size() == m_targetContour.size());
 
    emit targetContourCalculated(getBoundary(m_targetContour));
-   cv::Mat targetMask;
 
+   cv::Mat targetMask = cv::Mat::zeros(m_cvTargetFull.size(),CV_8UC1);
+   std::vector<std::vector<cv::Point> > tmp;
+   tmp.push_back(m_targetContour);
+
+   cv::drawContours(targetMask,tmp,-1 ,cv::Scalar(255), CV_FILLED);
+   cv::Mat onlyMaskCopied;
+   m_cvTargetFull.copyTo(onlyMaskCopied,targetMask);
+
+   cv::Rect targetBB = cv::boundingRect(m_targetContour);
+
+   cv::Mat targetPatch = onlyMaskCopied(targetBB);
+
+
+   cv::namedWindow( "Target BB", cv::WINDOW_AUTOSIZE );
+   cv::imshow("Target BB", targetPatch);
+   cv::waitKey(0);
+   cv::destroyAllWindows();
 
 }
 

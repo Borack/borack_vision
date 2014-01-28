@@ -41,6 +41,7 @@ void SourceScene::drawPolygon()
    if(m_polygon)
    {
       removeItem(m_polygon);
+
    }
 
    QPolygonF polygon(m_boundary);

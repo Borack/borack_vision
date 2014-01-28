@@ -58,23 +58,14 @@ void MeanValueSeamlessCloning::startComputation()
    {
       for(int r = 0; r< m_patch.rows; r++)
       {
-         cv::Point interiorPoint(c,r);
-         if(!cv::pointPolygonTest(m_contour,interiorPoint,false))
+         cv::Point interiorPoint(c+convexHull.x,r+convexHull.y);
+         if(cv::pointPolygonTest(m_contour,interiorPoint,false) > 0) //! returns positive when inside, negative when outside and zero if on edge.
          {
-            continue;
+            calculateMVCValues(interiorPoint);
          }
 
-         calculateMVCValues(interiorPoint);
       }
    }
-
-   Eigen::Vector2f a(0,1);
-   Eigen::Vector2f b(1,0);
-
-   float angle = std::acos(b.dot(a));
-   qDebug() << "The angle is: " << angle ;
-
-   qDebug() << "Normed combination: " << (a+b).norm();
 
 
    cv::namedWindow( "Display window", cv::WINDOW_AUTOSIZE );
@@ -94,11 +85,32 @@ void MeanValueSeamlessCloning::calculateMVCValues(const cv::Point &interiorPoint
    for(int boundaryVerPos = 0; boundaryVerPos < m_contour.size(); boundaryVerPos++)
    {
       int boundaryVerPos_before = boundaryVerPos == 0 ? m_contour.size()-1 : boundaryVerPos - 1;
+      int boundaryVerPos_after = boundaryVerPos == m_contour.size()-1 ? 0 : boundaryVerPos + 1;
 
       Eigen::Vector2f boundaryVertex_i(m_contour[boundaryVerPos].x, m_contour[boundaryVerPos].y);
       Eigen::Vector2f boundaryVertex_i_minus_1(m_contour[boundaryVerPos_before].x, m_contour[boundaryVerPos_before].y);
+      Eigen::Vector2f boundaryVertex_i_plus_1(m_contour[boundaryVerPos_after].x, m_contour[boundaryVerPos_after].y);
 
-      float w_i = (std::atan(std::acos(boundaryVertex_i_minus_1.dot(point))/2.0f) + std::atan(std::acos(boundaryVertex_i.dot(point))/2.0f)) / (point - boundaryVertex_i).norm();
+      qDebug() << "boundaryVertex_i" << boundaryVertex_i(0) << " " << boundaryVertex_i(1);
+      qDebug() << "boundaryVertex_i_minus_1" << boundaryVertex_i_minus_1(0) << " " << boundaryVertex_i_minus_1(1);
+      qDebug() << "point" << point(0) << " " << point(1);
+
+      Eigen::Vector2f vec_i_plus_1 = (point - boundaryVertex_i_plus_1).normalized();
+      Eigen::Vector2f vec_i = (point - boundaryVertex_i).normalized();
+      Eigen::Vector2f vec_i_minus_1 = (point - boundaryVertex_i_minus_1).normalized();
+
+      float a1 = std::acos(vec_i_plus_1.dot(vec_i));
+      float a2 = std::acos(vec_i_minus_1.dot(vec_i));
+
+      float angle = (std::tan(a1/2.0f) + std::tan(a2/2.0f));
+      float normedDist = (point - boundaryVertex_i).norm();
+
+      float w_i = angle / normedDist;
+
+      qDebug() << "The angle1 is: " << a1;
+      qDebug() << "The angle2 is: " << a2;
+      qDebug() << "The total angle is: " << angle;
+      qDebug() << "The normedDist is: " << normedDist;
       qDebug() << "The weight is: " << w_i;
    }
 }

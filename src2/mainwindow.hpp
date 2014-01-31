@@ -3,6 +3,7 @@
 
 #include <QMainWindow>
 #include <QScopedPointer>
+#include <QAbstractButton>
 #include <QString>
 
 #include "meanvalue_seamless_cloning.hpp"
@@ -28,6 +29,9 @@ private slots:
 
     void on_runMVCComputation();
 
+    void on_buttonBox_clicked(QAbstractButton *button);
+
+    void on_reset();
 
 private:
 

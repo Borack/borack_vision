@@ -15,12 +15,12 @@ public:
 
    MVC::Boundary getBoundary() const;
 
+   virtual void reset();
 protected:
    virtual void mousePressEvent(QGraphicsSceneMouseEvent * mouseEvent);
 
 
 private:
-   virtual void reset();
 
    void drawPolygon();
 

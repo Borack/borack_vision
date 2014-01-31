@@ -44,6 +44,11 @@ void SourceScene::mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent)
 void SourceScene::reset()
 {
    m_boundary.clear();
+   if(m_polygon)
+   {
+      removeItem(m_polygon);
+
+   }
 }
 
 void SourceScene::drawPolygon()

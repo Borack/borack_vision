@@ -14,24 +14,32 @@ QPointF TargetScene::clickLocation() const
    return m_targetLocation;
 }
 
-void TargetScene::drawContour(MVC::Boundary boundary)
+void TargetScene::reset()
 {
+   if(m_pixmap)
+   {
+      removeItem(m_pixmap);
+      m_pixmap = 0;
+   }
+
    if(m_polygon)
    {
       removeItem(m_polygon);
+      m_polygon = 0;
    }
+}
 
+void TargetScene::drawContour(MVC::Boundary boundary)
+{
+
+   reset();
    QPolygonF polygon(boundary);
    m_polygon = addPolygon(polygon,QPen(Qt::blue, 2, Qt::DashDotLine, Qt::RoundCap));
 }
 
 void TargetScene::drawFinalPatch(QImage img)
 {
-   if(m_pixmap)
-   {
-      removeItem(m_pixmap);
-   }
-
+   reset();
    QPixmap pixmap = QPixmap::fromImage(img);
    m_pixmap = addPixmap(pixmap);
 }

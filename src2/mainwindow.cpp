@@ -1,19 +1,24 @@
 #include "mainwindow.hpp"
 #include "ui_mainwindow.h"
 
+#include <QAbstractButton>
+#include <QAction>
+#include <QApplication>
+#include <QDebug>
 #include <QFileDialog>
+#include <QFileInfo>
 #include <QGLWidget>
 #include <QGraphicsScene>
 #include <QGraphicsView>
 #include <QImage>
 #include <QLabel>
+#include <QPushButton>
 #include <QSettings>
 #include <QString>
-#include <QVariant>
+#include <QToolButton>
 #include <QVBoxLayout>
+#include <QVariant>
 #include <QWidget>
-#include <QFileInfo>
-#include <QDebug>
 
 
 
@@ -69,6 +74,12 @@ void MainWindow::setup()
    loadSourceImg(settings.value(SETTINGS_LAST_SOURCE_PATH).toString());
    loadTargetImg(settings.value(SETTINGS_LAST_TARGET_PATH).toString());
 
+   QAction* resetAction = new QAction("Reset",this);
+   resetAction->setShortcut(Qt::CTRL+Qt::Key_R);
+
+   connect(resetAction, SIGNAL(triggered(bool)), this, SLOT(on_reset()));
+
+   ui->pushButton->addAction(resetAction);
 }
 
 void MainWindow::loadSourceImg(const QString &path)
@@ -82,8 +93,8 @@ void MainWindow::loadSourceImg(const QString &path)
       m_sScene = new SourceScene(this);
       m_sScene->setPixmap(sourceImage);
 
-      ui->graphicsView->scale(0.5,0.5);
-      ui->graphicsView->setScene(m_sScene);
+      ui->graphicsView_3->scale(0.5,0.5);
+      ui->graphicsView_3->setScene(m_sScene);
 
       QSettings settings;
       settings.setValue(SETTINGS_LAST_SOURCE_PATH, path);
@@ -101,10 +112,25 @@ void MainWindow::loadTargetImg(const QString &path)
       connect(m_tScene,SIGNAL(runMVCComputation()), this, SLOT(on_runMVCComputation()));
       m_tScene->setPixmap(targetImage);
 
-      ui->graphicsView_2->scale(0.5,0.5);
-      ui->graphicsView_2->setScene(m_tScene);
+      ui->graphicsView_4->scale(0.5,0.5);
+      ui->graphicsView_4->setScene(m_tScene);
 
       QSettings settings;
       settings.setValue(SETTINGS_LAST_TARGET_PATH, path);
    }
+}
+
+void MainWindow::on_buttonBox_clicked(QAbstractButton *button)
+{
+   if(ui->buttonBox->button(QDialogButtonBox::Close) == button)
+   {
+      QApplication::quit();
+   }
+}
+
+void MainWindow::on_reset()
+{
+   qDebug() << "Reset triggered";
+   m_sScene->reset();
+   m_tScene->reset();
 }

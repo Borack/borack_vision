@@ -91,8 +91,8 @@ void MeanValueSeamlessCloning::startComputation()
 #endif //MVC_DEBUG
 
 
-   cv::namedWindow( "Source BB", cv::WINDOW_AUTOSIZE );
-   cv::imshow("Source BB", m_sourcePatch);
+//   cv::namedWindow( "Source BB", cv::WINDOW_AUTOSIZE );
+//   cv::imshow("Source BB", m_sourcePatch);
 
 
 
@@ -140,10 +140,10 @@ void MeanValueSeamlessCloning::startComputation()
    cv::Mat targetPatch = onlyMaskCopied(targetBB);
 
 
-   cv::namedWindow( "Target BB", cv::WINDOW_AUTOSIZE );
-   cv::imshow("Target BB", targetPatch);
-   cv::waitKey(0);
-   cv::destroyAllWindows();
+//   cv::namedWindow( "Target BB", cv::WINDOW_AUTOSIZE );
+//   cv::imshow("Target BB", targetPatch);
+//   cv::waitKey(0);
+//   cv::destroyAllWindows();
 
 
    //! Compute the differences along the boundary.
@@ -184,13 +184,15 @@ void MeanValueSeamlessCloning::startComputation()
             r[channel] += m_patchMVCCoords[i].second[v] * m_colorDifferences[v][channel];
          }
       }
-      assert(std::abs(totalWeight - 1.0f) < 1e-6);
+      assert(std::abs(totalWeight - 1.0f) < 1e-4);
 
       Eigen::Vector4f sourceIntensity = Converter::CvVec4sbToEigenVec4f(m_sourcePatch.at<cv::Vec4b>(pointInPatchSpace));
 
       Eigen::Vector4f finalColor = sourceIntensity + r;
 
-      qDebug() << "FinalColor: " << finalColor[0] << ", " << finalColor[1] << ", " << finalColor[2] << ", " << finalColor[3];
+//      qDebug() << "FinalColor: " << finalColor[0] << ", " << finalColor[1] << ", " << finalColor[2] << ", " << finalColor[3];
+
+      // clamp to [0,255]
       targetPatch.at<cv::Vec4b>(pointInPatchSpace)[0] = std::min<int>(255, std::max<int>(0,finalColor[0]));
       targetPatch.at<cv::Vec4b>(pointInPatchSpace)[1] = std::min<int>(255, std::max<int>(0,finalColor[1]));
       targetPatch.at<cv::Vec4b>(pointInPatchSpace)[2] = std::min<int>(255, std::max<int>(0,finalColor[2]));
@@ -198,10 +200,10 @@ void MeanValueSeamlessCloning::startComputation()
 
    }
 
-   cv::namedWindow( "Final Patch", cv::WINDOW_AUTOSIZE );
-   cv::imshow("Final Patch",onlyMaskCopied );
-   cv::waitKey(0);
-   cv::destroyAllWindows();
+//   cv::namedWindow( "Final Patch", cv::WINDOW_AUTOSIZE );
+//   cv::imshow("Final Patch",onlyMaskCopied );
+//   cv::waitKey(0);
+//   cv::destroyAllWindows();
 
 
 

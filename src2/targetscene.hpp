@@ -17,6 +17,7 @@ public:
    virtual ~TargetScene() {}
 
    QPointF clickLocation() const;
+   virtual void reset();
 
 signals:
    void runMVCComputation();

@@ -6,6 +6,8 @@
 
 #include <QPointF>
 #include <QGraphicsPolygonItem>
+#include <QImage>
+#include <QPixmap>
 
 class TargetScene : public CustomScene
 {
@@ -21,12 +23,14 @@ signals:
 
 public slots:
    void drawContour(MVC::Boundary boundary);
+   void drawFinalPatch(QImage img);
 
 protected:
    virtual void mousePressEvent(QGraphicsSceneMouseEvent * mouseEvent);
 
 private:
    QGraphicsPolygonItem* m_polygon;
+   QGraphicsPixmapItem* m_pixmap;
    QPointF m_targetLocation;
 
 };

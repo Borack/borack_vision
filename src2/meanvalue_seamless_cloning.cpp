@@ -169,7 +169,7 @@ void MeanValueSeamlessCloning::startComputation()
    assert(m_colorDifferences.size() == m_contourPatchSpace.size());
 
    //! calculate mv coordinates for each interior coordinate.
-   cv::Mat finalPatch = targetPatch.clone();
+//   cv::Mat finalPatch = targetPatch.clone();
    for(int i = 0; i< m_patchMVCCoords.size(); i++)
    {
       const cv::Point& pointInPatchSpace = m_patchMVCCoords[i].first;
@@ -191,17 +191,22 @@ void MeanValueSeamlessCloning::startComputation()
       Eigen::Vector4f finalColor = sourceIntensity + r;
 
       qDebug() << "FinalColor: " << finalColor[0] << ", " << finalColor[1] << ", " << finalColor[2] << ", " << finalColor[3];
-      finalPatch.at<cv::Vec4b>(pointInPatchSpace)[0] = std::min<int>(255, std::max<int>(0,finalColor[0]));
-      finalPatch.at<cv::Vec4b>(pointInPatchSpace)[1] = std::min<int>(255, std::max<int>(0,finalColor[1]));
-      finalPatch.at<cv::Vec4b>(pointInPatchSpace)[2] = std::min<int>(255, std::max<int>(0,finalColor[2]));
-      finalPatch.at<cv::Vec4b>(pointInPatchSpace)[3] = std::min<int>(255, std::max<int>(0,finalColor[3]));
+      targetPatch.at<cv::Vec4b>(pointInPatchSpace)[0] = std::min<int>(255, std::max<int>(0,finalColor[0]));
+      targetPatch.at<cv::Vec4b>(pointInPatchSpace)[1] = std::min<int>(255, std::max<int>(0,finalColor[1]));
+      targetPatch.at<cv::Vec4b>(pointInPatchSpace)[2] = std::min<int>(255, std::max<int>(0,finalColor[2]));
+      targetPatch.at<cv::Vec4b>(pointInPatchSpace)[3] = std::min<int>(255, std::max<int>(0,finalColor[3]));
 
    }
 
    cv::namedWindow( "Final Patch", cv::WINDOW_AUTOSIZE );
-   cv::imshow("Final Patch", finalPatch);
+   cv::imshow("Final Patch",onlyMaskCopied );
    cv::waitKey(0);
    cv::destroyAllWindows();
+
+
+
+   QImage qFinalPatch = Converter::CvMatToQImage(onlyMaskCopied);
+   emit displayFinalPatch(qFinalPatch);
 
 }
 

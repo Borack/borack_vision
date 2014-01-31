@@ -20,6 +20,7 @@ public:
 
 signals:
    void targetContourCalculated(MVC::Boundary contour);
+   void displayFinalPatch(QImage finalPatch);
 
 public slots:
 

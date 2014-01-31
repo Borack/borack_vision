@@ -55,7 +55,8 @@ void MainWindow::on_actionOpen_target_triggered()
 void MainWindow::on_runMVCComputation()
 {
    m_mvcCloning.reset(new MeanValueSeamlessCloning(m_sScene->getPixmap(), m_sScene->getBoundary(), m_tScene->getPixmap(), m_tScene->clickLocation()));
-   connect(m_mvcCloning.data(),SIGNAL(targetContourCalculated(MVC::Boundary)), m_tScene ,SLOT(drawContour(MVC::Boundary)) );
+   connect(m_mvcCloning.data(),SIGNAL(targetContourCalculated(MVC::Boundary)), m_tScene ,SLOT(drawContour(MVC::Boundary)));
+   connect(m_mvcCloning.data(), SIGNAL(displayFinalPatch(QImage)), m_tScene, SLOT(drawFinalPatch(QImage)));
    // could be called within a new thread
    m_mvcCloning->startComputation();
    qDebug() << "Start running mvc";

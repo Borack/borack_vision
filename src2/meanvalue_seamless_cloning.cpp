@@ -145,11 +145,6 @@ void MeanValueSeamlessCloning::startComputation()
    cv::waitKey(0);
    cv::destroyAllWindows();
 
-   cv::namedWindow( "Target full", cv::WINDOW_AUTOSIZE );
-   cv::imshow("Target full", m_cvTargetFull);
-   cv::waitKey(0);
-   cv::destroyAllWindows();
-
 
    //! Compute the differences along the boundary.
    assert(m_contourTargetSpace.size() == m_contourSourceSpace.size());
@@ -157,10 +152,6 @@ void MeanValueSeamlessCloning::startComputation()
    m_colorDifferences.reserve(m_contourTargetSpace.size());
    for(int i = 0; i < m_contourSourceSpace.size(); i++ )
    {
-      const cv::Point sourceSpace = m_contourSourceSpace[i];
-      const cv::Point targetSpace = m_contourTargetSpace[i];
-      const cv::Point patchSpace = m_contourPatchSpace[i];
-
 
       Eigen::Vector4i sourceIntensity = Converter::CvVec4bToEigenVec4i(m_cvSourceFull.at<cv::Vec4b>(m_contourSourceSpace[i]));
       Eigen::Vector4i targetIntensity = Converter::CvVec4bToEigenVec4i(m_cvTargetFull.at<cv::Vec4b>(m_contourTargetSpace[i]));
@@ -183,23 +174,27 @@ void MeanValueSeamlessCloning::startComputation()
    {
       const cv::Point& pointInPatchSpace = m_patchMVCCoords[i].first;
 
-      Eigen::Vector4f r;
+      Eigen::Vector4f r = Eigen::Vector4f::Zero();
+      double totalWeight = 0;
       for(int v=0; v<m_contourPatchSpace.size();v++)
       {
-         for(int channel = 0; channel <3; channel++)
+         totalWeight += m_patchMVCCoords[i].second[v];
+         for(int channel = 0; channel <4; channel++)
          {
             r[channel] += m_patchMVCCoords[i].second[v] * m_colorDifferences[v][channel];
          }
       }
+      assert(std::abs(totalWeight - 1.0f) < 1e-6);
 
       Eigen::Vector4f sourceIntensity = Converter::CvVec4sbToEigenVec4f(m_sourcePatch.at<cv::Vec4b>(pointInPatchSpace));
 
       Eigen::Vector4f finalColor = sourceIntensity + r;
 
-      finalPatch.at<cv::Vec4b>(pointInPatchSpace)[0] = finalColor[0];
-      finalPatch.at<cv::Vec4b>(pointInPatchSpace)[1] = finalColor[1];
-      finalPatch.at<cv::Vec4b>(pointInPatchSpace)[2] = finalColor[2];
-      finalPatch.at<cv::Vec4b>(pointInPatchSpace)[3] = finalColor[3];
+      qDebug() << "FinalColor: " << finalColor[0] << ", " << finalColor[1] << ", " << finalColor[2] << ", " << finalColor[3];
+      finalPatch.at<cv::Vec4b>(pointInPatchSpace)[0] = std::min<int>(255, std::max<int>(0,finalColor[0]));
+      finalPatch.at<cv::Vec4b>(pointInPatchSpace)[1] = std::min<int>(255, std::max<int>(0,finalColor[1]));
+      finalPatch.at<cv::Vec4b>(pointInPatchSpace)[2] = std::min<int>(255, std::max<int>(0,finalColor[2]));
+      finalPatch.at<cv::Vec4b>(pointInPatchSpace)[3] = std::min<int>(255, std::max<int>(0,finalColor[3]));
 
    }
 

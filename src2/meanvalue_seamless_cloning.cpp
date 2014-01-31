@@ -175,17 +175,13 @@ void MeanValueSeamlessCloning::startComputation()
       const cv::Point& pointInPatchSpace = m_patchMVCCoords[i].first;
 
       Eigen::Vector4f r = Eigen::Vector4f::Zero();
-      double totalWeight = 0;
       for(int v=0; v<m_contourPatchSpace.size();v++)
       {
-         totalWeight += m_patchMVCCoords[i].second[v];
          for(int channel = 0; channel <4; channel++)
          {
             r[channel] += m_patchMVCCoords[i].second[v] * m_colorDifferences[v][channel];
          }
       }
-      assert(std::abs(totalWeight - 1.0f) < 1e-4);
-
       Eigen::Vector4f sourceIntensity = Converter::CvVec4sbToEigenVec4f(m_sourcePatch.at<cv::Vec4b>(pointInPatchSpace));
 
       Eigen::Vector4f finalColor = sourceIntensity + r;
@@ -257,12 +253,17 @@ MeanValueSeamlessCloning::MVCoord MeanValueSeamlessCloning::calculateMVCValues(c
 //      qDebug() << "The weight is: " << w_i;
    }
 
+
+
    MVCoord mvc;
    mvc.reserve(m_contourPatchSpace.size());
+   double weightsTotal = 0;
    for(int boundaryVerPos = 0; boundaryVerPos < m_contourPatchSpace.size(); boundaryVerPos++)
    {
+      weightsTotal += weights[boundaryVerPos] / w_total;
       mvc.push_back(weights[boundaryVerPos] / w_total);
    }
+   assert(std::abs(weightsTotal - 1.0) < 1e-4);
    assert(mvc.size() == m_contourPatchSpace.size());
    return mvc;
 }

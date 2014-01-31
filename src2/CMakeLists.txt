@@ -74,12 +74,18 @@ find_package(OpenCV REQUIRED)
 find_package(Eigen3 REQUIRED)
 include_directories( "${EIGEN3_INCLUDE_DIR}" )
 
+#--------------------------------------------------------------------------------
+# CGAL
+#--------------------------------------------------------------------------------
+find_package(CGAL REQUIRED)
+include( ${CGAL_USE_FILE} )
+
 
 
 #--------------------------------------------------------------------------------
 # Executable
 #--------------------------------------------------------------------------------
 add_executable(${PROJECT_NAME} ${SOURCES} ${HEADERS} ${QRC_OUT} ${UI_HEADERS})
-target_link_libraries(${PROJECT_NAME} ${OpenCV_LIBS})
+target_link_libraries(${PROJECT_NAME} ${OpenCV_LIBS} ${CGAL_LIBRARIES})
 
 qt5_use_modules(${PROJECT_NAME} Widgets OpenGL Core)

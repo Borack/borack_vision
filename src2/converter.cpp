@@ -52,3 +52,13 @@ Eigen::Vector3i Converter::CvVec3bToEigenVec3i(const cv::Vec3b &vec)
    out[2] = vec[2];
    return out;
 }
+
+Eigen::Vector3f Converter::CvVec3bToEigenVec3f(const cv::Vec3b &vec)
+{
+   Eigen::Vector3f out;
+   out[0] = vec[0];
+   out[1] = vec[1];
+   out[2] = vec[2];
+   return out;
+
+}

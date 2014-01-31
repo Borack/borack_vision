@@ -146,11 +146,11 @@ void MeanValueSeamlessCloning::startComputation()
    m_colorDifferences.reserve(m_contourTargetSpace.size());
    for(int i = 0; i < m_contourSourceSpace.size(); i++ )
    {
-      Eigen::Vector3i targetIntensity = Converter::CvVec3bToEigenVec3i(m_cvTargetFull.at<cv::Vec3b>(m_contourTargetSpace[i]));
       Eigen::Vector3i sourceIntensity = Converter::CvVec3bToEigenVec3i( m_cvSourceFull.at<cv::Vec3b>(m_contourSourceSpace[i]));
+      Eigen::Vector3i targetIntensity = Converter::CvVec3bToEigenVec3i(m_cvTargetFull.at<cv::Vec3b>(m_contourTargetSpace[i]));
 
-      Eigen::Vector3i targetPatchIntensity = Converter::CvVec3bToEigenVec3i(targetPatch.at<cv::Vec3b>(m_contourPatchSpace[i]));
       Eigen::Vector3i sourcePatchIntensity = Converter::CvVec3bToEigenVec3i(m_sourcePatch.at<cv::Vec3b>(m_contourPatchSpace[i]));
+      Eigen::Vector3i targetPatchIntensity = Converter::CvVec3bToEigenVec3i(targetPatch.at<cv::Vec3b>(m_contourPatchSpace[i]));
 
 
       Eigen::Vector3i diff = targetIntensity - sourceIntensity;
@@ -159,8 +159,54 @@ void MeanValueSeamlessCloning::startComputation()
 
       m_colorDifferences.push_back(diff);
    }
+   assert(m_colorDifferences.size() == m_contourPatchSpace.size());
+
+   //! calculate mv coordinates for each interior coordinate.
+   cv::Mat finalPatch = targetPatch.clone();
+   for(int i = 0; i< m_patchMVCCoords.size(); i++)
+   {
+      const cv::Point& pointInPatchSpace = m_patchMVCCoords[i].first;
+
+      Eigen::Vector3f r;
+      for(int v=0; v<m_contourPatchSpace.size();v++)
+      {
+         for(int channel = 0; channel <3; channel++)
+         {
+            r[channel] += m_patchMVCCoords[i].second[v] * m_colorDifferences[v][channel];
+         }
+      }
+
+      Eigen::Vector3f sourceIntensity = Converter::CvVec3bToEigenVec3f(m_sourcePatch.at<cv::Vec3b>(pointInPatchSpace));
+
+      Eigen::Vector3f finalColor = sourceIntensity + r;
+
+      finalPatch.at<cv::Vec3b>(pointInPatchSpace)[0] = finalColor[0];
+      finalPatch.at<cv::Vec3b>(pointInPatchSpace)[1] = finalColor[1];
+      finalPatch.at<cv::Vec3b>(pointInPatchSpace)[2] = finalColor[2];
+
+   }
+
+   cv::namedWindow( "Final Patch", cv::WINDOW_AUTOSIZE );
+   cv::imshow("Final Patch", finalPatch);
+   cv::waitKey(0);
+   cv::destroyAllWindows();
 
 
+//   for(int c = 0; c< targetPatch.cols; c++)
+//   {
+//      for(int r = 0; r< targetPatch.rows; r++)
+//      {
+//         cv::Point interiorPoint(c,r);
+//         if(cv::pointPolygonTest(m_contourTargetSpace,interiorPoint,false) > 0) //! returns positive when inside, negative when outside and zero if on edge.
+//         {
+//            double r = 0;
+//            for(int i = 0; i < m_contourTargetSpace.size(); i++)
+//            {
+//               r += m_patchMVCCoords.
+//            }
+//         }
+//      }
+//   }
 }
 
 MeanValueSeamlessCloning::MVCoord MeanValueSeamlessCloning::calculateMVCValues(const cv::Point &interiorPoint)

@@ -23,6 +23,7 @@ public:
 
 
     static Eigen::Vector3i CvVec3bToEigenVec3i(const cv::Vec3b &vec);
+    static Eigen::Vector3f CvVec3bToEigenVec3f(const cv::Vec3b &vec);
 
 };
 

@@ -43,3 +43,12 @@ QImage Converter::CvMatToQImage(const cv::Mat &cvMat)
         return QImage();
     }
 }
+
+Eigen::Vector3i Converter::CvVec3bToEigenVec3i(const cv::Vec3b &vec)
+{
+   Eigen::Vector3i out;
+   out[0] = vec[0];
+   out[1] = vec[1];
+   out[2] = vec[2];
+   return out;
+}

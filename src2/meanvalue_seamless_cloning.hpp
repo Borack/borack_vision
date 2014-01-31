@@ -5,6 +5,8 @@
 #include <QPixmap>
 #include <QPointF>
 
+#include <eigen3/Eigen/Core>
+
 #include <opencv2/core/core.hpp>
 
 #include "mvc_types.hpp"
@@ -42,12 +44,14 @@ private:
    cv::Mat m_inputSub;
    cv::Mat m_cvTargetFull;
 
-   std::vector<cv::Point> m_contour;           //! This is the original contour in the source image
-   std::vector<cv::Point> m_translatedContour; //! This is the translated contour in the convex hull space.
-   std::vector<cv::Point> m_targetContour;     //! This is the contour in the target image. Based on the clicked location.
-   cv::Mat m_patch;
+   std::vector<cv::Point> m_contourSourceSpace;           //! This is the original contour in the source image
+   std::vector<cv::Point> m_contourPatchSpace; //! This is the translated contour in the convex hull space.
+   std::vector<cv::Point> m_contourTargetSpace;     //! This is the contour in the target image. Based on the clicked location.
+   cv::Mat m_sourcePatch;
 
    AllMVCoords m_patchMVCCoords;
+
+   std::vector<Eigen::Vector3i> m_colorDifferences;
 };
 
 #endif // MEANVALUE_SEAMLESS_CLONING_HPP

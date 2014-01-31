@@ -4,6 +4,8 @@
 #include <QImage>
 #include <opencv2/core/core.hpp>
 
+#include <Eigen/Core>
+
 class Converter
 {
 public:
@@ -18,6 +20,10 @@ public:
      *
      */
     static QImage CvMatToQImage(const cv::Mat& cvMat);
+
+
+    static Eigen::Vector3i CvVec3bToEigenVec3i(const cv::Vec3b &vec);
+
 };
 
 #endif // CONVERTER_HPP

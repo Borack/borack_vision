@@ -33,9 +33,9 @@ void MeanValueSeamlessCloning::startComputation()
 
    foreach (QPointF point, m_sourceBoundary)
    {
-      m_contour.push_back(cv::Point(point.x(), point.y()));
+      m_contourSourceSpace.push_back(cv::Point(point.x(), point.y()));
    }
-   contours.push_back(m_contour);
+   contours.push_back(m_contourSourceSpace);
 
 
    //! Create mask for patch
@@ -48,34 +48,33 @@ void MeanValueSeamlessCloning::startComputation()
 
    //! Get convex hull of the contour
    //! Create the patch;
-   cv::Rect boundingBox = cv::boundingRect(m_contour);
-   m_patch = roiInFullContext(boundingBox);
+   cv::Rect boundingBox = cv::boundingRect(m_contourSourceSpace);
+   m_sourcePatch = roiInFullContext(boundingBox);
 
 
-   assert(m_patch.cols > 0 && m_patch.rows > 0);
-   assert(m_contour.size() > 0);
+   assert(m_sourcePatch.cols > 0 && m_sourcePatch.rows > 0);
+   assert(m_contourSourceSpace.size() > 0);
 
 
-   m_translatedContour.reserve(m_contour.size());
-   for(int boundaryVerPos = 0; boundaryVerPos < m_contour.size(); boundaryVerPos++)
+   m_contourPatchSpace.reserve(m_contourSourceSpace.size());
+   for(int boundaryVerPos = 0; boundaryVerPos < m_contourSourceSpace.size(); boundaryVerPos++)
    {
-      cv::Point p(m_contour[boundaryVerPos].x-boundingBox.x, m_contour[boundaryVerPos].y-boundingBox.y);
+      cv::Point p(m_contourSourceSpace[boundaryVerPos].x-boundingBox.x, m_contourSourceSpace[boundaryVerPos].y-boundingBox.y);
       assert(p.x >= 0);
       assert(p.y >= 0);
       assert(p.x < boundingBox.width);
       assert(p.y < boundingBox.height);
-      m_translatedContour.push_back(p);
+      m_contourPatchSpace.push_back(p);
    }
-   assert(m_contour.size() == m_translatedContour.size());
+   assert(m_contourSourceSpace.size() == m_contourPatchSpace.size());
 
    //! calculate mv coordinates for each interior coordinate.
-   m_patchMVCCoords.reserve(m_sourceBoundary.size());
-   for(int c = 0; c< m_patch.cols; c++)
+   for(int c = 0; c< m_sourcePatch.cols; c++)
    {
-      for(int r = 0; r< m_patch.rows; r++)
+      for(int r = 0; r< m_sourcePatch.rows; r++)
       {
-         cv::Point interiorPoint(c+boundingBox.x,r+boundingBox.y);
-         if(cv::pointPolygonTest(m_contour,interiorPoint,false) > 0) //! returns positive when inside, negative when outside and zero if on edge.
+         cv::Point interiorPoint(c,r);
+         if(cv::pointPolygonTest(m_contourPatchSpace,interiorPoint,false) > 0) //! returns positive when inside, negative when outside and zero if on edge.
          {
             MVCoord mvcoord = calculateMVCValues(interiorPoint);
             m_patchMVCCoords.push_back(std::make_pair(interiorPoint, mvcoord));
@@ -86,7 +85,7 @@ void MeanValueSeamlessCloning::startComputation()
 
 
    cv::namedWindow( "Source BB", cv::WINDOW_AUTOSIZE );
-   cv::imshow("Source BB", m_patch);
+   cv::imshow("Source BB", m_sourcePatch);
 //   cv::waitKey(0);
 //   cv::destroyWindow("Source BB");
 
@@ -100,12 +99,11 @@ void MeanValueSeamlessCloning::startComputation()
    QImage imgT = m_inputTarget.toImage();
    m_cvTargetFull = Converter::QImageToCvMat(imgT);
 
-   assert(m_contour.size() == m_translatedContour.size());
-   m_targetContour.reserve(m_translatedContour.size());
-   for(int boundaryVerPos = 0; boundaryVerPos < m_translatedContour.size(); boundaryVerPos++)
+   assert(m_contourSourceSpace.size() == m_contourPatchSpace.size());
+   m_contourTargetSpace.reserve(m_contourPatchSpace.size());
+   for(int boundaryVerPos = 0; boundaryVerPos < m_contourPatchSpace.size(); boundaryVerPos++)
    {
-      cv::Point p(m_translatedContour[boundaryVerPos].x+m_targetClickLocation.x(), m_translatedContour[boundaryVerPos].y+m_targetClickLocation.y());
-
+      cv::Point p(m_contourPatchSpace[boundaryVerPos].x+m_targetClickLocation.x(), m_contourPatchSpace[boundaryVerPos].y+m_targetClickLocation.y());
 
       if(p.x < 0)
          p.x = 0;
@@ -117,21 +115,21 @@ void MeanValueSeamlessCloning::startComputation()
       else if(p.y >= m_cvTargetFull.rows)
          p.y = m_cvTargetFull.rows-1;
 
-      m_targetContour.push_back(p);
+      m_contourTargetSpace.push_back(p);
    }
-   assert(m_translatedContour.size() == m_targetContour.size());
+   assert(m_contourPatchSpace.size() == m_contourTargetSpace.size());
 
-   emit targetContourCalculated(getBoundary(m_targetContour));
+   emit targetContourCalculated(getBoundary(m_contourTargetSpace));
 
    cv::Mat targetMask = cv::Mat::zeros(m_cvTargetFull.size(),CV_8UC1);
    std::vector<std::vector<cv::Point> > tmp;
-   tmp.push_back(m_targetContour);
+   tmp.push_back(m_contourTargetSpace);
 
    cv::drawContours(targetMask,tmp,-1 ,cv::Scalar(255), CV_FILLED);
    cv::Mat onlyMaskCopied;
    m_cvTargetFull.copyTo(onlyMaskCopied,targetMask);
 
-   cv::Rect targetBB = cv::boundingRect(m_targetContour);
+   cv::Rect targetBB = cv::boundingRect(m_contourTargetSpace);
 
    cv::Mat targetPatch = onlyMaskCopied(targetBB);
 
@@ -141,6 +139,28 @@ void MeanValueSeamlessCloning::startComputation()
    cv::waitKey(0);
    cv::destroyAllWindows();
 
+
+   //! Compute the differences along the boundary.
+   assert(m_contourTargetSpace.size() == m_contourSourceSpace.size());
+   assert(m_contourTargetSpace.size() == m_contourPatchSpace.size());
+   m_colorDifferences.reserve(m_contourTargetSpace.size());
+   for(int i = 0; i < m_contourSourceSpace.size(); i++ )
+   {
+      Eigen::Vector3i targetIntensity = Converter::CvVec3bToEigenVec3i(m_cvTargetFull.at<cv::Vec3b>(m_contourTargetSpace[i]));
+      Eigen::Vector3i sourceIntensity = Converter::CvVec3bToEigenVec3i( m_cvSourceFull.at<cv::Vec3b>(m_contourSourceSpace[i]));
+
+      Eigen::Vector3i targetPatchIntensity = Converter::CvVec3bToEigenVec3i(targetPatch.at<cv::Vec3b>(m_contourPatchSpace[i]));
+      Eigen::Vector3i sourcePatchIntensity = Converter::CvVec3bToEigenVec3i(m_sourcePatch.at<cv::Vec3b>(m_contourPatchSpace[i]));
+
+
+      Eigen::Vector3i diff = targetIntensity - sourceIntensity;
+      Eigen::Vector3i diff2 = targetPatchIntensity - sourcePatchIntensity;
+//      assert(diff == diff2); // FIXME: the two differences are not the same. We should fix this!
+
+      m_colorDifferences.push_back(diff);
+   }
+
+
 }
 
 MeanValueSeamlessCloning::MVCoord MeanValueSeamlessCloning::calculateMVCValues(const cv::Point &interiorPoint)
@@ -149,18 +169,18 @@ MeanValueSeamlessCloning::MVCoord MeanValueSeamlessCloning::calculateMVCValues(c
    const Eigen::Vector2f point(interiorPoint.x, interiorPoint.y);
 
    Weights weights;
-   weights.reserve(m_translatedContour.size());  //! contains the w_i
+   weights.reserve(m_contourPatchSpace.size());  //! contains the w_i
    assert(weights.size() == 0);
    double w_total = 0.0f;
 
-   for(int boundaryVerPos = 0; boundaryVerPos < m_translatedContour.size(); boundaryVerPos++)
+   for(int boundaryVerPos = 0; boundaryVerPos < m_contourPatchSpace.size(); boundaryVerPos++)
    {
-      int boundaryVerPos_before = boundaryVerPos == 0 ? m_translatedContour.size()-1 : boundaryVerPos - 1;
-      int boundaryVerPos_after = boundaryVerPos == m_translatedContour.size()-1 ? 0 : boundaryVerPos + 1;
+      int boundaryVerPos_before = boundaryVerPos == 0 ? m_contourPatchSpace.size()-1 : boundaryVerPos - 1;
+      int boundaryVerPos_after = boundaryVerPos == m_contourPatchSpace.size()-1 ? 0 : boundaryVerPos + 1;
 
-      Eigen::Vector2f boundaryVertex_i(m_translatedContour[boundaryVerPos].x, m_translatedContour[boundaryVerPos].y);
-      Eigen::Vector2f boundaryVertex_i_minus_1(m_translatedContour[boundaryVerPos_before].x, m_translatedContour[boundaryVerPos_before].y);
-      Eigen::Vector2f boundaryVertex_i_plus_1(m_translatedContour[boundaryVerPos_after].x, m_translatedContour[boundaryVerPos_after].y);
+      Eigen::Vector2f boundaryVertex_i(m_contourPatchSpace[boundaryVerPos].x, m_contourPatchSpace[boundaryVerPos].y);
+      Eigen::Vector2f boundaryVertex_i_minus_1(m_contourPatchSpace[boundaryVerPos_before].x, m_contourPatchSpace[boundaryVerPos_before].y);
+      Eigen::Vector2f boundaryVertex_i_plus_1(m_contourPatchSpace[boundaryVerPos_after].x, m_contourPatchSpace[boundaryVerPos_after].y);
 
 //      qDebug() << "boundaryVertex_i" << boundaryVertex_i(0) << " " << boundaryVertex_i(1);
 //      qDebug() << "boundaryVertex_i_minus_1" << boundaryVertex_i_minus_1(0) << " " << boundaryVertex_i_minus_1(1);
@@ -189,12 +209,12 @@ MeanValueSeamlessCloning::MVCoord MeanValueSeamlessCloning::calculateMVCValues(c
    }
 
    MVCoord mvc;
-   mvc.reserve(m_translatedContour.size());
-   for(int boundaryVerPos = 0; boundaryVerPos < m_translatedContour.size(); boundaryVerPos++)
+   mvc.reserve(m_contourPatchSpace.size());
+   for(int boundaryVerPos = 0; boundaryVerPos < m_contourPatchSpace.size(); boundaryVerPos++)
    {
       mvc.push_back(weights[boundaryVerPos] / w_total);
    }
-   assert(mvc.size() == m_translatedContour.size());
+   assert(mvc.size() == m_contourPatchSpace.size());
    return mvc;
 }
 

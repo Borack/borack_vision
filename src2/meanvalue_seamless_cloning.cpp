@@ -108,8 +108,8 @@ void MeanValueSeamlessCloning::startComputation()
    m_contourTargetSpace.reserve(m_contourPatchSpace.size());
    for(int boundaryVerPos = 0; boundaryVerPos < m_contourPatchSpace.size(); boundaryVerPos++)
    {
-      cv::Point p(m_contourPatchSpace[boundaryVerPos].x+m_targetClickLocation.x(),
-                  m_contourPatchSpace[boundaryVerPos].y+m_targetClickLocation.y());
+      cv::Point p(m_contourPatchSpace[boundaryVerPos].x+m_targetClickLocation.x() - static_cast<int>(m_sourcePatch.cols/2.0f),
+                  m_contourPatchSpace[boundaryVerPos].y+m_targetClickLocation.y() - static_cast<int>(m_sourcePatch.rows/2.0f));
 
       if(p.x < 0)
          p.x = 0;
@@ -162,7 +162,7 @@ void MeanValueSeamlessCloning::startComputation()
 
       Eigen::Vector4i diff = targetIntensity - sourceIntensity;
       Eigen::Vector4i diff2 = targetPatchIntensity - sourcePatchIntensity;
-      assert(diff == diff2); // FIXME: the two differences are not the same. We should fix this!
+      assert(diff == diff2); //
 
       m_colorDifferences.push_back(diff);
    }

@@ -93,7 +93,7 @@ void MainWindow::loadSourceImg(const QString &path)
       m_sScene = new SourceScene(this);
       m_sScene->setPixmap(sourceImage);
 
-      ui->graphicsView_3->scale(0.5,0.5);
+      ui->graphicsView_3->scale(0.75,0.75);
       ui->graphicsView_3->setScene(m_sScene);
 
       QSettings settings;
@@ -112,7 +112,7 @@ void MainWindow::loadTargetImg(const QString &path)
       connect(m_tScene,SIGNAL(runMVCComputation()), this, SLOT(on_runMVCComputation()));
       m_tScene->setPixmap(targetImage);
 
-      ui->graphicsView_4->scale(0.5,0.5);
+      ui->graphicsView_4->scale(0.75,0.75);
       ui->graphicsView_4->setScene(m_tScene);
 
       QSettings settings;

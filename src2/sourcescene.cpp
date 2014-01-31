@@ -60,5 +60,5 @@ void SourceScene::drawPolygon()
    }
 
    QPolygonF polygon(m_boundary);
-   m_polygon = addPolygon(polygon,QPen(Qt::green, 20, Qt::DashDotLine, Qt::RoundCap));
+   m_polygon = addPolygon(polygon,QPen(Qt::green, 5, Qt::DashDotLine, Qt::RoundCap));
 }

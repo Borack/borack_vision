@@ -24,9 +24,20 @@ void SourceScene::mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent)
    //   qDebug() << "Button down screen pos: " << mouseEvent->buttonDownScreenPos(Qt::AllButtons);
    //   qDebug() << "Pos: " << mouseEvent->pos();
 //      qDebug() << "Scene pos: " << mouseEvent->scenePos();
-      m_boundary << mouseEvent->scenePos();
    //   qDebug() << "Screen pos: " << mouseEvent->screenPos();
    //   qDebug() << "";
+
+
+#ifdef MVC_DEBUG
+      m_boundary.clear();
+      const float length = 100;
+      m_boundary << QPointF(0,0);
+      m_boundary << QPointF(0,length);
+      m_boundary << QPointF(length,length);
+      m_boundary << QPointF(length,0);
+#else
+   m_boundary << mouseEvent->scenePos();
+#endif
 
    drawPolygon();
 }

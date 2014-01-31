@@ -155,7 +155,7 @@ void MeanValueSeamlessCloning::startComputation()
 
       Eigen::Vector3i diff = targetIntensity - sourceIntensity;
       Eigen::Vector3i diff2 = targetPatchIntensity - sourcePatchIntensity;
-//      assert(diff == diff2); // FIXME: the two differences are not the same. We should fix this!
+      assert(diff == diff2); // FIXME: the two differences are not the same. We should fix this!
 
       m_colorDifferences.push_back(diff);
    }
@@ -191,22 +191,6 @@ void MeanValueSeamlessCloning::startComputation()
    cv::waitKey(0);
    cv::destroyAllWindows();
 
-
-//   for(int c = 0; c< targetPatch.cols; c++)
-//   {
-//      for(int r = 0; r< targetPatch.rows; r++)
-//      {
-//         cv::Point interiorPoint(c,r);
-//         if(cv::pointPolygonTest(m_contourTargetSpace,interiorPoint,false) > 0) //! returns positive when inside, negative when outside and zero if on edge.
-//         {
-//            double r = 0;
-//            for(int i = 0; i < m_contourTargetSpace.size(); i++)
-//            {
-//               r += m_patchMVCCoords.
-//            }
-//         }
-//      }
-//   }
 }
 
 MeanValueSeamlessCloning::MVCoord MeanValueSeamlessCloning::calculateMVCValues(const cv::Point &interiorPoint)

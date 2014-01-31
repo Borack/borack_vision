@@ -26,6 +26,12 @@ void TargetScene::drawContour(MVC::Boundary boundary)
 
 void TargetScene::mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent)
 {
+
+#ifdef MVC_DEBUG
+   m_targetLocation = QPointF(0,0);
+   qWarning() << "Running in debug mode. Using hardcoded values for selection and target location!";
+#else
    m_targetLocation = mouseEvent->scenePos();
+#endif // MVC_DEBUG
    emit runMVCComputation();
 }

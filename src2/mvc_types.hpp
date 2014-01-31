@@ -4,6 +4,8 @@
 #include <QVector>
 #include <QPointF>
 
+#define MVC_DEBUG
+
 namespace MVC{
 typedef QVector<QPointF> Boundary;
 }

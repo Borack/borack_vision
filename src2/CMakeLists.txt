@@ -26,9 +26,9 @@ set(HEADERS
             customview.hpp
             mainwindow.hpp
             meanvalue_seamless_cloning.hpp
-            mvc_types.hpp
             sourcescene.hpp
             targetscene.hpp
+            mvc_types.hpp
 )
 
 set(UI_FILES mainwindow.ui)
@@ -79,7 +79,7 @@ include_directories( "${EIGEN3_INCLUDE_DIR}" )
 #--------------------------------------------------------------------------------
 # Executable
 #--------------------------------------------------------------------------------
-add_executable(${PROJECT_NAME} ${SOURCES} ${QRC_OUT} ${UI_HEADERS})
+add_executable(${PROJECT_NAME} ${SOURCES} ${HEADERS} ${QRC_OUT} ${UI_HEADERS})
 target_link_libraries(${PROJECT_NAME} ${OpenCV_LIBS})
 
 qt5_use_modules(${PROJECT_NAME} Widgets OpenGL Core)

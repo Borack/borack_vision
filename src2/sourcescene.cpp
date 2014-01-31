@@ -30,11 +30,10 @@ void SourceScene::mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent)
 
 #ifdef MVC_DEBUG
       m_boundary.clear();
-      const float length = 100;
       m_boundary << QPointF(0,0);
-      m_boundary << QPointF(0,length);
-      m_boundary << QPointF(length,length);
-      m_boundary << QPointF(length,0);
+      m_boundary << QPointF(0,DEBUG_LENGTH-1);
+      m_boundary << QPointF(DEBUG_LENGTH-1,DEBUG_LENGTH-1);
+      m_boundary << QPointF(DEBUG_LENGTH-1,0);
 #else
    m_boundary << mouseEvent->scenePos();
 #endif

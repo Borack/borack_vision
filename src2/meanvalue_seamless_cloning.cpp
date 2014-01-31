@@ -59,7 +59,8 @@ void MeanValueSeamlessCloning::startComputation()
    m_contourPatchSpace.reserve(m_contourSourceSpace.size());
    for(int boundaryVerPos = 0; boundaryVerPos < m_contourSourceSpace.size(); boundaryVerPos++)
    {
-      cv::Point p(m_contourSourceSpace[boundaryVerPos].x-boundingBox.x, m_contourSourceSpace[boundaryVerPos].y-boundingBox.y);
+      cv::Point p(m_contourSourceSpace[boundaryVerPos].x-boundingBox.x,
+                  m_contourSourceSpace[boundaryVerPos].y-boundingBox.y);
       assert(p.x >= 0);
       assert(p.y >= 0);
       assert(p.x < boundingBox.width);
@@ -69,9 +70,9 @@ void MeanValueSeamlessCloning::startComputation()
    assert(m_contourSourceSpace.size() == m_contourPatchSpace.size());
 
    //! calculate mv coordinates for each interior coordinate.
-   for(int c = 0; c< m_sourcePatch.cols; c++)
+   for(int c = 0; c < m_sourcePatch.cols; c++)
    {
-      for(int r = 0; r< m_sourcePatch.rows; r++)
+      for(int r = 0; r < m_sourcePatch.rows; r++)
       {
          cv::Point interiorPoint(c,r);
          if(cv::pointPolygonTest(m_contourPatchSpace,interiorPoint,false) > 0) //! returns positive when inside, negative when outside and zero if on edge.
@@ -83,11 +84,15 @@ void MeanValueSeamlessCloning::startComputation()
       }
    }
 
+#ifdef MVC_DEBUG
+   int desiredSize = DEBUG_LENGTH*DEBUG_LENGTH - (4*DEBUG_LENGTH - 4);
+   int actualSize = m_patchMVCCoords.size();
+   assert(desiredSize == actualSize);
+#endif //MVC_DEBUG
+
 
    cv::namedWindow( "Source BB", cv::WINDOW_AUTOSIZE );
    cv::imshow("Source BB", m_sourcePatch);
-//   cv::waitKey(0);
-//   cv::destroyWindow("Source BB");
 
 
 
@@ -103,7 +108,8 @@ void MeanValueSeamlessCloning::startComputation()
    m_contourTargetSpace.reserve(m_contourPatchSpace.size());
    for(int boundaryVerPos = 0; boundaryVerPos < m_contourPatchSpace.size(); boundaryVerPos++)
    {
-      cv::Point p(m_contourPatchSpace[boundaryVerPos].x+m_targetClickLocation.x(), m_contourPatchSpace[boundaryVerPos].y+m_targetClickLocation.y());
+      cv::Point p(m_contourPatchSpace[boundaryVerPos].x+m_targetClickLocation.x(),
+                  m_contourPatchSpace[boundaryVerPos].y+m_targetClickLocation.y());
 
       if(p.x < 0)
          p.x = 0;
@@ -139,6 +145,11 @@ void MeanValueSeamlessCloning::startComputation()
    cv::waitKey(0);
    cv::destroyAllWindows();
 
+   cv::namedWindow( "Target full", cv::WINDOW_AUTOSIZE );
+   cv::imshow("Target full", m_cvTargetFull);
+   cv::waitKey(0);
+   cv::destroyAllWindows();
+
 
    //! Compute the differences along the boundary.
    assert(m_contourTargetSpace.size() == m_contourSourceSpace.size());
@@ -146,15 +157,20 @@ void MeanValueSeamlessCloning::startComputation()
    m_colorDifferences.reserve(m_contourTargetSpace.size());
    for(int i = 0; i < m_contourSourceSpace.size(); i++ )
    {
-      Eigen::Vector3i sourceIntensity = Converter::CvVec3bToEigenVec3i( m_cvSourceFull.at<cv::Vec3b>(m_contourSourceSpace[i]));
-      Eigen::Vector3i targetIntensity = Converter::CvVec3bToEigenVec3i(m_cvTargetFull.at<cv::Vec3b>(m_contourTargetSpace[i]));
-
-      Eigen::Vector3i sourcePatchIntensity = Converter::CvVec3bToEigenVec3i(m_sourcePatch.at<cv::Vec3b>(m_contourPatchSpace[i]));
-      Eigen::Vector3i targetPatchIntensity = Converter::CvVec3bToEigenVec3i(targetPatch.at<cv::Vec3b>(m_contourPatchSpace[i]));
+      const cv::Point sourceSpace = m_contourSourceSpace[i];
+      const cv::Point targetSpace = m_contourTargetSpace[i];
+      const cv::Point patchSpace = m_contourPatchSpace[i];
 
 
-      Eigen::Vector3i diff = targetIntensity - sourceIntensity;
-      Eigen::Vector3i diff2 = targetPatchIntensity - sourcePatchIntensity;
+      Eigen::Vector4i sourceIntensity = Converter::CvVec4bToEigenVec4i(m_cvSourceFull.at<cv::Vec4b>(m_contourSourceSpace[i]));
+      Eigen::Vector4i targetIntensity = Converter::CvVec4bToEigenVec4i(m_cvTargetFull.at<cv::Vec4b>(m_contourTargetSpace[i]));
+
+      Eigen::Vector4i sourcePatchIntensity = Converter::CvVec4bToEigenVec4i(m_sourcePatch.at<cv::Vec4b>(m_contourPatchSpace[i]));
+      Eigen::Vector4i targetPatchIntensity = Converter::CvVec4bToEigenVec4i(targetPatch.at<cv::Vec4b>(m_contourPatchSpace[i]));
+
+
+      Eigen::Vector4i diff = targetIntensity - sourceIntensity;
+      Eigen::Vector4i diff2 = targetPatchIntensity - sourcePatchIntensity;
       assert(diff == diff2); // FIXME: the two differences are not the same. We should fix this!
 
       m_colorDifferences.push_back(diff);
@@ -167,7 +183,7 @@ void MeanValueSeamlessCloning::startComputation()
    {
       const cv::Point& pointInPatchSpace = m_patchMVCCoords[i].first;
 
-      Eigen::Vector3f r;
+      Eigen::Vector4f r;
       for(int v=0; v<m_contourPatchSpace.size();v++)
       {
          for(int channel = 0; channel <3; channel++)
@@ -176,13 +192,14 @@ void MeanValueSeamlessCloning::startComputation()
          }
       }
 
-      Eigen::Vector3f sourceIntensity = Converter::CvVec3bToEigenVec3f(m_sourcePatch.at<cv::Vec3b>(pointInPatchSpace));
+      Eigen::Vector4f sourceIntensity = Converter::CvVec4sbToEigenVec4f(m_sourcePatch.at<cv::Vec4b>(pointInPatchSpace));
 
-      Eigen::Vector3f finalColor = sourceIntensity + r;
+      Eigen::Vector4f finalColor = sourceIntensity + r;
 
-      finalPatch.at<cv::Vec3b>(pointInPatchSpace)[0] = finalColor[0];
-      finalPatch.at<cv::Vec3b>(pointInPatchSpace)[1] = finalColor[1];
-      finalPatch.at<cv::Vec3b>(pointInPatchSpace)[2] = finalColor[2];
+      finalPatch.at<cv::Vec4b>(pointInPatchSpace)[0] = finalColor[0];
+      finalPatch.at<cv::Vec4b>(pointInPatchSpace)[1] = finalColor[1];
+      finalPatch.at<cv::Vec4b>(pointInPatchSpace)[2] = finalColor[2];
+      finalPatch.at<cv::Vec4b>(pointInPatchSpace)[3] = finalColor[3];
 
    }
 

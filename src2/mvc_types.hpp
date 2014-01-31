@@ -6,6 +6,8 @@
 
 #define MVC_DEBUG
 
+const int DEBUG_LENGTH=100;
+
 namespace MVC{
 typedef QVector<QPointF> Boundary;
 }

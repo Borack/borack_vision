@@ -28,7 +28,7 @@ void TargetScene::mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent)
 {
 
 #ifdef MVC_DEBUG
-   m_targetLocation = QPointF(0,0);
+   m_targetLocation = QPointF(10,10);
    qWarning() << "Running in debug mode. Using hardcoded values for selection and target location!";
 #else
    m_targetLocation = mouseEvent->scenePos();

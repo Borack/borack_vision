@@ -51,7 +51,7 @@ private:
 
    AllMVCoords m_patchMVCCoords;
 
-   std::vector<Eigen::Vector3i> m_colorDifferences;
+   std::vector<Eigen::Vector4i> m_colorDifferences;
 };
 
 #endif // MEANVALUE_SEAMLESS_CLONING_HPP

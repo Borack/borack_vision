@@ -22,8 +22,8 @@ public:
     static QImage CvMatToQImage(const cv::Mat& cvMat);
 
 
-    static Eigen::Vector3i CvVec3bToEigenVec3i(const cv::Vec3b &vec);
-    static Eigen::Vector3f CvVec3bToEigenVec3f(const cv::Vec3b &vec);
+    static Eigen::Vector4i CvVec4bToEigenVec4i(const cv::Vec4b &vec);
+    static Eigen::Vector4f CvVec4sbToEigenVec4f(const cv::Vec4b &vec);
 
 };
 

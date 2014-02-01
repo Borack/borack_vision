@@ -18,6 +18,7 @@ public:
    virtual void reset();
 protected:
    virtual void mousePressEvent(QGraphicsSceneMouseEvent * mouseEvent);
+   virtual void mouseMoveEvent(QGraphicsSceneMouseEvent *event);
 
 
 private:

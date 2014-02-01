@@ -41,6 +41,16 @@ void SourceScene::mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent)
    drawPolygon();
 }
 
+void SourceScene::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
+{
+   if(event->buttons() != Qt::NoButton)
+   {
+      qDebug() << "A button was pressed at: " << event->scenePos();
+      m_boundary << event->scenePos();
+      drawPolygon();
+   }
+}
+
 void SourceScene::reset()
 {
    m_boundary.clear();

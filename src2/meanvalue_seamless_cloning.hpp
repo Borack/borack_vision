@@ -45,9 +45,9 @@ private:
    cv::Mat m_inputSub;
    cv::Mat m_cvTargetFull;
 
-   std::vector<cv::Point> m_contourSourceSpace;           //! This is the original contour in the source image
-   std::vector<cv::Point> m_contourPatchSpace; //! This is the translated contour in the convex hull space.
-   std::vector<cv::Point> m_contourTargetSpace;     //! This is the contour in the target image. Based on the clicked location.
+   MVC::Contour m_contourSourceSpace;           //! This is the original contour in the source image
+   MVC::Contour m_contourPatchSpace; //! This is the translated contour in the convex hull space.
+   MVC::Contour m_contourTargetSpace;     //! This is the contour in the target image. Based on the clicked location.
    cv::Mat m_sourcePatch;
 
    AllMVCoords m_patchMVCCoords;

@@ -1,5 +1,6 @@
 #include "meanvalue_seamless_cloning.hpp"
 #include "converter.hpp"
+#include "mesh2d.hpp"
 
 
 #include <QDebug>
@@ -29,13 +30,14 @@ void MeanValueSeamlessCloning::startComputation()
 
 
    //! Get a cv contour
-   std::vector<std::vector<cv::Point> > contours;
+   MVC::Contours contours;
 
    foreach (QPointF point, m_sourceBoundary)
    {
       m_contourSourceSpace.push_back(cv::Point(point.x(), point.y()));
    }
    contours.push_back(m_contourSourceSpace);
+   Mesh2d mesh(m_contourSourceSpace);
 
 
    //! Create mask for patch

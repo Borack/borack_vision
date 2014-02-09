@@ -18,6 +18,7 @@ set(SOURCES  main.cpp
             meanvalue_seamless_cloning.cpp
             sourcescene.cpp
             targetscene.cpp
+            mesh2d.cpp
 )
 
 set(HEADERS
@@ -29,6 +30,7 @@ set(HEADERS
             sourcescene.hpp
             targetscene.hpp
             mvc_types.hpp
+            mesh2d.hpp
 )
 
 set(UI_FILES mainwindow.ui)

@@ -78,6 +78,7 @@ void MainWindow::setup()
    resetAction->setShortcut(Qt::CTRL+Qt::Key_R);
 
    connect(resetAction, SIGNAL(triggered(bool)), this, SLOT(on_reset()));
+   connect(ui->pushButton, SIGNAL(clicked()), this, SLOT(on_reset()));
 
    ui->pushButton->addAction(resetAction);
 }

@@ -10,32 +10,41 @@ void Mesh2d::init()
 {
    CDT cdt;
 
-   Vertex_handle before;
+   std::vector<Vertex_handle> handles;
+   handles.reserve(m_contours.size());
+
    for(int i = 0; i< m_contours.size(); i++)
    {
       cv::Point p = m_contours[i];
-      Vertex_handle current = cdt.insert(Point(p.x,p.y));
-      if(i>0)
+
+      handles.push_back(cdt.insert(Point(p.x,p.y)));
+      if(i > 0)
       {
-         cdt.insert_constraint(before, current);
+         cdt.insert_constraint(handles[i-1], handles[i]);
       }
-      before = current;
+
+   }
+   cdt.insert_constraint(handles[0], handles[m_contours.size()-1]);
+
+
+   int count = 0;
+   for (CDT::Finite_edges_iterator eit = cdt.finite_edges_begin();
+        eit != cdt.finite_edges_end();
+        ++eit)
+   {
+     if (cdt.is_constrained(*eit))
+     {
+        ++count;
+     }
    }
 
-//   Vertex_handle va = cdt.insert(Point(-4,0));
-//   Vertex_handle vb = cdt.insert(Point(0,-1));
-//   Vertex_handle vc = cdt.insert(Point(4,0));
-//   Vertex_handle vd = cdt.insert(Point(0,1));
-//   cdt.insert(Point(2, 0.6));
 
-//   cdt.insert_constraint(va, vb);
-//   cdt.insert_constraint(vb, vc);
-//   cdt.insert_constraint(vc, vd);
-//   cdt.insert_constraint(vd, va);
+   std::cout << "The number of resulting constrained edges is  ";
+   std::cout <<  count << std::endl;
 
 
    std::cout << "Number of vertices: " << cdt.number_of_vertices() << std::endl;
    std::cout << "Meshing the triangulation..." << std::endl;
-   CGAL::refine_Delaunay_mesh_2(cdt, Criteria(/*0.125, 0.5*/));
+   CGAL::refine_Delaunay_mesh_2(cdt, Criteria(0.125, 50.5));
    std::cout << "Number of vertices: " << cdt.number_of_vertices() << std::endl;
 }

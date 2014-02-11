@@ -265,7 +265,11 @@ MeanValueSeamlessCloning::MVCoord MeanValueSeamlessCloning::calculateMVCValues(c
       weightsTotal += weights[boundaryVerPos] / w_total;
       mvc.push_back(weights[boundaryVerPos] / w_total);
    }
-   assert(std::abs(weightsTotal - 1.0) < 1e-4);
+//   assert(std::abs(weightsTotal - 1.0) < 1e-3);
+   if(std::abs(weightsTotal - 1.0) > 1e-4)
+   {
+      qWarning() << "Total weight is not 1.0f: " << weightsTotal;
+   }
    assert(mvc.size() == m_contourPatchSpace.size());
    return mvc;
 }

@@ -1,6 +1,6 @@
 #include "meanvalue_seamless_cloning.hpp"
 #include "converter.hpp"
-#include "mesh2d.hpp"
+
 
 
 #include <QDebug>
@@ -38,6 +38,7 @@ void MeanValueSeamlessCloning::startComputation()
    }
    contours.push_back(m_contourSourceSpace);
    Mesh2d mesh(m_contourSourceSpace);
+   emit displayMesh(mesh.segments());
 
 
    //! Create mask for patch

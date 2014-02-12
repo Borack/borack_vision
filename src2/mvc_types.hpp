@@ -2,7 +2,7 @@
 #define MVC_TYPES_HPP
 
 #include <QVector>
-#include <QPointF>
+#include <QLineF>
 
 
 #include <opencv2/core/core.hpp>
@@ -16,6 +16,10 @@ namespace MVC{
 typedef QVector<QPointF> Boundary;
 typedef std::vector<cv::Point> Contour;
 typedef std::vector<Contour> Contours;
+
+namespace Mesh2d {
+   typedef std::vector<QLineF> Segments;
+}
 }
 
 #endif // MVC_TYPES_HPP

@@ -10,6 +10,7 @@
 #include <opencv2/core/core.hpp>
 
 #include "mvc_types.hpp"
+#include "mesh2d.hpp"s
 
 class MeanValueSeamlessCloning : public QObject
 {
@@ -21,6 +22,7 @@ public:
 signals:
    void targetContourCalculated(MVC::Boundary contour);
    void displayFinalPatch(QImage finalPatch);
+   void displayMesh(MVC::Mesh2d::Segments vertices);
 
 public slots:
 

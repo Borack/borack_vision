@@ -7,6 +7,9 @@
 #include <CGAL/Delaunay_mesh_face_base_2.h>
 #include <CGAL/Delaunay_mesh_size_criteria_2.h>
 
+#include <vector>
+#include <QPointF>
+
 #include <mvc_types.hpp>
 
 typedef CGAL::Exact_predicates_inexact_constructions_kernel K;
@@ -24,12 +27,16 @@ typedef CDT::Point Point;
 class Mesh2d
 {
 public:
+
    Mesh2d(const MVC::Contour &contours);
+   MVC::Mesh2d::Segments segments() const;
 
 private:
    void init();
 
    const MVC::Contour &m_contours;
+   MVC::Mesh2d::Segments m_segments;
+
 };
 
 #endif // MESH2D_HPP

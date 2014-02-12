@@ -59,6 +59,29 @@ void SourceScene::reset()
       removeItem(m_polygon);
 
    }
+
+   foreach(QGraphicsLineItem* line, m_lines)
+   {
+      removeItem(line);
+   }
+   m_lines.clear();
+}
+
+void SourceScene::drawMesh(MVC::Mesh2d::Segments segements)
+{
+   foreach(QGraphicsLineItem* line, m_lines)
+   {
+      removeItem(line);
+   }
+   m_lines.clear();
+
+   double rad = 1.0;
+   foreach(QLineF line, segements)
+   {
+      m_lines.push_back(addLine(line,QPen(QColor(0,0,0))));
+//      m_points.push_back(addEllipse(point.x()-rad, point.y()-rad, rad*2.0, rad*2.0,
+//                                    QPen(), QBrush(Qt::SolidPattern)));
+   }
 }
 
 void SourceScene::drawPolygon()

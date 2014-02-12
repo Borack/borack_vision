@@ -80,6 +80,8 @@ include_directories( "${EIGEN3_INCLUDE_DIR}" )
 # CGAL
 #--------------------------------------------------------------------------------
 find_package(CGAL REQUIRED)
+find_package(CGAL COMPONENTS Qt4)
+
 include( ${CGAL_USE_FILE} )
 
 
@@ -88,6 +90,6 @@ include( ${CGAL_USE_FILE} )
 # Executable
 #--------------------------------------------------------------------------------
 add_executable(${PROJECT_NAME} ${SOURCES} ${HEADERS} ${QRC_OUT} ${UI_HEADERS})
-target_link_libraries(${PROJECT_NAME} ${OpenCV_LIBS} ${CGAL_LIBRARIES})
+target_link_libraries(${PROJECT_NAME} ${OpenCV_LIBS} ${CGAL_LIBRARIES} ${CGAL_3RD_PARTY_LIBRARIES})
 
 qt5_use_modules(${PROJECT_NAME} Widgets OpenGL Core)

@@ -52,7 +52,7 @@ void Mesh2d::init()
 
    std::cout << "Number of vertices: " << cdt.number_of_vertices() << std::endl;
    std::cout << "Meshing the triangulation..." << std::endl;
-   CGAL::refine_Delaunay_mesh_2(cdt, Criteria(1.125, 25));
+   CGAL::refine_Delaunay_mesh_2(cdt, Criteria(0.35, 50));
    std::cout << "Number of vertices: " << cdt.number_of_vertices() << std::endl;
 
 //   CDT::All_vertices_iterator it;

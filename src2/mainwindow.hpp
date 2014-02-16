@@ -27,7 +27,9 @@ private slots:
 
     void on_actionOpen_target_triggered();
 
-    void on_runMVCComputation();
+    void on_runMVCSource();
+
+    void on_runMVCTarget();
 
     void on_buttonBox_clicked(QAbstractButton *button);
 
@@ -38,6 +40,7 @@ private:
     void setup();
     void loadSourceImg(const QString& path);
     void loadTargetImg(const QString& path);
+    void tryToLoadMVCInstance();
 
     Ui::MainWindow *ui;
 

@@ -13,17 +13,27 @@
 
 #include <cmath>
 
-MeanValueSeamlessCloning::MeanValueSeamlessCloning(const QPixmap &pixmap, const MVC::Boundary &b, const QPixmap &tPixmap, const QPointF &clickLoc, QObject *parent)
+//MeanValueSeamlessCloning::MeanValueSeamlessCloning(const QPixmap &pixmap, const MVC::Boundary &b, const QPixmap &tPixmap, const QPointF &clickLoc, QObject *parent)
+//   : QObject(parent)
+//   , m_inputSource(pixmap)
+//   , m_sourceBoundary(b)
+//   , m_inputTarget(tPixmap)
+//   , m_targetClickLocation(clickLoc)
+//{
+//}
+
+MeanValueSeamlessCloning::MeanValueSeamlessCloning(const QPixmap &pixmap, const QPixmap &tPixmap, QObject *parent)
    : QObject(parent)
    , m_inputSource(pixmap)
-   , m_sourceBoundary(b)
    , m_inputTarget(tPixmap)
-   , m_targetClickLocation(clickLoc)
 {
+
 }
 
-void MeanValueSeamlessCloning::startComputation()
+void MeanValueSeamlessCloning::startSourceComputation(const MVC::Boundary &b)
 {
+   m_sourceBoundary = b;
+
    //! Convert to cv::Mat
    QImage img = m_inputSource.toImage();
    m_cvSourceFull = Converter::QImageToCvMat(img);
@@ -97,7 +107,13 @@ void MeanValueSeamlessCloning::startComputation()
 //   cv::namedWindow( "Source BB", cv::WINDOW_AUTOSIZE );
 //   cv::imshow("Source BB", m_sourcePatch);
 
+}
 
+
+void MeanValueSeamlessCloning::startTargetComputation(const QPointF &clickLoc)
+
+{
+   m_targetClickLocation = clickLoc;
 
    //////////////////////////////////////////////////////////////////////////////////////
    //!! Up to here it was pre-processing. From here on it depends on the target image ///

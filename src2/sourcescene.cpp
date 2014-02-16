@@ -51,6 +51,13 @@ void SourceScene::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
    }
 }
 
+void SourceScene::mouseReleaseEvent(QGraphicsSceneMouseEvent */*event*/)
+{
+    qDebug() << "Mouse released";
+
+    emit runMVCSource();
+}
+
 void SourceScene::reset()
 {
    m_boundary.clear();
@@ -75,12 +82,9 @@ void SourceScene::drawMesh(MVC::Mesh2d::Segments segements)
    }
    m_lines.clear();
 
-   double rad = 1.0;
    foreach(QLineF line, segements)
    {
       m_lines.push_back(addLine(line,QPen(QColor(0,0,0))));
-//      m_points.push_back(addEllipse(point.x()-rad, point.y()-rad, rad*2.0, rad*2.0,
-//                                    QPen(), QBrush(Qt::SolidPattern)));
    }
 }
 

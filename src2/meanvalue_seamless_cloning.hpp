@@ -16,8 +16,11 @@ class MeanValueSeamlessCloning : public QObject
 {
    Q_OBJECT
 public:
-   explicit MeanValueSeamlessCloning(const QPixmap &pixmap, const MVC::Boundary & _b, const QPixmap &tPixmap, const QPointF &clickLoc, QObject *parent = 0);
-   void startComputation();
+//   explicit MeanValueSeamlessCloning(const QPixmap &pixmap, const MVC::Boundary & b, const QPixmap &tPixmap, const QPointF &clickLoc, QObject *parent = 0);
+   explicit MeanValueSeamlessCloning(const QPixmap &pixmap, const QPixmap &tPixmap, QObject *parent = 0);
+
+   void startSourceComputation(const MVC::Boundary & b);
+   void startTargetComputation(const QPointF &clickLoc);
 
 signals:
    void targetContourCalculated(MVC::Boundary contour);
@@ -39,9 +42,10 @@ private:
 
    // inputs
    const QPixmap m_inputSource;
-   const MVC::Boundary m_sourceBoundary;
    const QPixmap m_inputTarget;
-   const QPointF m_targetClickLocation;
+
+   MVC::Boundary m_sourceBoundary;
+   QPointF m_targetClickLocation;
 
    cv::Mat m_cvSourceFull;
    cv::Mat m_inputSub;

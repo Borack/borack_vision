@@ -57,14 +57,15 @@ void MainWindow::on_actionOpen_target_triggered()
    loadTargetImg(targetPath);
 }
 
-void MainWindow::on_runMVCComputation()
+void MainWindow::on_runMVCSource()
 {
-   m_mvcCloning.reset(new MeanValueSeamlessCloning(m_sScene->getPixmap(), m_sScene->getBoundary(), m_tScene->getPixmap(), m_tScene->clickLocation()));
-   connect(m_mvcCloning.data(),SIGNAL(displayMesh(MVC::Mesh2d::Segments)), m_sScene, SLOT(drawMesh(MVC::Mesh2d::Segments)));
-   connect(m_mvcCloning.data(),SIGNAL(targetContourCalculated(MVC::Boundary)), m_tScene ,SLOT(drawContour(MVC::Boundary)));
-   connect(m_mvcCloning.data(), SIGNAL(displayFinalPatch(QImage)), m_tScene, SLOT(drawFinalPatch(QImage)));
+   m_mvcCloning->startSourceComputation(m_sScene->getBoundary());
+}
+
+void MainWindow::on_runMVCTarget()
+{
    // could be called within a new thread
-   m_mvcCloning->startComputation();
+   m_mvcCloning->startTargetComputation(m_tScene->clickLocation());
    qDebug() << "Start running mvc";
 }
 
@@ -92,7 +93,15 @@ void MainWindow::loadSourceImg(const QString &path)
       QPixmap sourceImage(path);
 
 
+      if(m_sScene)
+      {
+         delete m_sScene;
+      }
       m_sScene = new SourceScene(this);
+      // delete old instance if we already have one.
+
+
+      connect(m_sScene,SIGNAL(runMVCSource()), this, SLOT(on_runMVCSource()));
       m_sScene->setPixmap(sourceImage);
 
       ui->graphicsView_3->scale(0.75,0.75);
@@ -100,6 +109,7 @@ void MainWindow::loadSourceImg(const QString &path)
 
       QSettings settings;
       settings.setValue(SETTINGS_LAST_SOURCE_PATH, path);
+      tryToLoadMVCInstance();
    }
 
 }
@@ -110,8 +120,13 @@ void MainWindow::loadTargetImg(const QString &path)
    {
       QPixmap targetImage(path);
 
+      // delete old instance if we already have one.
+      if(m_tScene)
+      {
+         delete m_tScene;
+      }
       m_tScene = new TargetScene(this);
-      connect(m_tScene,SIGNAL(runMVCComputation()), this, SLOT(on_runMVCComputation()));
+      connect(m_tScene,SIGNAL(runMVCComputation()), this, SLOT(on_runMVCTarget()));
       m_tScene->setPixmap(targetImage);
 
       ui->graphicsView_4->scale(0.75,0.75);
@@ -119,6 +134,22 @@ void MainWindow::loadTargetImg(const QString &path)
 
       QSettings settings;
       settings.setValue(SETTINGS_LAST_TARGET_PATH, path);
+      tryToLoadMVCInstance();
+   }
+}
+
+void MainWindow::tryToLoadMVCInstance()
+{
+   // FIXME check if null
+   if(m_sScene && m_tScene &&
+         ! (m_sScene->getPixmap().isNull() || m_tScene->getPixmap().isNull()))
+   {
+      m_mvcCloning.reset(new MeanValueSeamlessCloning(m_sScene->getPixmap(), m_tScene->getPixmap()));
+
+      connect(m_mvcCloning.data(),SIGNAL(displayMesh(MVC::Mesh2d::Segments)), m_sScene, SLOT(drawMesh(MVC::Mesh2d::Segments)));
+
+      connect(m_mvcCloning.data(),SIGNAL(targetContourCalculated(MVC::Boundary)), m_tScene ,SLOT(drawContour(MVC::Boundary)));
+      connect(m_mvcCloning.data(), SIGNAL(displayFinalPatch(QImage)), m_tScene, SLOT(drawFinalPatch(QImage)));
    }
 }
 

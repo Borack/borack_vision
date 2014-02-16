@@ -66,7 +66,7 @@ QT5_ADD_RESOURCES(QRC_OUT ${QRC_FILES})
 #--------------------------------------------------------------------------------
 # OpenCV
 #--------------------------------------------------------------------------------
-set(OpenCV_DIR /opt/dacuda/opencv-2.4.3_clang/share/OpenCV )
+#set(OpenCV_DIR /opt/dacuda/opencv-2.4.3_clang/share/OpenCV )
 find_package(OpenCV REQUIRED)
 
 

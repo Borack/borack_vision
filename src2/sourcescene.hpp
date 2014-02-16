@@ -20,9 +20,14 @@ public:
 public slots:
    void drawMesh(MVC::Mesh2d::Segments segements);
 
+signals:
+   void runMVCSource();
+
+
 protected:
    virtual void mousePressEvent(QGraphicsSceneMouseEvent * mouseEvent);
    virtual void mouseMoveEvent(QGraphicsSceneMouseEvent *event);
+   virtual void mouseReleaseEvent(QGraphicsSceneMouseEvent *);
 
 
 private:

@@ -10,35 +10,10 @@ project(${PROJECT_NAME})
 # Setup paths
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/../cmake/)
 
-
-
-set(SOURCES  main.cpp
-            converter.cpp
-            customscene.cpp
-            customview.cpp
-            mainwindow.cpp
-            sourcescene.cpp
-            targetscene.cpp
-)
-set(HEADERS
-            converter.hpp
-            customscene.hpp
-            customview.hpp
-            mainwindow.hpp
-            sourcescene.hpp
-            targetscene.hpp
-)
-
-set(UI_FILES mainwindow.ui)
-
-set(QRC_FILES
-#   main.qrc
-)
-
-set(QML_SOURCES
-
-)
-
+#--------------------------------------------------------------------------------
+# Core - always required 
+#--------------------------------------------------------------------------------
+add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/core) 
 
 #--------------------------------------------------------------------------------
 # Modules
@@ -46,7 +21,7 @@ set(QML_SOURCES
 
 option(MODULE_MVC "Build with the 'Coordinates for instant image cloning' module" ON)
 if(MODULE_MVC)
-	add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/../modules/mvc)
+	add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/modules/mvc)
 endif(MODULE_MVC)
 
 

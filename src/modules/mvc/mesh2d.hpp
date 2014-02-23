@@ -10,7 +10,7 @@
 #include <vector>
 #include <QPointF>
 
-#include <mvc_types.hpp>
+#include "mvc_types.hpp"
 
 typedef CGAL::Exact_predicates_inexact_constructions_kernel K;
 typedef CGAL::Triangulation_vertex_base_2<K> Vb;

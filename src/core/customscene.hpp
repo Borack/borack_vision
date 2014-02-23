@@ -7,7 +7,7 @@
 #include <QPointF>
 #include <QGraphicsPixmapItem>
 
-#include <mvc_types.hpp>
+#include <modules/mvc/mvc_types.hpp>
 
 class CustomScene : public QGraphicsScene
 {

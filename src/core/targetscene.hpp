@@ -2,7 +2,7 @@
 #define TARGETSCENE_HPP
 
 #include "customscene.hpp"
-#include "mvc_types.hpp"
+#include <modules/mvc/mvc_types.hpp>
 
 #include <QPointF>
 #include <QGraphicsPolygonItem>

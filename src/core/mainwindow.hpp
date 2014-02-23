@@ -6,7 +6,7 @@
 #include <QAbstractButton>
 #include <QString>
 
-#include "meanvalue_seamless_cloning.hpp"
+#include <modules/mvc/meanvalue_seamless_cloning.hpp>
 #include "sourcescene.hpp"
 #include "targetscene.hpp"
 

@@ -4,7 +4,7 @@
 #include "customscene.hpp"
 #include <QObject>
 #include <QGraphicsPolygonItem>
-#include <mvc_types.hpp>
+#include <modules/mvc/mvc_types.hpp>
 
 class SourceScene : public CustomScene
 {

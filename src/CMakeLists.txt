@@ -10,26 +10,23 @@ project(${PROJECT_NAME})
 # Setup paths
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/../cmake/)
 
+
+
 set(SOURCES  main.cpp
             converter.cpp
             customscene.cpp
             customview.cpp
             mainwindow.cpp
-            meanvalue_seamless_cloning.cpp
             sourcescene.cpp
             targetscene.cpp
-            mesh2d.cpp
 )
 set(HEADERS
             converter.hpp
             customscene.hpp
             customview.hpp
             mainwindow.hpp
-            meanvalue_seamless_cloning.hpp
             sourcescene.hpp
             targetscene.hpp
-            mvc_types.hpp
-            mesh2d.hpp
 )
 
 set(UI_FILES mainwindow.ui)
@@ -41,6 +38,16 @@ set(QRC_FILES
 set(QML_SOURCES
 
 )
+
+
+#--------------------------------------------------------------------------------
+# Modules
+#--------------------------------------------------------------------------------
+
+option(MODULE_MVC "Build with the 'Coordinates for instant image cloning' module" ON)
+if(MODULE_MVC)
+	add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/../modules/mvc)
+endif(MODULE_MVC)
 
 
 #--------------------------------------------------------------------------------

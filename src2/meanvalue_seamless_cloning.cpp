@@ -124,6 +124,7 @@ void MeanValueSeamlessCloning::startTargetComputation(const QPointF &clickLoc)
    m_cvTargetFull = Converter::QImageToCvMat(imgT);
 
    assert(m_contourSourceSpace.size() == m_contourPatchSpace.size());
+   m_contourTargetSpace.clear();
    m_contourTargetSpace.reserve(m_contourPatchSpace.size());
    for(int boundaryVerPos = 0; boundaryVerPos < m_contourPatchSpace.size(); boundaryVerPos++)
    {
@@ -168,6 +169,7 @@ void MeanValueSeamlessCloning::startTargetComputation(const QPointF &clickLoc)
    //! Compute the differences along the boundary.
    assert(m_contourTargetSpace.size() == m_contourSourceSpace.size());
    assert(m_contourTargetSpace.size() == m_contourPatchSpace.size());
+   m_colorDifferences.clear();
    m_colorDifferences.reserve(m_contourTargetSpace.size());
    for(int i = 0; i < m_contourSourceSpace.size(); i++ )
    {

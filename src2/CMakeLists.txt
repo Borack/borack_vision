@@ -20,7 +20,6 @@ set(SOURCES  main.cpp
             targetscene.cpp
             mesh2d.cpp
 )
-
 set(HEADERS
             converter.hpp
             customscene.hpp
@@ -80,7 +79,6 @@ include_directories( "${EIGEN3_INCLUDE_DIR}" )
 # CGAL
 #--------------------------------------------------------------------------------
 find_package(CGAL REQUIRED)
-find_package(CGAL COMPONENTS Qt4)
 
 include( ${CGAL_USE_FILE} )
 

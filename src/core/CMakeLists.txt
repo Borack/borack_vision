@@ -1,28 +1,27 @@
+# Get module name
+get_filename_component(MODULE ${CMAKE_CURRENT_LIST_DIR} NAME)
+project(${MODULE})
+
 set(SOURCES
-            ${SOURCES}
-	${CMAKE_CURRENT_SOURCE_DIR}/main.cpp
-	${CMAKE_CURRENT_SOURCE_DIR}/converter.cpp
-	${CMAKE_CURRENT_SOURCE_DIR}/customscene.cpp
-	${CMAKE_CURRENT_SOURCE_DIR}/customview.cpp
-	${CMAKE_CURRENT_SOURCE_DIR}/mainwindow.cpp
-	${CMAKE_CURRENT_SOURCE_DIR}/sourcescene.cpp
-	${CMAKE_CURRENT_SOURCE_DIR}/targetscene.cpp
-	    PARENT_SCOPE
+        main.cpp
+        converter.cpp
+        customscene.cpp
+        customview.cpp
+        mainwindow.cpp
+        sourcescene.cpp
+        targetscene.cpp
 )
 set(HEADERS
-            ${HEADERS}
-            ${CMAKE_CURRENT_SOURCE_DIR}/converter.hpp
-            ${CMAKE_CURRENT_SOURCE_DIR}/customscene.hpp
-            ${CMAKE_CURRENT_SOURCE_DIR}/customview.hpp
-            ${CMAKE_CURRENT_SOURCE_DIR}/mainwindow.hpp
-            ${CMAKE_CURRENT_SOURCE_DIR}/sourcescene.hpp
-            ${CMAKE_CURRENT_SOURCE_DIR}/targetscene.hpp
-	    PARENT_SCOPE
+           converter.hpp
+           customscene.hpp
+           customview.hpp
+           mainwindow.hpp
+           sourcescene.hpp
+           targetscene.hpp
 )
 
 set(UI_FILES 
-	${CMAKE_CURRENT_SOURCE_DIR}/mainwindow.ui
-	    PARENT_SCOPE
+        mainwindow.ui
 )
 
 set(QRC_FILES
@@ -33,4 +32,18 @@ set(QML_SOURCES
 
 )
 
-#include_directories(${CMAKE_CURRENT_SOURCE_DIR})
+#add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/../modules/mvc" "${PROJECT_BINARY_DIR}/../modules/mvc2")
+include_directories("${CMAKE_CURRENT_SOURCE_DIR}/..")
+
+message(STATUS "add_library ${MODULE}")
+add_library(${MODULE} ${SOURCES} ${HEADERS})
+#target_include_directories(${MODULE} PUBLIC "${CMAKE_CURRENT_LIST_DIR}/../.." )
+
+
+find_opencv()
+find_qt5()
+find_eigen()
+find_cgal()
+
+qt5_use_modules(${MODULE} Widgets OpenGL Core)
+

@@ -1,18 +1,29 @@
-
+# Get module name
+get_filename_component(MODULE ${CMAKE_CURRENT_LIST_DIR} NAME)
+project(${MODULE})
 
 set(SOURCES
-            ${SOURCES}
-            ${CMAKE_CURRENT_SOURCE_DIR}/meanvalue_seamless_cloning.cpp
-            ${CMAKE_CURRENT_SOURCE_DIR}/mesh2d.cpp
-            PARENT_SCOPE
+            meanvalue_seamless_cloning.cpp
+            mesh2d.cpp
 )
 
 set(HEADERS
-            ${HEADERS}
-            ${CMAKE_CURRENT_SOURCE_DIR}/meanvalue_seamless_cloning.hpp
-            ${CMAKE_CURRENT_SOURCE_DIR}/mvc_types.hpp
-            ${CMAKE_CURRENT_SOURCE_DIR}/mesh2d.hpp
-            PARENT_SCOPE
+            meanvalue_seamless_cloning.hpp
+            mvc_types.hpp
+            mesh2d.hpp
 )
 
-include_directories(${CMAKE_CURRENT_SOURCE_DIR})
+
+message(STATUS "add_library ${MODULE}")
+add_library(${MODULE} ${SOURCES} ${HEADERS})
+#target_include_directories(${MODULE} PUBLIC "${CMAKE_CURRENT_LIST_DIR}/../..")
+
+#--------------------------------------------------------------------------------
+# OpenCV
+#--------------------------------------------------------------------------------
+find_opencv()
+find_qt5()
+find_cgal()
+find_eigen()
+
+qt5_use_modules(${MODULE} Widgets OpenGL Core)

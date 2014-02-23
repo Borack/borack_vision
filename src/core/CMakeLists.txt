@@ -10,7 +10,7 @@ set(SOURCES
 	    PARENT_SCOPE
 )
 set(HEADERS
-            ${SOURCES}
+            ${HEADERS}
             ${CMAKE_CURRENT_SOURCE_DIR}/converter.hpp
             ${CMAKE_CURRENT_SOURCE_DIR}/customscene.hpp
             ${CMAKE_CURRENT_SOURCE_DIR}/customview.hpp
@@ -32,3 +32,5 @@ set(QRC_FILES
 set(QML_SOURCES
 
 )
+
+#include_directories(${CMAKE_CURRENT_SOURCE_DIR})

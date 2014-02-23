@@ -10,7 +10,7 @@
 #include <opencv2/core/core.hpp>
 
 #include "mvc_types.hpp"
-#include "mesh2d.hpp"s
+#include "mesh2d.hpp"
 
 class MeanValueSeamlessCloning : public QObject
 {

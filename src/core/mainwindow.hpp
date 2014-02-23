@@ -35,6 +35,10 @@ private slots:
 
     void on_reset();
 
+    void on_sourceZoom_sliderMoved(int position);
+
+    void on_targetZoom_sliderMoved(int position);
+
 private:
 
     void setup();

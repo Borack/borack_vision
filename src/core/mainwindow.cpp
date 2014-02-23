@@ -1,4 +1,5 @@
 #include "mainwindow.hpp"
+
 #include "ui_mainwindow.h"
 
 #include <QAbstractButton>
@@ -104,8 +105,9 @@ void MainWindow::loadSourceImg(const QString &path)
       connect(m_sScene,SIGNAL(runMVCSource()), this, SLOT(on_runMVCSource()));
       m_sScene->setPixmap(sourceImage);
 
-      ui->graphicsView_3->scale(0.75,0.75);
-      ui->graphicsView_3->setScene(m_sScene);
+      float currentScale = ui->sourceZoom->value()/100.0f;
+      ui->sourceView->scale(currentScale,currentScale);
+      ui->sourceView->setScene(m_sScene);
 
       QSettings settings;
       settings.setValue(SETTINGS_LAST_SOURCE_PATH, path);
@@ -129,8 +131,10 @@ void MainWindow::loadTargetImg(const QString &path)
       connect(m_tScene,SIGNAL(runMVCComputation()), this, SLOT(on_runMVCTarget()));
       m_tScene->setPixmap(targetImage);
 
-      ui->graphicsView_4->scale(0.75,0.75);
-      ui->graphicsView_4->setScene(m_tScene);
+
+      float currentScale = ui->targetZoom->value()/100.0f;
+      ui->targetView->scale(currentScale,currentScale);
+      ui->targetView->setScene(m_tScene);
 
       QSettings settings;
       settings.setValue(SETTINGS_LAST_TARGET_PATH, path);
@@ -166,4 +170,19 @@ void MainWindow::on_reset()
    qDebug() << "Reset triggered";
    m_sScene->reset();
    m_tScene->reset();
+}
+
+
+void MainWindow::on_sourceZoom_sliderMoved(int position)
+{
+   float scale = static_cast<float>(position)/100.0f;
+   ui->sourceView->resetMatrix();
+   ui->sourceView->scale(scale, scale);
+}
+
+void MainWindow::on_targetZoom_sliderMoved(int position)
+{
+   float scale = static_cast<float>(position)/100.0f;
+   ui->targetView->resetMatrix();
+   ui->targetView->scale(scale, scale);
 }

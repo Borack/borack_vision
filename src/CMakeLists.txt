@@ -13,12 +13,13 @@ list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/../cmake/)
 #--------------------------------------------------------------------------------
 # Core - always required 
 #--------------------------------------------------------------------------------
-add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/core) 
+add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/core)
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/core) #FIXME: should be done in the core/CMakeLists.txt
+
 
 #--------------------------------------------------------------------------------
 # Modules
 #--------------------------------------------------------------------------------
-
 option(MODULE_MVC "Build with the 'Coordinates for instant image cloning' module" ON)
 if(MODULE_MVC)
 	add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/modules/mvc)

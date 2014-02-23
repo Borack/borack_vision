@@ -23,18 +23,18 @@ include_directories(${CMAKE_CURRENT_SOURCE_DIR}) #FIXME: should be done in the c
 #--------------------------------------------------------------------------------
 option(MODULE_MVC "Build with the 'Coordinates for instant image cloning' module" ON)
 if(MODULE_MVC)
-        include_directories(${CMAKE_CURRENT_SOURCE_DIR}/modules/mvc) #FIXME: should be done in the core/CMakeLists.txt
-        include_directories(${CMAKE_CURRENT_SOURCE_DIR}) #FIXME: should be done in the core/CMakeLists.txt
-        add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/modules/mvc)
+#        include_directories(${CMAKE_CURRENT_SOURCE_DIR}/modules/mvc) #FIXME: should be done in the core/CMakeLists.txt
+#        include_directories(${CMAKE_CURRENT_SOURCE_DIR}) #FIXME: should be done in the core/CMakeLists.txt
+#        add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/modules/mvc)
 endif(MODULE_MVC)
 
 option(MODULE_PHOTOMONTAGE "Build with the 'Interactive Digital Photomontage' module" ON)
 if(MODULE_PHOTOMONTAGE)
-        add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/modules/photomontage)
-        include_directories(${CMAKE_CURRENT_SOURCE_DIR}/modules/photomontage) #FIXME: should be done in the core/CMakeLists.txt
+#        add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/modules/photomontage)
+#        include_directories(${CMAKE_CURRENT_SOURCE_DIR}/modules/photomontage) #FIXME: should be done in the core/CMakeLists.txt
 
-        add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/3rd_party/gco-v3.0)
-        include_directories(${CMAKE_CURRENT_SOURCE_DIR}/3rd_party/gco-v3.0) #FIXME: should be done in the core/CMakeLists.txt
+#        add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/3rd_party/gco-v3.0)
+#        include_directories(${CMAKE_CURRENT_SOURCE_DIR}/3rd_party/gco-v3.0) #FIXME: should be done in the core/CMakeLists.txt
 endif(MODULE_PHOTOMONTAGE)
 
 
@@ -75,7 +75,7 @@ include( ${CGAL_USE_FILE} )
 #--------------------------------------------------------------------------------
 # Executable
 #--------------------------------------------------------------------------------
-add_executable(${PROJECT_NAME} ${SOURCES} ${HEADERS} ${QRC_OUT} ${UI_HEADERS})
-target_link_libraries(${PROJECT_NAME} ${OpenCV_LIBS} ${CGAL_LIBRARIES} ${CGAL_3RD_PARTY_LIBRARIES})
+#add_executable(${PROJECT_NAME} ${SOURCES} ${HEADERS} ${QRC_OUT} ${UI_HEADERS})
+#target_link_libraries(${PROJECT_NAME} ${OpenCV_LIBS} ${CGAL_LIBRARIES} ${CGAL_3RD_PARTY_LIBRARIES})
 
-qt5_use_modules(${PROJECT_NAME} Widgets OpenGL Core)
+#qt5_use_modules(${PROJECT_NAME} Widgets OpenGL Core)

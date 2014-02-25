@@ -45,6 +45,9 @@ macro(find_cgal)
     include( ${CGAL_USE_FILE} )
 endmacro(find_cgal)
 
+#--------------------------------------------------------------------------------
+# Add Module
+#--------------------------------------------------------------------------------
 macro(add_module NAME)
     set(B_PATH "/Users/sim/dev/borack_vision/src")
     add_subdirectory(${B_PATH}/${NAME} ${CMAKE_CURRENT_BINARY_DIR}/${NAME})

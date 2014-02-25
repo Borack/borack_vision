@@ -1,6 +1,7 @@
 #include "meanvalue_seamless_cloning.hpp"
-//#include <utilities/converter.hpp>
-#include "utilities/converter.hpp"
+
+#include <utilities/converter.hpp>
+
 
 #include <QDebug>
 

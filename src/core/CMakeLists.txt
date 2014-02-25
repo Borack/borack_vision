@@ -43,7 +43,7 @@ message(STATUS "add_library ${MODULE}")
 message(STATUS "add_library ${MVC}")
 #add_executable(${MODULE} ${SOURCES} ${HEADERS} ${UI_FILES})
 add_executable(${MODULE} ${SOURCES} ${HEADERS} ${QRC_OUT} ${UI_HEADERS})
-target_link_libraries(${MODULE} ${OpenCV_LIBS} ${CGAL_LIBRARIES} ${CGAL_3RD_PARTY_LIBRARIES} "mvc")
+target_link_libraries(${MODULE} ${OpenCV_LIBS} ${CGAL_LIBRARIES} ${CGAL_3RD_PARTY_LIBRARIES} "mvc" "utilities")
 #target_include_directories(${MODULE} PUBLIC "${CMAKE_CURRENT_LIST_DIR}/../.." )
 
 

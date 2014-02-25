@@ -46,7 +46,6 @@ macro(find_cgal)
 endmacro(find_cgal)
 
 
-
 #--------------------------------------------------------------------------------
 # Setup Module
 #--------------------------------------------------------------------------------
@@ -54,14 +53,22 @@ macro(setup_module)
     # Get module name
     get_filename_component(MODULE ${CMAKE_CURRENT_LIST_DIR} NAME)
     project(${MODULE})
-endmacro(add_module)
+endmacro(setup_module)
 
 #--------------------------------------------------------------------------------
 # Add Module
 #--------------------------------------------------------------------------------
 macro(add_module NAME)
     set(B_PATH "/Users/sim/dev/borack_vision/src/modules/")
-    add_subdirectory(${B_PATH}/${NAME} ${CMAKE_CURRENT_BINARY_DIR}/${NAME})
+    set(MODULE_PATH ${B_PATH}/${NAME})
+    add_subdirectory(${MODULE_PATH} ${CMAKE_CURRENT_BINARY_DIR}/${NAME})
+    include_directories(${MODULE_PATH})
+    link_directories(${MODULE_PATH})
+
+    #Expand the list of libs we have to link to with this module
+    get_filename_component(MODULE_NAME ${MODULE_PATH} NAME)
+    set(MODULE_LIBS ${MODULE_LIBS} ${MODULE_NAME})
+
 endmacro(add_module)
 
 #--------------------------------------------------------------------------------

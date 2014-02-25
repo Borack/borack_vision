@@ -1,24 +1,22 @@
 setup_module()
 
 set(SOURCES
-            converter.cpp
+        converter.cpp
 )
 
 set(HEADERS
-		converter.hpp
+        converter.hpp
 )
 
 
 message(STATUS "add_library ${MODULE}")
 add_library(${MODULE} ${SOURCES} ${HEADERS})
-#target_include_directories(${MODULE} PUBLIC "${CMAKE_CURRENT_LIST_DIR}/../..")
 
 #--------------------------------------------------------------------------------
 # OpenCV
 #--------------------------------------------------------------------------------
 find_opencv()
-find_qt5()
-find_cgal()
 find_eigen()
+find_qt5()
 
-qt5_use_modules(${MODULE} Widgets OpenGL Core)
+qt5_use_modules(${MODULE} Widgets)

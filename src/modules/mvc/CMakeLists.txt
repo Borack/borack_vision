@@ -14,7 +14,6 @@ set(HEADERS
 add_util()
 message(STATUS "add_library ${MODULE}")
 add_library(${MODULE} ${SOURCES} ${HEADERS})
-#target_include_directories(${MODULE} PUBLIC "${CMAKE_CURRENT_LIST_DIR}/../..")
 
 #--------------------------------------------------------------------------------
 # OpenCV

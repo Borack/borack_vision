@@ -45,11 +45,29 @@ macro(find_cgal)
     include( ${CGAL_USE_FILE} )
 endmacro(find_cgal)
 
+
+
+#--------------------------------------------------------------------------------
+# Setup Module
+#--------------------------------------------------------------------------------
+macro(setup_module)
+    # Get module name
+    get_filename_component(MODULE ${CMAKE_CURRENT_LIST_DIR} NAME)
+    project(${MODULE})
+endmacro(add_module)
+
 #--------------------------------------------------------------------------------
 # Add Module
 #--------------------------------------------------------------------------------
 macro(add_module NAME)
-    set(B_PATH "/Users/sim/dev/borack_vision/src")
+    set(B_PATH "/Users/sim/dev/borack_vision/src/modules/")
     add_subdirectory(${B_PATH}/${NAME} ${CMAKE_CURRENT_BINARY_DIR}/${NAME})
 endmacro(add_module)
+
+#--------------------------------------------------------------------------------
+# Add Utilities
+#--------------------------------------------------------------------------------
+macro(add_util)
+    add_module("../utilities")
+endmacro(add_util)
 

@@ -1,6 +1,4 @@
-# Get module name
-get_filename_component(MODULE ${CMAKE_CURRENT_LIST_DIR} NAME)
-project(${MODULE})
+setup_module()
 
 set(SOURCES
             converter.cpp

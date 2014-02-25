@@ -14,8 +14,7 @@ list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/../cmake/)
 #--------------------------------------------------------------------------------
 # Core - always required 
 #--------------------------------------------------------------------------------
-#add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/utilities)
-include_directories(${CMAKE_CURRENT_SOURCE_DIR}) #FIXME: should be done in the core/CMakeLists.txt
+include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/app)
 
 

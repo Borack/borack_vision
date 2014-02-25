@@ -1,6 +1,4 @@
-# Get module name
-get_filename_component(MODULE ${CMAKE_CURRENT_LIST_DIR} NAME)
-project(${MODULE})
+setup_module()
 
 set(SOURCES
             meanvalue_seamless_cloning.cpp
@@ -13,7 +11,7 @@ set(HEADERS
             mesh2d.hpp
 )
 
-add_module(utilities)
+add_util()
 message(STATUS "add_library ${MODULE}")
 add_library(${MODULE} ${SOURCES} ${HEADERS})
 #target_include_directories(${MODULE} PUBLIC "${CMAKE_CURRENT_LIST_DIR}/../..")

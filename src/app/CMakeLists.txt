@@ -34,10 +34,10 @@ set(QML_SOURCES
 find_qt5()
 find_cgal()
 
-add_module(modules/mvc)
+add_module(mvc)
 #add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/../modules/mvc" "${PROJECT_BINARY_DIR}/../modules/mvc")
 #include_directories("${CMAKE_CURRENT_SOURCE_DIR}/..")
-include_directories("/Users/sim/dev/borack_vision/src")
+#include_directories("/Users/sim/dev/borack_vision/src")
 
 message(STATUS "add_library ${MODULE}")
 message(STATUS "add_library ${MVC}")

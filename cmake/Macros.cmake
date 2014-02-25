@@ -63,12 +63,10 @@ macro(add_module NAME)
     set(MODULE_PATH ${B_PATH}/${NAME})
     add_subdirectory(${MODULE_PATH} ${CMAKE_CURRENT_BINARY_DIR}/${NAME})
     include_directories(${MODULE_PATH})
-    link_directories(${MODULE_PATH})
 
     #Expand the list of libs we have to link to with this module
     get_filename_component(MODULE_NAME ${MODULE_PATH} NAME)
-    set(MODULE_LIBS ${MODULE_LIBS} ${MODULE_NAME})
-
+    set_property(GLOBAL APPEND PROPERTY MODULE_LIBS ${MODULE_NAME})
 endmacro(add_module)
 
 #--------------------------------------------------------------------------------

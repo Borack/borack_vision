@@ -3,6 +3,7 @@
 #--------------------------------------------------------------------------------
 macro(find_opencv)
     find_package(OpenCV REQUIRED)
+    include_directories(${OpenCV_INCLUDE_DIRS})
     target_link_libraries(${MODULE} ${OpenCV_LIBS})
 endmacro()
 
@@ -22,7 +23,7 @@ macro(find_qt5)
     QT5_WRAP_UI(UI_HEADERS ${UI_FILES})
 
     set(CMAKE_INCLUDE_CURRENT_DIR ON)
-    INCLUDE_DIRECTORIES( ${CMAKE_CURRENT_BINARY_DIR} )
+    include_directories( ${CMAKE_CURRENT_BINARY_DIR} )
 
     QT5_ADD_RESOURCES(QRC_OUT ${QRC_FILES})
 endmacro(find_qt5)
@@ -43,6 +44,11 @@ endmacro(find_eigen)
 macro(find_cgal)
     find_package(CGAL REQUIRED)
     include( ${CGAL_USE_FILE} )
+#    include_directories( ${CGAL_3RD_PARTY_INCLUDE_DIRS})
+
+#    #Expand the list of libs we have to link to with this module
+#    get_filename_component(MODULE_NAME ${MODULE_PATH} NAME)
+#    set_property(GLOBAL APPEND PROPERTY MODULE_LIBS ${CGAL_LIBRARIES} ${CGAL_3RD_PARTY_LIBRARIES})
 endmacro(find_cgal)
 
 

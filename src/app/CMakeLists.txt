@@ -42,7 +42,7 @@ if(MODULE_MVC)
 endif(MODULE_MVC)
 
 
-option(MODULE_PHOTOMONTAGE "Build with the 'Interactive Digital Photomontage' module" ON)
+option(MODULE_PHOTOMONTAGE "Build with the 'Interactive Digital Photomontage' module" OFF)
 if(MODULE_PHOTOMONTAGE)
 #        add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/modules/photomontage)
 #        include_directories(${CMAKE_CURRENT_SOURCE_DIR}/modules/photomontage) #FIXME: should be done in the core/CMakeLists.txt
@@ -56,10 +56,11 @@ endif(MODULE_PHOTOMONTAGE)
 get_property(ALL_MODULE_LIBS GLOBAL PROPERTY MODULE_LIBS)
 message(STATUS "Linking against these internal libraries: ${ALL_MODULE_LIBS}")
 
+
 find_cgal()
 
 add_executable(${MODULE} ${SOURCES} ${HEADERS} ${QRC_OUT} ${UI_HEADERS})
-target_link_libraries(${MODULE} ${OpenCV_LIBS} ${CGAL_LIBRARIES} ${CGAL_3RD_PARTY_LIBRARIES} ${ALL_MODULE_LIBS})
+target_link_libraries(${MODULE} ${ALL_MODULE_LIBS})
 
 find_opencv()
 

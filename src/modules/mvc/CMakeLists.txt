@@ -11,16 +11,14 @@ set(HEADERS
             mesh2d.hpp
 )
 
-add_util()
 message(STATUS "add_library ${MODULE}")
 add_library(${MODULE} ${SOURCES} ${HEADERS})
 
-#--------------------------------------------------------------------------------
-# OpenCV
-#--------------------------------------------------------------------------------
+add_util()
+
+
 find_opencv()
-find_qt5()
 find_cgal()
 find_eigen()
 
-qt5_use_modules(${MODULE} Widgets OpenGL Core)
+qt5_use_modules(${MODULE} Widgets OpenGL)

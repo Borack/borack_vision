@@ -4,7 +4,6 @@ project(${MODULE})
 
 set(SOURCES
         main.cpp
-        converter.cpp
         customscene.cpp
         customview.cpp
         mainwindow.cpp
@@ -12,7 +11,6 @@ set(SOURCES
         targetscene.cpp
 )
 set(HEADERS
-           converter.hpp
            customscene.hpp
            customview.hpp
            mainwindow.hpp
@@ -36,7 +34,7 @@ set(QML_SOURCES
 find_qt5()
 find_cgal()
 
-add_module(mvc)
+add_module(modules/mvc)
 #add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/../modules/mvc" "${PROJECT_BINARY_DIR}/../modules/mvc")
 #include_directories("${CMAKE_CURRENT_SOURCE_DIR}/..")
 include_directories("/Users/sim/dev/borack_vision/src")
@@ -45,7 +43,7 @@ message(STATUS "add_library ${MODULE}")
 message(STATUS "add_library ${MVC}")
 #add_executable(${MODULE} ${SOURCES} ${HEADERS} ${UI_FILES})
 add_executable(${MODULE} ${SOURCES} ${HEADERS} ${QRC_OUT} ${UI_HEADERS})
-target_link_libraries(${MODULE} ${OpenCV_LIBS} ${CGAL_LIBRARIES} ${CGAL_3RD_PARTY_LIBRARIES} )
+target_link_libraries(${MODULE} ${OpenCV_LIBS} ${CGAL_LIBRARIES} ${CGAL_3RD_PARTY_LIBRARIES} "mvc")
 #target_include_directories(${MODULE} PUBLIC "${CMAKE_CURRENT_LIST_DIR}/../.." )
 
 

@@ -65,14 +65,22 @@ endmacro(setup_module)
 # Add Module
 #--------------------------------------------------------------------------------
 macro(add_module NAME)
-    set(B_PATH "/Users/sim/dev/borack_vision/src/modules/")
-    set(MODULE_PATH ${B_PATH}/${NAME})
-    add_subdirectory(${MODULE_PATH} ${CMAKE_CURRENT_BINARY_DIR}/${NAME})
-    include_directories(${MODULE_PATH})
+     set(B_PATH "/Users/sim/dev/borack_vision/src/modules/") #Should be an ENV variable
+     set(MODULE_PATH ${B_PATH}/${NAME})
+     get_filename_component(MODULE_NAME ${MODULE_PATH} NAME)
 
-    #Expand the list of libs we have to link to with this module
-    get_filename_component(MODULE_NAME ${MODULE_PATH} NAME)
-    set_property(GLOBAL APPEND PROPERTY MODULE_LIBS ${MODULE_NAME})
+
+     if(NOT TARGET ${MODULE_NAME}) #Make sure that we only add this module once
+        add_subdirectory(${MODULE_PATH} ${CMAKE_CURRENT_BINARY_DIR}/${NAME})
+        include_directories(${MODULE_PATH})
+
+        #Expand the list of libs we have to link to with this module
+        set_property(GLOBAL APPEND PROPERTY MODULE_LIBS ${MODULE_NAME})
+    endif()
+
+    if(TARGET ${MODULE})
+        target_link_libraries(${MODULE} ${NAME})
+    endif()
 endmacro(add_module)
 
 #--------------------------------------------------------------------------------

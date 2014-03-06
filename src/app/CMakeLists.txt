@@ -31,6 +31,9 @@ set(QML_SOURCES
 )
 
 find_qt5()
+find_cgal()
+
+add_executable(${MODULE} ${SOURCES} ${HEADERS} ${QRC_OUT} ${UI_HEADERS})
 
 #--------------------------------------------------------------------------------
 # Modules
@@ -42,13 +45,9 @@ if(MODULE_MVC)
 endif(MODULE_MVC)
 
 
-option(MODULE_PHOTOMONTAGE "Build with the 'Interactive Digital Photomontage' module" OFF)
+option(MODULE_PHOTOMONTAGE "Build with the 'Interactive Digital Photomontage' module" ON)
 if(MODULE_PHOTOMONTAGE)
-#        add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/modules/photomontage)
-#        include_directories(${CMAKE_CURRENT_SOURCE_DIR}/modules/photomontage) #FIXME: should be done in the core/CMakeLists.txt
-
-#        add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/3rd_party/gco-v3.0)
-#        include_directories(${CMAKE_CURRENT_SOURCE_DIR}/3rd_party/gco-v3.0) #FIXME: should be done in the core/CMakeLists.txt
+    add_module(photomontage)
 endif(MODULE_PHOTOMONTAGE)
 
 
@@ -57,9 +56,7 @@ get_property(ALL_MODULE_LIBS GLOBAL PROPERTY MODULE_LIBS)
 message(STATUS "Linking against these internal libraries: ${ALL_MODULE_LIBS}")
 
 
-find_cgal()
 
-add_executable(${MODULE} ${SOURCES} ${HEADERS} ${QRC_OUT} ${UI_HEADERS})
 target_link_libraries(${MODULE} ${ALL_MODULE_LIBS})
 
 find_opencv()

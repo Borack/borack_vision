@@ -16,11 +16,11 @@ class MeanValueSeamlessCloning : public QObject
 {
    Q_OBJECT
 public:
-//   explicit MeanValueSeamlessCloning(const QPixmap &pixmap, const MVC::Boundary & b, const QPixmap &tPixmap, const QPointF &clickLoc, QObject *parent = 0);
    explicit MeanValueSeamlessCloning(const QPixmap &pixmap, const QPixmap &tPixmap, QObject *parent = 0);
 
    void startSourceComputation(const MVC::Boundary & b);
    void startTargetComputation(const QPointF &clickLoc);
+   void resetCoords();
 
 signals:
    void targetContourCalculated(MVC::Boundary contour);
@@ -52,8 +52,8 @@ private:
    cv::Mat m_cvTargetFull;
 
    MVC::Contour m_contourSourceSpace;           //! This is the original contour in the source image
-   MVC::Contour m_contourPatchSpace; //! This is the translated contour in the convex hull space.
-   MVC::Contour m_contourTargetSpace;     //! This is the contour in the target image. Based on the clicked location.
+   MVC::Contour m_contourPatchSpace;            //! This is the translated contour in the convex hull space.
+   MVC::Contour m_contourTargetSpace;           //! This is the contour in the target image. Based on the clicked location.
    cv::Mat m_sourcePatch;
 
    AllMVCoords m_patchMVCCoords;

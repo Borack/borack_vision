@@ -221,6 +221,17 @@ void MeanValueSeamlessCloning::startTargetComputation(const QPointF &clickLoc)
 
 }
 
+void MeanValueSeamlessCloning::resetCoords()
+{
+   m_colorDifferences.clear();
+   m_contourPatchSpace.clear();
+   m_contourSourceSpace.clear();
+   m_contourTargetSpace.clear();
+   m_sourceBoundary.clear();
+   m_patchMVCCoords.clear();
+
+}
+
 MeanValueSeamlessCloning::MVCoord MeanValueSeamlessCloning::calculateMVCValues(const cv::Point &interiorPoint)
 {
 

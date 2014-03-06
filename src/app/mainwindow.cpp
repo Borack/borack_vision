@@ -150,7 +150,6 @@ void MainWindow::tryToLoadMVCInstance()
       m_mvcCloning.reset(new MeanValueSeamlessCloning(m_sScene->getPixmap(), m_tScene->getPixmap()));
 
       connect(m_mvcCloning.data(),SIGNAL(displayMesh(MVC::Mesh2d::Segments)), m_sScene, SLOT(drawMesh(MVC::Mesh2d::Segments)));
-
       connect(m_mvcCloning.data(),SIGNAL(targetContourCalculated(MVC::Boundary)), m_tScene ,SLOT(drawContour(MVC::Boundary)));
       connect(m_mvcCloning.data(), SIGNAL(displayFinalPatch(QImage)), m_tScene, SLOT(drawFinalPatch(QImage)));
    }
@@ -169,6 +168,7 @@ void MainWindow::on_reset()
    qDebug() << "Reset triggered";
    m_sScene->reset();
    m_tScene->reset();
+   m_mvcCloning->resetCoords();
 }
 
 

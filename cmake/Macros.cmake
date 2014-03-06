@@ -79,7 +79,7 @@ macro(add_module NAME)
     endif()
 
     if(TARGET ${MODULE})
-        target_link_libraries(${MODULE} ${NAME})
+        target_link_libraries(${MODULE} ${MODULE_NAME})
     endif()
 endmacro(add_module)
 

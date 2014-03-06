@@ -90,3 +90,10 @@ macro(add_util)
     add_module("../utilities")
 endmacro(add_util)
 
+#--------------------------------------------------------------------------------
+# Add 3rd party libraries (source code)
+#--------------------------------------------------------------------------------
+macro(add_3rd NAME)
+    add_module("../3rd_party/${NAME}")
+endmacro(add_3rd)
+

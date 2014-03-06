@@ -22,7 +22,6 @@
 #include <QWidget>
 
 
-
 const QString MainWindow::SETTINGS_LAST_SOURCE_PATH("last_img_source_path");
 const QString MainWindow::SETTINGS_LAST_TARGET_PATH("last_img_target_path");
 

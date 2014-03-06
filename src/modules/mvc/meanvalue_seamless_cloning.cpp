@@ -1,6 +1,6 @@
 #include "meanvalue_seamless_cloning.hpp"
-#include <core/converter.hpp>
 
+#include <converter.hpp>
 
 
 #include <QDebug>
@@ -13,14 +13,6 @@
 
 #include <cmath>
 
-//MeanValueSeamlessCloning::MeanValueSeamlessCloning(const QPixmap &pixmap, const MVC::Boundary &b, const QPixmap &tPixmap, const QPointF &clickLoc, QObject *parent)
-//   : QObject(parent)
-//   , m_inputSource(pixmap)
-//   , m_sourceBoundary(b)
-//   , m_inputTarget(tPixmap)
-//   , m_targetClickLocation(clickLoc)
-//{
-//}
 
 MeanValueSeamlessCloning::MeanValueSeamlessCloning(const QPixmap &pixmap, const QPixmap &tPixmap, QObject *parent)
    : QObject(parent)

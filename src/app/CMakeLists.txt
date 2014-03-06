@@ -48,6 +48,7 @@ endif(MODULE_MVC)
 option(MODULE_PHOTOMONTAGE "Build with the 'Interactive Digital Photomontage' module" ON)
 if(MODULE_PHOTOMONTAGE)
     add_module(photomontage)
+    add_definitions(-DMODULE_PHOTOMONTAGE)
 endif(MODULE_PHOTOMONTAGE)
 
 

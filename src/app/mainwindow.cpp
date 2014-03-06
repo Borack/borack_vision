@@ -60,6 +60,12 @@ void MainWindow::on_actionOpen_target_triggered()
 void MainWindow::on_runMVCSource()
 {
    m_mvcCloning->startSourceComputation(m_sScene->getBoundary());
+
+   //! @todo needs to be modularized!
+#ifdef MODULE_PHOTOMONTAGE
+   m_photoMontage.reset(new PhotoMontage(m_sScene->getPixmap(),this));
+#endif
+
 }
 
 void MainWindow::on_runMVCTarget()
@@ -148,7 +154,6 @@ void MainWindow::tryToLoadMVCInstance()
          ! (m_sScene->getPixmap().isNull() || m_tScene->getPixmap().isNull()))
    {
       m_mvcCloning.reset(new MeanValueSeamlessCloning(m_sScene->getPixmap(), m_tScene->getPixmap()));
-
       connect(m_mvcCloning.data(),SIGNAL(displayMesh(MVC::Mesh2d::Segments)), m_sScene, SLOT(drawMesh(MVC::Mesh2d::Segments)));
       connect(m_mvcCloning.data(),SIGNAL(targetContourCalculated(MVC::Boundary)), m_tScene ,SLOT(drawContour(MVC::Boundary)));
       connect(m_mvcCloning.data(), SIGNAL(displayFinalPatch(QImage)), m_tScene, SLOT(drawFinalPatch(QImage)));

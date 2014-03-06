@@ -3,15 +3,23 @@
 
 #include <QObject>
 
+#include <QPixmap>
+
 class PhotoMontage : public QObject
 {
    Q_OBJECT
 public:
-   explicit PhotoMontage(QObject *parent = 0);
+   explicit PhotoMontage(const QPixmap &pixmap, QObject *parent = 0);
 
 signals:
 
 public slots:
+
+private:
+
+   void setupGraphCut();
+
+   const QPixmap& m_inputSource;
 
 };
 

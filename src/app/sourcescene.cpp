@@ -45,7 +45,7 @@ void SourceScene::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
 {
    if(event->buttons() != Qt::NoButton)
    {
-      qDebug() << "A button was pressed at: " << event->scenePos();
+//      qDebug() << "A button was pressed at: " << event->scenePos();
       m_boundary << event->scenePos();
       drawPolygon();
    }
@@ -54,7 +54,6 @@ void SourceScene::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
 void SourceScene::mouseReleaseEvent(QGraphicsSceneMouseEvent */*event*/)
 {
     qDebug() << "Mouse released";
-
     emit runMVCSource();
 }
 

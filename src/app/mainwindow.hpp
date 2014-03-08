@@ -29,9 +29,9 @@ private slots:
 
    void on_actionOpen_target_triggered();
 
-   void on_runMVCSource();
+   void on_runSource();
 
-   void on_runMVCTarget();
+   void on_runTarget();
 
    void on_buttonBox_clicked(QAbstractButton *button);
 

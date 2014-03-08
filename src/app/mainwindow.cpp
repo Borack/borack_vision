@@ -25,6 +25,8 @@
 #include <QWidget>
 
 
+//! @note Consider to use boost::statechart here!
+
 const QString MainWindow::SETTINGS_LAST_SOURCE_PATH("last_img_source_path");
 const QString MainWindow::SETTINGS_LAST_TARGET_PATH("last_img_target_path");
 
@@ -64,17 +66,32 @@ void MainWindow::on_actionOpen_target_triggered()
 }
 
 //-----------------------------------------------------------------------------
-void MainWindow::on_runMVCSource()
+void MainWindow::on_runSource()
 {
-   m_mvcCloning->startSourceComputation(m_sScene->getBoundary());
+   if(m_mode == EMode_MVC)
+   {
+      assert(m_mvcCloning);
+      m_mvcCloning->startSourceComputation(m_sScene->getBoundary());
+   }
+   else if(m_mode == EMode_PhotoMontage)
+   {
+      assert(m_photoMontage);
+   }
 }
 
 //-----------------------------------------------------------------------------
-void MainWindow::on_runMVCTarget()
+void MainWindow::on_runTarget()
 {
-   // could be called within a new thread
-   m_mvcCloning->startTargetComputation(m_tScene->clickLocation());
-   qDebug() << "Start running mvc";
+   if(m_mode == EMode_MVC)
+   {
+      assert(m_mvcCloning);
+      // could be called within a new thread
+      m_mvcCloning->startTargetComputation(m_tScene->clickLocation());
+   }
+   else if(m_mode == EMode_PhotoMontage)
+   {
+      assert(m_photoMontage);
+   }
 }
 
 
@@ -95,7 +112,6 @@ void MainWindow::setup()
 
    QActionGroup* actionGroup = new QActionGroup(ui->menuMode);
    actionGroup->setExclusive(true);
-
 
    // MVC module
    QAction* mvcAction = new QAction("MVC",this);
@@ -134,7 +150,7 @@ void MainWindow::loadSourceImg(const QString &path)
       // delete old instance if we already have one.
 
 
-      connect(m_sScene,SIGNAL(runMVCSource()), this, SLOT(on_runMVCSource()));
+      connect(m_sScene,SIGNAL(runSource()), this, SLOT(on_runSource()));
       m_sScene->setPixmap(sourceImage);
 
       float currentScale = ui->sourceZoom->value()/100.0f;
@@ -161,7 +177,7 @@ void MainWindow::loadTargetImg(const QString &path)
          delete m_tScene;
       }
       m_tScene = new TargetScene(this);
-      connect(m_tScene,SIGNAL(runMVCComputation()), this, SLOT(on_runMVCTarget()));
+      connect(m_tScene,SIGNAL(runTarget()), this, SLOT(on_runTarget()));
       m_tScene->setPixmap(targetImage);
 
 
@@ -233,10 +249,15 @@ void MainWindow::on_mvcSelected(bool enabled)
    qDebug() << "On mvc enabled" << enabled;
    if(enabled)
    {
+      //resetting
       on_reset();
       m_photoMontage.reset();
       tryToLoadMVCInstance();
+
+      //logic changes
       m_mode = EMode_MVC;
+
+      //ui changes
    }
 }
 
@@ -246,9 +267,15 @@ void MainWindow::on_photoMontageSelected(bool enabled)
    qDebug() << "On photomontage enabled" << enabled;
    if(enabled)
    {
+      // reseting
       on_reset();
       m_mvcCloning.reset();
       m_photoMontage.reset(new PhotoMontage(m_sScene->getPixmap(),this));
+
+      //logic changes
       m_mode = EMode_PhotoMontage;
+
+      //ui changes
+      ui->spinBox->hide();
    }
 }

@@ -53,5 +53,5 @@ void TargetScene::mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent)
 #else
    m_targetLocation = mouseEvent->scenePos();
 #endif // MVC_DEBUG
-   emit runMVCComputation();
+   emit runTarget();
 }

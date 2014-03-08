@@ -54,7 +54,7 @@ void SourceScene::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
 void SourceScene::mouseReleaseEvent(QGraphicsSceneMouseEvent */*event*/)
 {
     qDebug() << "Mouse released";
-    emit runMVCSource();
+    emit runSource();
 }
 
 void SourceScene::reset()

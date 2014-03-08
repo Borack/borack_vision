@@ -21,7 +21,7 @@ public slots:
    void drawMesh(MVC::Mesh2d::Segments segements);
 
 signals:
-   void runMVCSource();
+   void runSource();
 
 
 protected:

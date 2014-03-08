@@ -18,7 +18,7 @@ struct ForSmoothness
 GCoptimization::EnergyTermType SmoothCostFn(GCoptimization::SiteID site1, GCoptimization::SiteID s2, GCoptimization::LabelID l1, GCoptimization::LabelID l2, void* forSmoothness)
 {
    if(l1 == l2) return 0;
-   else return 100;
+   else return 1;
 }
 
 //-----------------------------------------------------------------------------
@@ -32,15 +32,18 @@ PhotoMontage::PhotoMontage(const QPixmap &pixmap, QObject *parent)
 //-----------------------------------------------------------------------------
 void PhotoMontage::setupGraphCut()
 {
-   const int num_labels = 2;
-   GCoptimizationGridGraph* gc = new GCoptimizationGridGraph(m_inputSource.width(), m_inputSource.height(), num_labels);
+   QImage qImg = m_inputSource.toImage();
+   cv::Mat cvMat = Converter::QImageToCvMat(qImg);
+   cv::Mat colorMat;
+   cv::resize(cvMat, colorMat, cv::Size(0,0), 0.25, 0.25);
+
+   const int num_labels = 5;
+   GCoptimizationGridGraph* gc = new GCoptimizationGridGraph(colorMat.cols, colorMat.rows, num_labels);
+   gc->setVerbosity(2);
    qDebug() << "Graph is setup";
 
-
-   QImage qImg = m_inputSource.toImage();
-   cv::Mat colMat = Converter::QImageToCvMat(qImg);
    cv::Mat gray;
-   cv::cvtColor(colMat, gray, CV_BGR2GRAY);
+   cv::cvtColor(colorMat, gray, CV_BGR2GRAY);
 
    const int num_pixels = gc->numSites();
 
@@ -57,7 +60,7 @@ void PhotoMontage::setupGraphCut()
          int properLabel = colValue / threshold;
 
          if(l == properLabel)    gc->setDataCost(i,l,0);
-         else                    gc->setDataCost(i,l,100);
+         else                    gc->setDataCost(i,l,1);
 
       }
    }
@@ -68,7 +71,7 @@ void PhotoMontage::setupGraphCut()
    gc->setSmoothCost(&SmoothCostFn, &forSmoothness);
 
    qDebug() << "\nBefore optimization energy is %d" << gc->compute_energy();
-   gc->expansion(2);// run expansion for 2 iterations. For swap use gc->swap(num_iterations);
+   gc->expansion(1);// run expansion for 2 iterations. For swap use gc->swap(num_iterations);
    qDebug() << "\nAfter optimization energy is %d" << gc->compute_energy();
 
 

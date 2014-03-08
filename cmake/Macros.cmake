@@ -70,9 +70,9 @@ macro(add_module NAME)
      get_filename_component(MODULE_NAME ${MODULE_PATH} NAME)
 
 
+     include_directories(${MODULE_PATH})
      if(NOT TARGET ${MODULE_NAME}) #Make sure that we only add this module once
         add_subdirectory(${MODULE_PATH} ${CMAKE_CURRENT_BINARY_DIR}/${NAME})
-        include_directories(${MODULE_PATH})
 
         #Expand the list of libs we have to link to with this module
         set_property(GLOBAL APPEND PROPERTY MODULE_LIBS ${MODULE_NAME})

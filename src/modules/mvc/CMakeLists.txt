@@ -15,10 +15,8 @@ message(STATUS "add_library ${MODULE}")
 add_library(${MODULE} ${SOURCES} ${HEADERS})
 
 add_util()
-
-
 find_opencv()
-find_cgal()
 find_eigen()
+find_cgal()
 
 qt5_use_modules(${MODULE} Widgets OpenGL)

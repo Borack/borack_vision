@@ -2,7 +2,6 @@
 #define PHOTOMONTAGE_HPP
 
 #include <QObject>
-
 #include <QPixmap>
 
 class PhotoMontage : public QObject
@@ -18,6 +17,7 @@ public slots:
 private:
 
    void setupGraphCut();
+//   GCoptimization::EnergyTermType SmoothCostFn(GCoptimization::SiteID site1, GCoptimization::SiteID s2, GCoptimization::LabelID l1, GCoptimization::LabelID l2);
 
    const QPixmap& m_inputSource;
 

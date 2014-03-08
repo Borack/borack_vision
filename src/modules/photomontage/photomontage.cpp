@@ -18,7 +18,7 @@ struct ForSmoothness
 GCoptimization::EnergyTermType SmoothCostFn(GCoptimization::SiteID site1, GCoptimization::SiteID s2, GCoptimization::LabelID l1, GCoptimization::LabelID l2, void* forSmoothness)
 {
    if(l1 == l2) return 0;
-   else return 1;
+   else return 2;
 }
 
 //-----------------------------------------------------------------------------
@@ -37,9 +37,9 @@ void PhotoMontage::setupGraphCut()
    cv::Mat colorMat;
    cv::resize(cvMat, colorMat, cv::Size(0,0), 0.25, 0.25);
 
-   const int num_labels = 5;
+   const int num_labels = 3;
    GCoptimizationGridGraph* gc = new GCoptimizationGridGraph(colorMat.cols, colorMat.rows, num_labels);
-   gc->setVerbosity(2);
+//   gc->setVerbosity(2);
    qDebug() << "Graph is setup";
 
    cv::Mat gray;
@@ -51,7 +51,6 @@ void PhotoMontage::setupGraphCut()
    const float threshold = 255.0f / num_labels;
    for ( int i = 0; i < num_pixels; i++ )
    {
-
       for (int l = 0; l < num_labels; l++ )
       {
          int r = i / gray.cols;
@@ -61,7 +60,6 @@ void PhotoMontage::setupGraphCut()
 
          if(l == properLabel)    gc->setDataCost(i,l,0);
          else                    gc->setDataCost(i,l,1);
-
       }
    }
 
@@ -71,12 +69,13 @@ void PhotoMontage::setupGraphCut()
    gc->setSmoothCost(&SmoothCostFn, &forSmoothness);
 
    qDebug() << "\nBefore optimization energy is %d" << gc->compute_energy();
-   gc->expansion(1);// run expansion for 2 iterations. For swap use gc->swap(num_iterations);
+   gc->expansion(2);// run expansion for 2 iterations. For swap use gc->swap(num_iterations);
+//   gc->swap(num_labels);
    qDebug() << "\nAfter optimization energy is %d" << gc->compute_energy();
 
 
    cv::Mat out(gray.size(), CV_8UC1);
-   for ( int  i = 0; i < num_pixels; i++ )
+   for (int  i = 0; i < num_pixels; i++)
    {
       int r = i / gray.cols;
       int c = i % gray.cols;

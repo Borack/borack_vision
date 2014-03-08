@@ -42,13 +42,14 @@ add_executable(${MODULE} ${SOURCES} ${HEADERS} ${QRC_OUT} ${UI_HEADERS})
 option(MODULE_MVC "Build with the 'Coordinates for instant image cloning' module" ON)
 if(MODULE_MVC)
     add_module(mvc)
+#    add_definitions(-DMODULE_MVC)
 endif(MODULE_MVC)
 
 
 option(MODULE_PHOTOMONTAGE "Build with the 'Interactive Digital Photomontage' module" ON)
 if(MODULE_PHOTOMONTAGE)
     add_module(photomontage)
-    add_definitions(-DMODULE_PHOTOMONTAGE)
+#    add_definitions(-DMODULE_PHOTOMONTAGE)
 endif(MODULE_PHOTOMONTAGE)
 
 

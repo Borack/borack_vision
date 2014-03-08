@@ -4,6 +4,7 @@
 
 #include <QAbstractButton>
 #include <QAction>
+#include <QActionGroup>
 #include <QApplication>
 #include <QDebug>
 #include <QFileDialog>
@@ -13,8 +14,10 @@
 #include <QGraphicsView>
 #include <QImage>
 #include <QLabel>
+#include <QMenu>
 #include <QPushButton>
 #include <QSettings>
+#include <QSpinBox>
 #include <QString>
 #include <QToolButton>
 #include <QVBoxLayout>
@@ -25,10 +28,10 @@
 const QString MainWindow::SETTINGS_LAST_SOURCE_PATH("last_img_source_path");
 const QString MainWindow::SETTINGS_LAST_TARGET_PATH("last_img_target_path");
 
-MainWindow::MainWindow(QWidget *parent) :
-   QMainWindow(parent),
-   ui(new Ui::MainWindow)
- , m_mvcCloning(0)
+//-----------------------------------------------------------------------------
+MainWindow::MainWindow(QWidget *parent)
+ : QMainWindow(parent)
+ , ui(new Ui::MainWindow)
  , m_sScene(0)
  , m_tScene(0)
 {
@@ -36,11 +39,13 @@ MainWindow::MainWindow(QWidget *parent) :
    setup();
 }
 
+//-----------------------------------------------------------------------------
 MainWindow::~MainWindow()
 {
    delete ui;
 }
 
+//-----------------------------------------------------------------------------
 void MainWindow::on_actionOpen_source_triggered()
 {
    QSettings settings;
@@ -49,6 +54,7 @@ void MainWindow::on_actionOpen_source_triggered()
    loadSourceImg(sourcePath);
 }
 
+//-----------------------------------------------------------------------------
 void MainWindow::on_actionOpen_target_triggered()
 {
    QSettings settings;
@@ -57,17 +63,13 @@ void MainWindow::on_actionOpen_target_triggered()
    loadTargetImg(targetPath);
 }
 
+//-----------------------------------------------------------------------------
 void MainWindow::on_runMVCSource()
 {
    m_mvcCloning->startSourceComputation(m_sScene->getBoundary());
-
-   //! @todo needs to be modularized!
-#ifdef MODULE_PHOTOMONTAGE
-   m_photoMontage.reset(new PhotoMontage(m_sScene->getPixmap(),this));
-#endif
-
 }
 
+//-----------------------------------------------------------------------------
 void MainWindow::on_runMVCTarget()
 {
    // could be called within a new thread
@@ -76,6 +78,7 @@ void MainWindow::on_runMVCTarget()
 }
 
 
+//-----------------------------------------------------------------------------
 void MainWindow::setup()
 {
    QSettings settings;
@@ -89,8 +92,32 @@ void MainWindow::setup()
    connect(ui->pushButton, SIGNAL(clicked()), this, SLOT(on_reset()));
 
    ui->pushButton->addAction(resetAction);
+
+   QActionGroup* actionGroup = new QActionGroup(ui->menuMode);
+   actionGroup->setExclusive(true);
+
+
+   // MVC module
+   QAction* mvcAction = new QAction("MVC",this);
+   mvcAction->setCheckable(true);
+   connect(mvcAction, SIGNAL(triggered(bool)), this, SLOT(on_mvcSelected(bool)));
+   mvcAction->setChecked(true);
+   mvcAction->setActionGroup(actionGroup);
+   ui->menuMode->addAction(mvcAction);
+
+   // PhotoMontage module
+   QAction* photoMontageAction = new QAction("PhotoMontage",this);
+   photoMontageAction->setCheckable(true);
+   connect(photoMontageAction, SIGNAL(triggered(bool)), this, SLOT(on_photoMontageSelected(bool)));
+   photoMontageAction->setActionGroup(actionGroup);
+   ui->menuMode->addAction(photoMontageAction);
+
+   // since this is not the default we disable the counter from here.
+   ui->spinBox->hide();
+
 }
 
+//-----------------------------------------------------------------------------
 void MainWindow::loadSourceImg(const QString &path)
 {
 
@@ -121,6 +148,7 @@ void MainWindow::loadSourceImg(const QString &path)
 
 }
 
+//-----------------------------------------------------------------------------
 void MainWindow::loadTargetImg(const QString &path)
 {
    if(!path.isEmpty())
@@ -147,6 +175,7 @@ void MainWindow::loadTargetImg(const QString &path)
    }
 }
 
+//-----------------------------------------------------------------------------
 void MainWindow::tryToLoadMVCInstance()
 {
    // FIXME check if null
@@ -160,6 +189,7 @@ void MainWindow::tryToLoadMVCInstance()
    }
 }
 
+//-----------------------------------------------------------------------------
 void MainWindow::on_buttonBox_clicked(QAbstractButton *button)
 {
    if(ui->buttonBox->button(QDialogButtonBox::Close) == button)
@@ -168,15 +198,20 @@ void MainWindow::on_buttonBox_clicked(QAbstractButton *button)
    }
 }
 
+//-----------------------------------------------------------------------------
 void MainWindow::on_reset()
 {
    qDebug() << "Reset triggered";
    m_sScene->reset();
    m_tScene->reset();
-   m_mvcCloning->resetCoords();
+   if(m_mvcCloning)
+   {
+      m_mvcCloning->resetCoords();
+   }
 }
 
 
+//-----------------------------------------------------------------------------
 void MainWindow::on_sourceZoom_sliderMoved(int position)
 {
    float scale = static_cast<float>(position)/100.0f;
@@ -184,9 +219,36 @@ void MainWindow::on_sourceZoom_sliderMoved(int position)
    ui->sourceView->scale(scale, scale);
 }
 
+//-----------------------------------------------------------------------------
 void MainWindow::on_targetZoom_sliderMoved(int position)
 {
    float scale = static_cast<float>(position)/100.0f;
    ui->targetView->resetMatrix();
    ui->targetView->scale(scale, scale);
+}
+
+//-----------------------------------------------------------------------------
+void MainWindow::on_mvcSelected(bool enabled)
+{
+   qDebug() << "On mvc enabled" << enabled;
+   if(enabled)
+   {
+      on_reset();
+      m_photoMontage.reset();
+      tryToLoadMVCInstance();
+      m_mode = EMode_MVC;
+   }
+}
+
+//-----------------------------------------------------------------------------
+void MainWindow::on_photoMontageSelected(bool enabled)
+{
+   qDebug() << "On photomontage enabled" << enabled;
+   if(enabled)
+   {
+      on_reset();
+      m_mvcCloning.reset();
+      m_photoMontage.reset(new PhotoMontage(m_sScene->getPixmap(),this));
+      m_mode = EMode_PhotoMontage;
+   }
 }

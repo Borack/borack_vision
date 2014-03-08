@@ -41,7 +41,16 @@ private slots:
 
    void on_targetZoom_sliderMoved(int position);
 
+   void on_photoMontageSelected(bool enabled);
+
+   void on_mvcSelected(bool enabled);
+
 private:
+
+   enum EMode{
+      EMode_MVC = 0,
+      EMode_PhotoMontage
+   };
 
    void setup();
    void loadSourceImg(const QString& path);
@@ -54,13 +63,13 @@ private:
    TargetScene *m_tScene;
 
    QScopedPointer<MeanValueSeamlessCloning> m_mvcCloning;
+   QScopedPointer<PhotoMontage> m_photoMontage;
+
    static const QString SETTINGS_LAST_SOURCE_PATH;
    static const QString SETTINGS_LAST_TARGET_PATH;
 
-   //! @todo needs to be modularized!
-#ifdef MODULE_PHOTOMONTAGE
-   QScopedPointer<PhotoMontage> m_photoMontage;
-#endif
+   EMode m_mode;
+
 };
 
 #endif // MAINWINDOW_HPP

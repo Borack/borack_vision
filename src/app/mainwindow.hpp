@@ -60,8 +60,8 @@ private:
 
    Ui::MainWindow *ui;
 
-   MVCSourceScene *m_mvcSourceScene;
-   MVCTargetScene *m_mvcTargetScene;
+   CustomScene *m_sScene;
+   CustomScene *m_tScene;
 
    QScopedPointer<MeanValueSeamlessCloning> m_mvcCloning;
    QScopedPointer<PhotoMontage> m_photoMontage;

@@ -1,4 +1,4 @@
-#include "targetscene.hpp"
+#include "mvc_targetscene.hpp"
 #include <QGraphicsSceneMouseEvent>
 #include <QDebug>
 

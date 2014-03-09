@@ -19,15 +19,14 @@ public:
    QPointF clickLocation() const;
    virtual void reset();
 
-signals:
-   void runTarget();
-
 public slots:
    void drawContour(MVC::Boundary boundary);
    void drawFinalPatch(QImage img);
 
 protected:
    virtual void mousePressEvent(QGraphicsSceneMouseEvent * mouseEvent);
+   virtual void mouseMoveEvent(QGraphicsSceneMouseEvent *event) {}
+   virtual void mouseReleaseEvent(QGraphicsSceneMouseEvent *) {}
 
 private:
    QGraphicsPolygonItem* m_polygon;

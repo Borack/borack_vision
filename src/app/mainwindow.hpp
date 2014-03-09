@@ -7,8 +7,8 @@
 #include <QString>
 
 #include <meanvalue_seamless_cloning.hpp>
-#include "sourcescene.hpp"
-#include "targetscene.hpp"
+#include "mvc_sourcescene.hpp"
+#include "mvc_targetscene.hpp"
 
 #include <photomontage.hpp>
 
@@ -59,7 +59,7 @@ private:
 
    Ui::MainWindow *ui;
 
-   SourceScene *m_sScene;
+   MVCSourceScene *m_sScene;
    TargetScene *m_tScene;
 
    QScopedPointer<MeanValueSeamlessCloning> m_mvcCloning;

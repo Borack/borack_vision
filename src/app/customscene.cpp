@@ -18,8 +18,3 @@ QPixmap CustomScene::getPixmap() const
 {
    return m_sceneImage;
 }
-
-void CustomScene::reset()
-{
-   // empty
-}

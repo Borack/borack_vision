@@ -25,7 +25,12 @@
 #include <QWidget>
 
 
-//! @note Consider to use boost::statechart here!
+//! @note   Consider to use boost::statechart here!
+//!
+//! @note   Consider to use a commong interface for all the modules.
+//!         Although most likely this is not very applicable since not all the modules need the same input parameters.
+//!         Providing dummy parameters for the ones that are required is an option - however this is not nice.
+
 
 const QString MainWindow::SETTINGS_LAST_SOURCE_PATH("last_img_source_path");
 const QString MainWindow::SETTINGS_LAST_TARGET_PATH("last_img_target_path");
@@ -146,7 +151,7 @@ void MainWindow::loadSourceImg(const QString &path)
       {
          delete m_sScene;
       }
-      m_sScene = new SourceScene(this);
+      m_sScene = new MVCSourceScene(this);
       // delete old instance if we already have one.
 
 
@@ -258,6 +263,7 @@ void MainWindow::on_mvcSelected(bool enabled)
       m_mode = EMode_MVC;
 
       //ui changes
+      ui->spinBox->hide();
    }
 }
 
@@ -276,6 +282,6 @@ void MainWindow::on_photoMontageSelected(bool enabled)
       m_mode = EMode_PhotoMontage;
 
       //ui changes
-      ui->spinBox->hide();
+      ui->spinBox->show();
    }
 }

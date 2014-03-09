@@ -6,12 +6,12 @@
 #include <QGraphicsPolygonItem>
 #include <mvc_types.hpp>
 
-class SourceScene : public CustomScene
+class MVCSourceScene : public CustomScene
 {
    Q_OBJECT
 public:
-   explicit SourceScene(QObject *parent = 0);
-   virtual ~SourceScene() {}
+   explicit MVCSourceScene(QObject *parent = 0);
+   virtual ~MVCSourceScene() {}
 
    MVC::Boundary getBoundary() const;
 
@@ -19,9 +19,6 @@ public:
 
 public slots:
    void drawMesh(MVC::Mesh2d::Segments segements);
-
-signals:
-   void runSource();
 
 
 protected:

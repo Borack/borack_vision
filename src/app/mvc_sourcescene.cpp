@@ -1,4 +1,4 @@
-#include "sourcescene.hpp"
+#include "mvc_sourcescene.hpp"
 
 #include <QDebug>
 #include <QGraphicsSceneMouseEvent>
@@ -6,18 +6,18 @@
 #include <QPen>
 #include <QBrush>
 
-SourceScene::SourceScene(QObject *parent)
+MVCSourceScene::MVCSourceScene(QObject *parent)
    : CustomScene(parent)
    , m_polygon(0)
 {
 }
 
-MVC::Boundary SourceScene::getBoundary() const
+MVC::Boundary MVCSourceScene::getBoundary() const
 {
    return m_boundary;
 }
 
-void SourceScene::mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent)
+void MVCSourceScene::mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent)
 {
    //   qDebug() << "Button down pos: " << mouseEvent->buttonDownPos(Qt::AllButtons);
    //   qDebug() << "Button down scene pos: " << mouseEvent->buttonDownScenePos(Qt::AllButtons);
@@ -41,7 +41,7 @@ void SourceScene::mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent)
    drawPolygon();
 }
 
-void SourceScene::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
+void MVCSourceScene::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
 {
    if(event->buttons() != Qt::NoButton)
    {
@@ -51,13 +51,13 @@ void SourceScene::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
    }
 }
 
-void SourceScene::mouseReleaseEvent(QGraphicsSceneMouseEvent */*event*/)
+void MVCSourceScene::mouseReleaseEvent(QGraphicsSceneMouseEvent */*event*/)
 {
     qDebug() << "Mouse released";
     emit runSource();
 }
 
-void SourceScene::reset()
+void MVCSourceScene::reset()
 {
    m_boundary.clear();
    if(m_polygon)
@@ -73,7 +73,7 @@ void SourceScene::reset()
    m_lines.clear();
 }
 
-void SourceScene::drawMesh(MVC::Mesh2d::Segments segements)
+void MVCSourceScene::drawMesh(MVC::Mesh2d::Segments segements)
 {
    foreach(QGraphicsLineItem* line, m_lines)
    {
@@ -87,7 +87,7 @@ void SourceScene::drawMesh(MVC::Mesh2d::Segments segements)
    }
 }
 
-void SourceScene::drawPolygon()
+void MVCSourceScene::drawPolygon()
 {
    if(m_polygon)
    {

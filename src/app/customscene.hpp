@@ -19,8 +19,18 @@ public:
    virtual void setPixmap(const QPixmap&img);
    virtual QPixmap getPixmap() const;
 
+   virtual void reset() = 0;
+
+signals:
+   void runSource();
+   void runTarget();
+
+protected:
+   virtual void mousePressEvent(QGraphicsSceneMouseEvent * mouseEvent) = 0;
+   virtual void mouseMoveEvent(QGraphicsSceneMouseEvent *event) = 0;
+   virtual void mouseReleaseEvent(QGraphicsSceneMouseEvent *) = 0;
+
 private:
-   virtual void reset();
    QPixmap m_sceneImage;
    QGraphicsPixmapItem* m_pixmapItem;
 };

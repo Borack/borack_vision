@@ -9,7 +9,8 @@
 #include <meanvalue_seamless_cloning.hpp>
 #include "mvc_sourcescene.hpp"
 #include "mvc_targetscene.hpp"
-#include <photomontage_sourcescene.hpp>
+#include <pm_sourcescene.hpp>
+#include <pm_targetscene.hpp>
 
 #include <photomontage.hpp>
 

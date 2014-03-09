@@ -147,6 +147,7 @@ void MainWindow::loadSourceImg(const QString &path)
       QPixmap sourceImage(path);
 
 
+      // delete old instance if we already have one.
       if(m_sScene)
       {
          delete m_sScene;
@@ -158,13 +159,13 @@ void MainWindow::loadSourceImg(const QString &path)
       }
       else if(m_mode == EMode_PhotoMontage)
       {
-         m_sScene = new PhotomontageSourceScene(this);
+         m_sScene = new PMSourceScene(this);
       }
       else
       {
          qFatal("Mode %d doees not provide a souce scene.", m_mode);
       }
-      // delete old instance if we already have one.
+      assert(m_sScene);
 
 
       connect(m_sScene,SIGNAL(runSource()), this, SLOT(on_runSource()));
@@ -200,12 +201,14 @@ void MainWindow::loadTargetImg(const QString &path)
       }
       else if(m_mode == EMode_PhotoMontage)
       {
-//         m_sScene = new
+         m_tScene = new PMTargetScene(this);
       }
       else
       {
          qFatal("Mode %d doees not provide a target scene.", m_mode);
       }
+      assert(m_tScene);
+
       connect(m_tScene,SIGNAL(runTarget()), this, SLOT(on_runTarget()));
       m_tScene->setPixmap(targetImage);
 

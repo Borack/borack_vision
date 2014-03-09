@@ -3,11 +3,11 @@
 
 #include "customscene.hpp"
 
-class PhotomontageSourceScene : public CustomScene
+class PMSourceScene : public CustomScene
 {
    Q_OBJECT
 public:
-   explicit PhotomontageSourceScene(QObject *parent = 0);
+   explicit PMSourceScene(QObject *parent = 0);
 
    virtual void reset() {}
 

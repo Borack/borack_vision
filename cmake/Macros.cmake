@@ -65,7 +65,7 @@ endmacro(setup_module)
 # Add Module
 #--------------------------------------------------------------------------------
 macro(add_module NAME)
-     set(B_PATH "/Users/sim/dev/borack_vision/src/modules/") #Should be an ENV variable
+     set(B_PATH "$ENV{BORACK_VISION}/src/modules/")
      set(MODULE_PATH ${B_PATH}/${NAME})
      get_filename_component(MODULE_NAME ${MODULE_PATH} NAME)
 
@@ -94,7 +94,9 @@ endmacro(add_util)
 # Add App
 #--------------------------------------------------------------------------------
 macro(add_app)
-    add_module("../app")
+     set(APP_PATH "$ENV{BORACK_VISION}/src/app/")
+     include_directories(${APP_PATH})
+     add_subdirectory(${APP_PATH} ${CMAKE_CURRENT_BINARY_DIR}/app)
 endmacro(add_app)
 
 #--------------------------------------------------------------------------------

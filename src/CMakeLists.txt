@@ -16,3 +16,6 @@ list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/../cmake/)
 # Application layer - always required
 #--------------------------------------------------------------------------------
 add_app()
+#add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/app)
+#include_directories(${CMAKE_CURRENT_SOURCE_DIR}/app)
+

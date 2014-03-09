@@ -2,11 +2,12 @@ setup_module()
 
 set(SOURCES
             photomontage.cpp
-
+            photomontage_sourcescene.cpp
 )
 
 set(HEADERS
             photomontage.hpp
+            photomontage_sourcescene.hpp
 )
 
 message(STATUS "add_library ${MODULE}")

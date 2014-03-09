@@ -39,8 +39,8 @@ const QString MainWindow::SETTINGS_LAST_TARGET_PATH("last_img_target_path");
 MainWindow::MainWindow(QWidget *parent)
  : QMainWindow(parent)
  , ui(new Ui::MainWindow)
- , m_sScene(0)
- , m_tScene(0)
+ , m_mvcSourceScene(0)
+ , m_mvcTargetScene(0)
 {
    ui->setupUi(this);
    setup();
@@ -76,7 +76,7 @@ void MainWindow::on_runSource()
    if(m_mode == EMode_MVC)
    {
       assert(m_mvcCloning);
-      m_mvcCloning->startSourceComputation(m_sScene->getBoundary());
+      m_mvcCloning->startSourceComputation(m_mvcSourceScene->getBoundary());
    }
    else if(m_mode == EMode_PhotoMontage)
    {
@@ -91,7 +91,7 @@ void MainWindow::on_runTarget()
    {
       assert(m_mvcCloning);
       // could be called within a new thread
-      m_mvcCloning->startTargetComputation(m_tScene->clickLocation());
+      m_mvcCloning->startTargetComputation(m_mvcTargetScene->clickLocation());
    }
    else if(m_mode == EMode_PhotoMontage)
    {
@@ -147,20 +147,20 @@ void MainWindow::loadSourceImg(const QString &path)
       QPixmap sourceImage(path);
 
 
-      if(m_sScene)
+      if(m_mvcSourceScene)
       {
-         delete m_sScene;
+         delete m_mvcSourceScene;
       }
-      m_sScene = new MVCSourceScene(this);
+      m_mvcSourceScene = new MVCSourceScene(this);
       // delete old instance if we already have one.
 
 
-      connect(m_sScene,SIGNAL(runSource()), this, SLOT(on_runSource()));
-      m_sScene->setPixmap(sourceImage);
+      connect(m_mvcSourceScene,SIGNAL(runSource()), this, SLOT(on_runSource()));
+      m_mvcSourceScene->setPixmap(sourceImage);
 
       float currentScale = ui->sourceZoom->value()/100.0f;
       ui->sourceView->scale(currentScale,currentScale);
-      ui->sourceView->setScene(m_sScene);
+      ui->sourceView->setScene(m_mvcSourceScene);
 
       QSettings settings;
       settings.setValue(SETTINGS_LAST_SOURCE_PATH, path);
@@ -177,18 +177,18 @@ void MainWindow::loadTargetImg(const QString &path)
       QPixmap targetImage(path);
 
       // delete old instance if we already have one.
-      if(m_tScene)
+      if(m_mvcTargetScene)
       {
-         delete m_tScene;
+         delete m_mvcTargetScene;
       }
-      m_tScene = new TargetScene(this);
-      connect(m_tScene,SIGNAL(runTarget()), this, SLOT(on_runTarget()));
-      m_tScene->setPixmap(targetImage);
+      m_mvcTargetScene = new MVCTargetScene(this);
+      connect(m_mvcTargetScene,SIGNAL(runTarget()), this, SLOT(on_runTarget()));
+      m_mvcTargetScene->setPixmap(targetImage);
 
 
       float currentScale = ui->targetZoom->value()/100.0f;
       ui->targetView->scale(currentScale,currentScale);
-      ui->targetView->setScene(m_tScene);
+      ui->targetView->setScene(m_mvcTargetScene);
 
       QSettings settings;
       settings.setValue(SETTINGS_LAST_TARGET_PATH, path);
@@ -200,13 +200,13 @@ void MainWindow::loadTargetImg(const QString &path)
 void MainWindow::tryToLoadMVCInstance()
 {
    // FIXME check if null
-   if(m_sScene && m_tScene &&
-         ! (m_sScene->getPixmap().isNull() || m_tScene->getPixmap().isNull()))
+   if(m_mvcSourceScene && m_mvcTargetScene &&
+         ! (m_mvcSourceScene->getPixmap().isNull() || m_mvcTargetScene->getPixmap().isNull()))
    {
-      m_mvcCloning.reset(new MeanValueSeamlessCloning(m_sScene->getPixmap(), m_tScene->getPixmap()));
-      connect(m_mvcCloning.data(),SIGNAL(displayMesh(MVC::Mesh2d::Segments)), m_sScene, SLOT(drawMesh(MVC::Mesh2d::Segments)));
-      connect(m_mvcCloning.data(),SIGNAL(targetContourCalculated(MVC::Boundary)), m_tScene ,SLOT(drawContour(MVC::Boundary)));
-      connect(m_mvcCloning.data(), SIGNAL(displayFinalPatch(QImage)), m_tScene, SLOT(drawFinalPatch(QImage)));
+      m_mvcCloning.reset(new MeanValueSeamlessCloning(m_mvcSourceScene->getPixmap(), m_mvcTargetScene->getPixmap()));
+      connect(m_mvcCloning.data(),SIGNAL(displayMesh(MVC::Mesh2d::Segments)), m_mvcSourceScene, SLOT(drawMesh(MVC::Mesh2d::Segments)));
+      connect(m_mvcCloning.data(),SIGNAL(targetContourCalculated(MVC::Boundary)), m_mvcTargetScene ,SLOT(drawContour(MVC::Boundary)));
+      connect(m_mvcCloning.data(), SIGNAL(displayFinalPatch(QImage)), m_mvcTargetScene, SLOT(drawFinalPatch(QImage)));
    }
 }
 
@@ -223,8 +223,8 @@ void MainWindow::on_buttonBox_clicked(QAbstractButton *button)
 void MainWindow::on_reset()
 {
    qDebug() << "Reset triggered";
-   m_sScene->reset();
-   m_tScene->reset();
+   m_mvcSourceScene->reset();
+   m_mvcTargetScene->reset();
    if(m_mvcCloning)
    {
       m_mvcCloning->resetCoords();
@@ -276,7 +276,7 @@ void MainWindow::on_photoMontageSelected(bool enabled)
       // reseting
       on_reset();
       m_mvcCloning.reset();
-      m_photoMontage.reset(new PhotoMontage(m_sScene->getPixmap(),this));
+      m_photoMontage.reset(new PhotoMontage(m_mvcSourceScene->getPixmap(),this));
 
       //logic changes
       m_mode = EMode_PhotoMontage;

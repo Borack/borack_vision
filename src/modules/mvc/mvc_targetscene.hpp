@@ -9,12 +9,12 @@
 #include <QImage>
 #include <QPixmap>
 
-class TargetScene : public CustomScene
+class MVCTargetScene : public CustomScene
 {
    Q_OBJECT
 public:
-   explicit TargetScene(QObject *parent = 0);
-   virtual ~TargetScene() {}
+   explicit MVCTargetScene(QObject *parent = 0);
+   virtual ~MVCTargetScene() {}
 
    QPointF clickLocation() const;
    virtual void reset();

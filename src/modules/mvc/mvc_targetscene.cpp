@@ -2,19 +2,19 @@
 #include <QGraphicsSceneMouseEvent>
 #include <QDebug>
 
-TargetScene::TargetScene(QObject *parent)
+MVCTargetScene::MVCTargetScene(QObject *parent)
  : CustomScene(parent)
  , m_polygon(0)
  , m_pixmap(0)
 {
 }
 
-QPointF TargetScene::clickLocation() const
+QPointF MVCTargetScene::clickLocation() const
 {
    return m_targetLocation;
 }
 
-void TargetScene::reset()
+void MVCTargetScene::reset()
 {
    if(m_pixmap)
    {
@@ -29,7 +29,7 @@ void TargetScene::reset()
    }
 }
 
-void TargetScene::drawContour(MVC::Boundary boundary)
+void MVCTargetScene::drawContour(MVC::Boundary boundary)
 {
 
    reset();
@@ -37,14 +37,14 @@ void TargetScene::drawContour(MVC::Boundary boundary)
    m_polygon = addPolygon(polygon,QPen(Qt::blue, 2, Qt::DashDotLine, Qt::RoundCap));
 }
 
-void TargetScene::drawFinalPatch(QImage img)
+void MVCTargetScene::drawFinalPatch(QImage img)
 {
    reset();
    QPixmap pixmap = QPixmap::fromImage(img);
    m_pixmap = addPixmap(pixmap);
 }
 
-void TargetScene::mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent)
+void MVCTargetScene::mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent)
 {
 
 #ifdef MVC_DEBUG

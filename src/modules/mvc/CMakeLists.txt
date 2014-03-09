@@ -3,12 +3,17 @@ setup_module()
 set(SOURCES
             meanvalue_seamless_cloning.cpp
             mesh2d.cpp
+            mvc_sourcescene.cpp
+            mvc_targetscene.cpp
+
 )
 
 set(HEADERS
             meanvalue_seamless_cloning.hpp
             mvc_types.hpp
             mesh2d.hpp
+            mvc_sourcescene.hpp
+            mvc_targetscene.hpp
 )
 
 message(STATUS "add_library ${MODULE}")

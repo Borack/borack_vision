@@ -7,16 +7,11 @@ set(SOURCES
         customscene.cpp
         customview.cpp
         mainwindow.cpp
-        mvc_sourcescene.cpp
-        mvc_targetscene.cpp
 )
 set(HEADERS
         customscene.hpp
         customview.hpp
-        mainwindow.hpp
-        mvc_sourcescene.hpp
-        mvc_targetscene.hpp
-)
+        mainwindow.hpp)
 
 set(UI_FILES 
         mainwindow.ui

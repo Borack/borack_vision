@@ -1,7 +1,7 @@
 #ifndef TARGETSCENE_HPP
 #define TARGETSCENE_HPP
 
-#include "customscene.hpp"
+#include <customscene.hpp>
 #include <mvc_types.hpp>
 
 #include <QPointF>

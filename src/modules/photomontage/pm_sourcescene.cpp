@@ -7,6 +7,7 @@
 PMSourceScene::PMSourceScene(QObject *parent)
    : CustomScene(parent)
    , m_pathMode(EPathMode_Curve)
+   , m_currentPath(0)
 {
 }
 
@@ -22,6 +23,7 @@ void PMSourceScene::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
    if(event->buttons() != Qt::NoButton)
    {
       m_currentStroke << event->scenePos();
+      m_currentPath = 0;
       drawStrokes();
    }
 }
@@ -47,18 +49,27 @@ void PMSourceScene::drawStrokes()
        while (i + 2 < m_currentStroke.size()) {
            path.cubicTo(m_currentStroke.at(i), m_currentStroke.at(i+1), m_currentStroke.at(i+2));
            i += 3;
-           qDebug() << "in curved mode";
        }
        while (i < m_currentStroke.size()) {
            path.lineTo(m_currentStroke.at(i));
            ++i;
        }
    }
-   addPath(path,QPen(Qt::green, 5));
+
+   if(m_currentPath)
+   {
+      removeItem(m_currentPath);
+   }
+   m_currentPath = addPath(path,QPen(Qt::blue, 20, Qt::SolidLine, Qt::FlatCap, Qt::BevelJoin));
 }
 
 //-----------------------------------------------------------------------------
 void PMSourceScene::reset()
 {
    m_allStrokes.clear();
+   if(m_currentPath)
+   {
+      removeItem(m_currentPath);
+   }
+   m_currentPath = 0;
 }

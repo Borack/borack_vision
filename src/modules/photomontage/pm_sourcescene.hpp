@@ -25,6 +25,7 @@ private:
    void drawStrokes();
 
    EPathMode m_pathMode;
+   QGraphicsPathItem* m_currentPath;
    Stroke m_currentStroke;
    Strokes m_allStrokes;
 };

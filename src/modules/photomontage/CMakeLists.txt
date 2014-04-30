@@ -21,5 +21,3 @@ add_core(utilities)
 add_3rd(gco-v3.0)
 find_opencv()
 find_eigen()
-
-qt5_use_modules(${MODULE} Core)

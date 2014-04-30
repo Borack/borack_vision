@@ -24,5 +24,3 @@ add_core(utilities)
 find_opencv()
 find_eigen()
 find_cgal()
-
-qt5_use_modules(${MODULE} Widgets OpenGL)

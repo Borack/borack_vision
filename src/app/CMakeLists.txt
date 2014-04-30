@@ -23,7 +23,6 @@ set(QML_SOURCES
 )
 
 find_qt5()
-find_cgal()
 
 add_executable(${MODULE} ${SOURCES} ${HEADERS} ${QRC_OUT} ${UI_HEADERS})
 

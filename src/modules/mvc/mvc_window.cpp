@@ -78,10 +78,6 @@ void MvcWindow::on_runSource()
       assert(m_mvcCloning);
       m_mvcCloning->startSourceComputation(dynamic_cast<MVCSourceScene*>(m_sScene)->getBoundary());
    }
-   else if(m_mode == EMode_PhotoMontage)
-   {
-      assert(m_photoMontage);
-   }
 }
 
 //-----------------------------------------------------------------------------
@@ -92,10 +88,6 @@ void MvcWindow::on_runTarget()
       assert(m_mvcCloning);
       // could be called within a new thread
       m_mvcCloning->startTargetComputation(dynamic_cast<MVCTargetScene*>(m_tScene)->clickLocation());
-   }
-   else if(m_mode == EMode_PhotoMontage)
-   {
-      assert(m_photoMontage);
    }
 }
 
@@ -125,13 +117,6 @@ void MvcWindow::setup()
    mvcAction->setChecked(true);
    mvcAction->setActionGroup(actionGroup);
    ui->menuMode->addAction(mvcAction);
-
-   // PhotoMontage module
-   QAction* photoMontageAction = new QAction("PhotoMontage",this);
-   photoMontageAction->setCheckable(true);
-   connect(photoMontageAction, SIGNAL(triggered(bool)), this, SLOT(on_photoMontageSelected(bool)));
-   photoMontageAction->setActionGroup(actionGroup);
-   ui->menuMode->addAction(photoMontageAction);
 
    // since this is not the default we disable the counter from here.
    ui->spinBox->hide();

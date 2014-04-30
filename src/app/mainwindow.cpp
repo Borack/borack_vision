@@ -5,6 +5,8 @@
 #include <QCloseEvent>
 #include <QSettings>
 
+#include <mvc_window.hpp>
+
 const int UI_VERSION = 1;
 
 MainWindow::MainWindow(QWidget *parent) :
@@ -39,5 +41,6 @@ void MainWindow::on_quitButton_clicked()
 
 void MainWindow::on_mvcButton_clicked()
 {
-
+   MvcWindow mvcWindow;
+   mvcWindow.show();
 }

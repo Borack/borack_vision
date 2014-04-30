@@ -1,5 +1,5 @@
-#ifndef MAINWINDOW_HPP
-#define MAINWINDOW_HPP
+#ifndef MVC_WINDOW_HPP
+#define MVC_WINDOW_HPP
 
 #include <QMainWindow>
 #include <QScopedPointer>
@@ -68,4 +68,4 @@ private:
 
 };
 
-#endif // MAINWINDOW_HPP
+#endif // MVC_WINDOW_HPP

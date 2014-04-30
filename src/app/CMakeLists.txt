@@ -32,6 +32,7 @@ add_executable(${MODULE} ${SOURCES} ${HEADERS} ${QRC_OUT} ${UI_HEADERS})
 
 option(MODULE_MVC "Build with the 'Coordinates for instant image cloning' module" ON)
 if(MODULE_MVC)
+find_cgal()
     add_module(mvc)
 #    add_definitions(-DMODULE_MVC)
     add_core(ui)

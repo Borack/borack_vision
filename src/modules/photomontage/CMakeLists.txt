@@ -15,7 +15,7 @@ set(HEADERS
 message(STATUS "add_library ${MODULE}")
 add_library(${MODULE} ${SOURCES} ${HEADERS})
 
-add_util()
+add_core(utilities)
 add_3rd(gco-v3.0)
 find_opencv()
 find_eigen()

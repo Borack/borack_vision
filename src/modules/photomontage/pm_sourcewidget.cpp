@@ -1,11 +1,14 @@
 #include "pm_sourcewidget.hpp"
 #include "ui_pm_sourcewidget.h"
 
+#include <QDebug>
 #include <QFileDialog>
+#include <QFileInfo>
 #include <QPixmap>
+#include <QSettings>
 #include <QString>
 
-#include <assert.h>
+const QString PMSourceWidget::SETTINGS_LAST_PM_SOURCE_PATH("last_pm_source_path");
 
 PMSourceWidget::PMSourceWidget(QWidget *parent) :
    QWidget(parent),
@@ -23,37 +26,29 @@ PMSourceWidget::~PMSourceWidget()
 void PMSourceWidget::on_loadBtn_clicked()
 {
 
-   QString sourcePath = QFileDialog::getOpenFileName(this,"Open source image",  QString(),"Images (*.png *.jpg)");
+   QSettings settings;
+   QString lastPath = QFileInfo(settings.value(SETTINGS_LAST_PM_SOURCE_PATH).toString()).absolutePath() + "/aslkjf"; // workaround;
+   QString sourcePath = QFileDialog::getOpenFileName(this,"Open source image",  lastPath,"Images (*.png *.jpg)");
 
    if(!sourcePath.isEmpty())
    {
       QPixmap sourceImage(sourcePath);
 
 
-      // delete old instance if we already have one.
-      if(m_sScene)
-      {
-         delete m_sScene;
-      }
+      m_sScene.reset(new PMSourceScene(this));
 
-      m_sScene = new PMSourceScene(this);
-
-
-      assert(m_sScene);
-
-
-//      connect(m_sScene,SIGNAL(runSource()), this, SLOT(on_runSource()));
+      connect(m_sScene.data(),SIGNAL(runSource()), this, SLOT(on_runSource()));
       m_sScene->setPixmap(sourceImage);
 
- //     float currentScale = ui->sourceZoom->value()/100.0f;
- //     ui->sourceView->scale(currentScale,currentScale);
-//      ui->sourceView->setScene(m_sScene);
-
-      ui->graphicsView->setScene(m_sScene);
+      ui->graphicsView->setScene(m_sScene.data());
       ui->graphicsView->fitInView(QRectF(0,0,sourceImage.width(), sourceImage.height()), Qt::KeepAspectRatio);
 
-//      QSettings settings;
-//      settings.setValue(SETTINGS_LAST_SOURCE_PATH, path);
-//      tryToLoadMVCInstance();
+      QSettings settings;
+      settings.setValue(SETTINGS_LAST_PM_SOURCE_PATH, sourcePath);
    }
+}
+
+void PMSourceWidget::on_runSource()
+{
+   qDebug() << "On run on source PM";
 }

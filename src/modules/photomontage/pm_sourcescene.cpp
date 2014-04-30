@@ -33,6 +33,8 @@ void PMSourceScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *)
 {
    m_allStrokes << m_currentStroke;
    m_currentStroke.clear();
+
+   emit runSource();
 }
 
 //-----------------------------------------------------------------------------

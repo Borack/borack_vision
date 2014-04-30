@@ -19,6 +19,7 @@ set(HEADERS
 message(STATUS "add_library ${MODULE}")
 add_library(${MODULE} ${SOURCES} ${HEADERS})
 
+add_core(ui)
 add_core(utilities)
 find_opencv()
 find_eigen()

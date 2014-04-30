@@ -1,7 +1,7 @@
 #ifndef SOURCESCENE_HPP
 #define SOURCESCENE_HPP
 
-#include "customscene.hpp"
+#include <customscene.hpp>
 #include <QObject>
 #include <QGraphicsPolygonItem>
 #include <mvc_types.hpp>

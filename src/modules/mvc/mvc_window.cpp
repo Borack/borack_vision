@@ -32,13 +32,13 @@
 //!         Providing dummy parameters for the ones that are required is an option - however this is not nice.
 
 
-const QString MainWindow::SETTINGS_LAST_SOURCE_PATH("last_img_source_path");
-const QString MainWindow::SETTINGS_LAST_TARGET_PATH("last_img_target_path");
+const QString MvcWindow::SETTINGS_LAST_SOURCE_PATH("last_img_source_path");
+const QString MvcWindow::SETTINGS_LAST_TARGET_PATH("last_img_target_path");
 
 //-----------------------------------------------------------------------------
-MainWindow::MainWindow(QWidget *parent)
+MvcWindow::MvcWindow(QWidget *parent)
  : QMainWindow(parent)
- , ui(new Ui::MainWindow)
+ , ui(new Ui::MvcWindow)
  , m_sScene(0)
  , m_tScene(0)
 {
@@ -47,13 +47,13 @@ MainWindow::MainWindow(QWidget *parent)
 }
 
 //-----------------------------------------------------------------------------
-MainWindow::~MainWindow()
+MvcWindow::~MvcWindow()
 {
    delete ui;
 }
 
 //-----------------------------------------------------------------------------
-void MainWindow::on_actionOpen_source_triggered()
+void MvcWindow::on_actionOpen_source_triggered()
 {
    QSettings settings;
    QString lastPath = QFileInfo(settings.value(SETTINGS_LAST_SOURCE_PATH).toString()).absolutePath() + "/aslkjf"; // workaround;
@@ -62,7 +62,7 @@ void MainWindow::on_actionOpen_source_triggered()
 }
 
 //-----------------------------------------------------------------------------
-void MainWindow::on_actionOpen_target_triggered()
+void MvcWindow::on_actionOpen_target_triggered()
 {
    QSettings settings;
    QString lastPath = QFileInfo(settings.value(SETTINGS_LAST_TARGET_PATH).toString()).absolutePath() + "/aslkjf"; // workaround;
@@ -71,7 +71,7 @@ void MainWindow::on_actionOpen_target_triggered()
 }
 
 //-----------------------------------------------------------------------------
-void MainWindow::on_runSource()
+void MvcWindow::on_runSource()
 {
    if(m_mode == EMode_MVC)
    {
@@ -85,7 +85,7 @@ void MainWindow::on_runSource()
 }
 
 //-----------------------------------------------------------------------------
-void MainWindow::on_runTarget()
+void MvcWindow::on_runTarget()
 {
    if(m_mode == EMode_MVC)
    {
@@ -101,7 +101,7 @@ void MainWindow::on_runTarget()
 
 
 //-----------------------------------------------------------------------------
-void MainWindow::setup()
+void MvcWindow::setup()
 {
    QSettings settings;
    loadSourceImg(settings.value(SETTINGS_LAST_SOURCE_PATH).toString());
@@ -139,7 +139,7 @@ void MainWindow::setup()
 }
 
 //-----------------------------------------------------------------------------
-void MainWindow::loadSourceImg(const QString &path)
+void MvcWindow::loadSourceImg(const QString &path)
 {
 
    if(!path.isEmpty())
@@ -179,7 +179,7 @@ void MainWindow::loadSourceImg(const QString &path)
 }
 
 //-----------------------------------------------------------------------------
-void MainWindow::loadTargetImg(const QString &path)
+void MvcWindow::loadTargetImg(const QString &path)
 {
    if(!path.isEmpty())
    {
@@ -216,7 +216,7 @@ void MainWindow::loadTargetImg(const QString &path)
 }
 
 //-----------------------------------------------------------------------------
-void MainWindow::tryToLoadMVCInstance()
+void MvcWindow::tryToLoadMVCInstance()
 {
    // FIXME check if null
    if(m_sScene && m_tScene &&
@@ -230,7 +230,7 @@ void MainWindow::tryToLoadMVCInstance()
 }
 
 //-----------------------------------------------------------------------------
-void MainWindow::on_buttonBox_clicked(QAbstractButton *button)
+void MvcWindow::on_buttonBox_clicked(QAbstractButton *button)
 {
    if(ui->buttonBox->button(QDialogButtonBox::Close) == button)
    {
@@ -239,7 +239,7 @@ void MainWindow::on_buttonBox_clicked(QAbstractButton *button)
 }
 
 //-----------------------------------------------------------------------------
-void MainWindow::on_reset()
+void MvcWindow::on_reset()
 {
    qDebug() << "Reset triggered";
    m_sScene->reset();
@@ -252,7 +252,7 @@ void MainWindow::on_reset()
 
 
 //-----------------------------------------------------------------------------
-void MainWindow::on_sourceZoom_sliderMoved(int position)
+void MvcWindow::on_sourceZoom_sliderMoved(int position)
 {
    float scale = static_cast<float>(position)/100.0f;
    ui->sourceView->resetMatrix();
@@ -260,7 +260,7 @@ void MainWindow::on_sourceZoom_sliderMoved(int position)
 }
 
 //-----------------------------------------------------------------------------
-void MainWindow::on_targetZoom_sliderMoved(int position)
+void MvcWindow::on_targetZoom_sliderMoved(int position)
 {
    float scale = static_cast<float>(position)/100.0f;
    ui->targetView->resetMatrix();
@@ -268,7 +268,7 @@ void MainWindow::on_targetZoom_sliderMoved(int position)
 }
 
 //-----------------------------------------------------------------------------
-void MainWindow::on_mvcSelected(bool enabled)
+void MvcWindow::on_mvcSelected(bool enabled)
 {
    qDebug() << "On mvc enabled" << enabled;
    if(enabled)

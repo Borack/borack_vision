@@ -11,16 +11,16 @@
 #include <mvc_targetscene.hpp>
 
 namespace Ui {
-class MainWindow;
+class MvcWindow;
 }
 
-class MainWindow : public QMainWindow
+class MvcWindow : public QMainWindow
 {
    Q_OBJECT
 
 public:
-   explicit MainWindow(QWidget *parent = 0);
-   ~MainWindow();
+   explicit MvcWindow(QWidget *parent = 0);
+   ~MvcWindow();
 
 private slots:
    void on_actionOpen_source_triggered();
@@ -53,7 +53,7 @@ private:
    void loadTargetImg(const QString& path);
    void tryToLoadMVCInstance();
 
-   Ui::MainWindow *ui;
+   Ui::MvcWindow *ui;
 
    CustomScene *m_sScene;
    CustomScene *m_tScene;

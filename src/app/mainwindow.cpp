@@ -41,6 +41,6 @@ void MainWindow::on_quitButton_clicked()
 
 void MainWindow::on_mvcButton_clicked()
 {
-   m_moduleWindow = new MvcWindow(this);
+   m_moduleWindow.reset(new MvcWindow(this));
    m_moduleWindow->show();
 }

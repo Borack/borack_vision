@@ -27,7 +27,7 @@ private slots:
 
 private:
    Ui::MainWindow *ui;
-   QPointer<QWidget> m_moduleWindow;
+   QScopedPointer<QWidget> m_moduleWindow;
 
 
 };

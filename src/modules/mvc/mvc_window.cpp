@@ -102,17 +102,6 @@ void MvcWindow::setup()
 
    ui->pushButton->addAction(resetAction);
 
-   QActionGroup* actionGroup = new QActionGroup(ui->menuMode);
-   actionGroup->setExclusive(true);
-
-   // MVC module
-   QAction* mvcAction = new QAction("MVC",this);
-   mvcAction->setCheckable(true);
-   connect(mvcAction, SIGNAL(triggered(bool)), this, SLOT(on_mvcSelected(bool)));
-   mvcAction->setChecked(true);
-   mvcAction->setActionGroup(actionGroup);
-   ui->menuMode->addAction(mvcAction);
-
    // since this is not the default we disable the counter from here.
    ui->spinBox->hide();
 
@@ -204,7 +193,7 @@ void MvcWindow::on_buttonBox_clicked(QAbstractButton *button)
 {
    if(ui->buttonBox->button(QDialogButtonBox::Close) == button)
    {
-      QApplication::quit();
+     this->close();
    }
 }
 
@@ -236,23 +225,3 @@ void MvcWindow::on_targetZoom_sliderMoved(int position)
    ui->targetView->resetMatrix();
    ui->targetView->scale(scale, scale);
 }
-
-//-----------------------------------------------------------------------------
-void MvcWindow::on_mvcSelected(bool enabled)
-{
-   qDebug() << "On mvc enabled" << enabled;
-   if(enabled)
-   {
-      //resetting
-      on_reset();
-      tryToLoadMVCInstance();
-
-      //ui changes
-      ui->spinBox->hide();
-
-      QSettings settings;
-      loadSourceImg(settings.value(SETTINGS_LAST_SOURCE_PATH).toString());
-      loadTargetImg(settings.value(SETTINGS_LAST_TARGET_PATH).toString());
-   }
-}
-

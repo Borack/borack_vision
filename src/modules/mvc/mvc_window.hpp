@@ -39,8 +39,6 @@ private slots:
 
    void on_targetZoom_sliderMoved(int position);
 
-   void on_mvcSelected(bool enabled);
-
 private:
 
    void setup();

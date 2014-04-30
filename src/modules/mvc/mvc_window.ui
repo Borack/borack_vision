@@ -197,13 +197,7 @@
     <addaction name="actionOpen_source"/>
     <addaction name="actionOpen_target"/>
    </widget>
-   <widget class="QMenu" name="menuMode">
-    <property name="title">
-     <string>Mode</string>
-    </property>
-   </widget>
    <addaction name="menuFile"/>
-   <addaction name="menuMode"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
   <action name="actionOpen_source">

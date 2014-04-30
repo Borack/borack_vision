@@ -3,6 +3,8 @@
 
 #include <QMainWindow>
 
+#include <QPointer>
+
 namespace Ui {
 class MainWindow;
 }
@@ -25,6 +27,9 @@ private slots:
 
 private:
    Ui::MainWindow *ui;
+   QPointer<QWidget> m_moduleWindow;
+
+
 };
 
 #endif // MAINWINDOW_HPP

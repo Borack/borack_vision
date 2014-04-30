@@ -37,10 +37,10 @@ const QString MvcWindow::SETTINGS_LAST_TARGET_PATH("last_img_target_path");
 
 //-----------------------------------------------------------------------------
 MvcWindow::MvcWindow(QWidget *parent)
- : QMainWindow(parent)
- , ui(new Ui::MvcWindow)
- , m_sScene(0)
- , m_tScene(0)
+   : QMainWindow(parent)
+   , ui(new Ui::MvcWindow)
+   , m_sScene(0)
+   , m_tScene(0)
 {
    ui->setupUi(this);
    setup();
@@ -73,22 +73,17 @@ void MvcWindow::on_actionOpen_target_triggered()
 //-----------------------------------------------------------------------------
 void MvcWindow::on_runSource()
 {
-   if(m_mode == EMode_MVC)
-   {
-      assert(m_mvcCloning);
-      m_mvcCloning->startSourceComputation(dynamic_cast<MVCSourceScene*>(m_sScene)->getBoundary());
-   }
+   assert(m_mvcCloning);
+   m_mvcCloning->startSourceComputation(dynamic_cast<MVCSourceScene*>(m_sScene)->getBoundary());
+
 }
 
 //-----------------------------------------------------------------------------
 void MvcWindow::on_runTarget()
 {
-   if(m_mode == EMode_MVC)
-   {
-      assert(m_mvcCloning);
-      // could be called within a new thread
-      m_mvcCloning->startTargetComputation(dynamic_cast<MVCTargetScene*>(m_tScene)->clickLocation());
-   }
+   assert(m_mvcCloning);
+   // could be called within a new thread
+   m_mvcCloning->startTargetComputation(dynamic_cast<MVCTargetScene*>(m_tScene)->clickLocation());
 }
 
 
@@ -138,14 +133,9 @@ void MvcWindow::loadSourceImg(const QString &path)
          delete m_sScene;
       }
 
-      if(m_mode == EMode_MVC)
-      {
-         m_sScene = new MVCSourceScene(this);
-      }
-      else
-      {
-         qFatal("Mode %d doees not provide a souce scene.", m_mode);
-      }
+      m_sScene = new MVCSourceScene(this);
+
+
       assert(m_sScene);
 
 
@@ -176,14 +166,9 @@ void MvcWindow::loadTargetImg(const QString &path)
          delete m_tScene;
       }
 
-      if(m_mode == EMode_MVC)
-      {
-         m_tScene = new MVCTargetScene(this);
-      }
-      else
-      {
-         qFatal("Mode %d doees not provide a target scene.", m_mode);
-      }
+
+      m_tScene = new MVCTargetScene(this);
+
       assert(m_tScene);
 
       connect(m_tScene,SIGNAL(runTarget()), this, SLOT(on_runTarget()));
@@ -261,9 +246,6 @@ void MvcWindow::on_mvcSelected(bool enabled)
       //resetting
       on_reset();
       tryToLoadMVCInstance();
-
-      //logic changes
-      m_mode = EMode_MVC;
 
       //ui changes
       ui->spinBox->hide();

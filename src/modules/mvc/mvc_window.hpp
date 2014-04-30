@@ -43,11 +43,6 @@ private slots:
 
 private:
 
-   enum EMode{
-      EMode_MVC = 0,
-      EMode_PhotoMontage
-   };
-
    void setup();
    void loadSourceImg(const QString& path);
    void loadTargetImg(const QString& path);
@@ -63,8 +58,6 @@ private:
 
    static const QString SETTINGS_LAST_SOURCE_PATH;
    static const QString SETTINGS_LAST_TARGET_PATH;
-
-   EMode m_mode;
 
 };
 

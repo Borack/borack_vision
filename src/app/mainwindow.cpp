@@ -6,6 +6,7 @@
 #include <QSettings>
 
 #include <mvc_window.hpp>
+#include <pm_window.hpp>
 
 const int UI_VERSION = 1;
 
@@ -41,6 +42,22 @@ void MainWindow::on_quitButton_clicked()
 
 void MainWindow::on_mvcButton_clicked()
 {
-   m_moduleWindow.reset(new MvcWindow(this));
+   if(m_moduleWindow)
+   {
+      m_moduleWindow->close();
+   }
+   m_moduleWindow = new MvcWindow;
    m_moduleWindow->show();
+}
+
+void MainWindow::on_pmButton_clicked()
+{
+   if(m_moduleWindow)
+   {
+      m_moduleWindow->close();
+   }
+
+   m_moduleWindow = new PmWindow;
+   m_moduleWindow->show();
+
 }

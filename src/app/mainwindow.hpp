@@ -25,9 +25,11 @@ private slots:
 
    void on_mvcButton_clicked();
 
+   void on_pmButton_clicked();
+
 private:
    Ui::MainWindow *ui;
-   QScopedPointer<QWidget> m_moduleWindow;
+   QPointer<QWidget> m_moduleWindow;
 
 
 };

@@ -4,16 +4,23 @@ set(SOURCES
             photomontage.cpp
             pm_sourcescene.cpp
             pm_targetscene.cpp
+            pm_window.cpp
 )
 
 set(HEADERS
             photomontage.hpp
             pm_sourcescene.hpp
-            pm_targetscene.cpp
+            pm_targetscene.hpp
+            pm_window.hpp
+)
+
+set(UI_FILES
+            pm_window.ui
 )
 
 message(STATUS "add_library ${MODULE}")
-add_library(${MODULE} ${SOURCES} ${HEADERS})
+find_qt5()
+add_library(${MODULE} ${SOURCES} ${HEADERS} ${UI_HEADERS})
 
 add_core(ui)
 add_core(utilities)

@@ -5,6 +5,7 @@ set(SOURCES
             pm_sourcescene.cpp
             pm_targetscene.cpp
             pm_window.cpp
+            pm_sourcewidget.cpp
 )
 
 set(HEADERS
@@ -16,6 +17,7 @@ set(HEADERS
 
 set(UI_FILES
             pm_window.ui
+            pm_sourcewidget.ui
 )
 
 message(STATUS "add_library ${MODULE}")

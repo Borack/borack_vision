@@ -5,6 +5,7 @@ set(SOURCES
             mesh2d.cpp
             mvc_sourcescene.cpp
             mvc_targetscene.cpp
+            mvc_window.cpp
 
 )
 
@@ -14,10 +15,18 @@ set(HEADERS
             mesh2d.hpp
             mvc_sourcescene.hpp
             mvc_targetscene.hpp
+            mvc_window.hpp
 )
 
+
+set(UI_FILES
+            mvc_window.ui
+)
+
+
 message(STATUS "add_library ${MODULE}")
-add_library(${MODULE} ${SOURCES} ${HEADERS})
+find_qt5()
+add_library(${MODULE} ${SOURCES} ${HEADERS} ${UI_HEADERS})
 
 add_core(ui)
 add_core(utilities)

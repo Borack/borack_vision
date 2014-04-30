@@ -1,6 +1,6 @@
 #include "mvc_window.hpp"
 
-#include "ui_mvc_window.h"
+#include "ui_mainwindow.h"
 
 #include <QAbstractButton>
 #include <QAction>
@@ -157,6 +157,10 @@ void MainWindow::loadSourceImg(const QString &path)
       {
          m_sScene = new MVCSourceScene(this);
       }
+      else if(m_mode == EMode_PhotoMontage)
+      {
+         m_sScene = new PMSourceScene(this);
+      }
       else
       {
          qFatal("Mode %d doees not provide a souce scene.", m_mode);
@@ -194,6 +198,10 @@ void MainWindow::loadTargetImg(const QString &path)
       if(m_mode == EMode_MVC)
       {
          m_tScene = new MVCTargetScene(this);
+      }
+      else if(m_mode == EMode_PhotoMontage)
+      {
+         m_tScene = new PMTargetScene(this);
       }
       else
       {
@@ -275,6 +283,7 @@ void MainWindow::on_mvcSelected(bool enabled)
    {
       //resetting
       on_reset();
+      m_photoMontage.reset();
       tryToLoadMVCInstance();
 
       //logic changes
@@ -289,3 +298,25 @@ void MainWindow::on_mvcSelected(bool enabled)
    }
 }
 
+//-----------------------------------------------------------------------------
+void MainWindow::on_photoMontageSelected(bool enabled)
+{
+   qDebug() << "On photomontage enabled" << enabled;
+   if(enabled)
+   {
+      // reseting
+      on_reset();
+      m_mvcCloning.reset();
+      m_photoMontage.reset(new PhotoMontage(m_sScene->getPixmap(),this));
+
+      //logic changes
+      m_mode = EMode_PhotoMontage;
+
+      //ui changes
+      ui->spinBox->show();
+
+      QSettings settings;
+      loadSourceImg(settings.value(SETTINGS_LAST_SOURCE_PATH).toString());
+      loadTargetImg(settings.value(SETTINGS_LAST_TARGET_PATH).toString());
+   }
+}

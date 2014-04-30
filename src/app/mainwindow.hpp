@@ -21,6 +21,8 @@ protected:
 private slots:
    void on_quitButton_clicked();
 
+   void on_mvcButton_clicked();
+
 private:
    Ui::MainWindow *ui;
 };

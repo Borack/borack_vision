@@ -59,6 +59,8 @@ macro(setup_module)
     # Get module name
     get_filename_component(MODULE ${CMAKE_CURRENT_LIST_DIR} NAME)
     project(${MODULE})
+
+    unset(UI_HEADERS)
 endmacro(setup_module)
 
 #--------------------------------------------------------------------------------

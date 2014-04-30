@@ -9,6 +9,10 @@
 #include <meanvalue_seamless_cloning.hpp>
 #include <mvc_sourcescene.hpp>
 #include <mvc_targetscene.hpp>
+#include <pm_sourcescene.hpp>
+#include <pm_targetscene.hpp>
+
+#include <photomontage.hpp>
 
 namespace Ui {
 class MainWindow;
@@ -39,6 +43,8 @@ private slots:
 
    void on_targetZoom_sliderMoved(int position);
 
+   void on_photoMontageSelected(bool enabled);
+
    void on_mvcSelected(bool enabled);
 
 private:
@@ -59,7 +65,7 @@ private:
    CustomScene *m_tScene;
 
    QScopedPointer<MeanValueSeamlessCloning> m_mvcCloning;
-
+   QScopedPointer<PhotoMontage> m_photoMontage;
 
    static const QString SETTINGS_LAST_SOURCE_PATH;
    static const QString SETTINGS_LAST_TARGET_PATH;

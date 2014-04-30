@@ -36,3 +36,8 @@ void MainWindow::on_quitButton_clicked()
    QApplication::closeAllWindows();
    QApplication::quit();
 }
+
+void MainWindow::on_mvcButton_clicked()
+{
+
+}

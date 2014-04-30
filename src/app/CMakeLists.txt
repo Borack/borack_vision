@@ -4,14 +4,11 @@ project(${MODULE})
 
 set(SOURCES
         main.cpp
-        customscene.cpp
-        customview.cpp
         mainwindow.cpp
 )
 set(HEADERS
-        customscene.hpp
-        customview.hpp
-        mainwindow.hpp)
+        mainwindow.hpp
+)
 
 set(UI_FILES 
         mainwindow.ui
@@ -26,7 +23,6 @@ set(QML_SOURCES
 )
 
 find_qt5()
-find_cgal()
 
 add_executable(${MODULE} ${SOURCES} ${HEADERS} ${QRC_OUT} ${UI_HEADERS})
 
@@ -36,14 +32,17 @@ add_executable(${MODULE} ${SOURCES} ${HEADERS} ${QRC_OUT} ${UI_HEADERS})
 
 option(MODULE_MVC "Build with the 'Coordinates for instant image cloning' module" ON)
 if(MODULE_MVC)
+find_cgal()
     add_module(mvc)
 #    add_definitions(-DMODULE_MVC)
+    add_core(ui)
 endif(MODULE_MVC)
 
 option(MODULE_PHOTOMONTAGE "Build with the 'Interactive Digital Photomontage' module" ON)
 if(MODULE_PHOTOMONTAGE)
     add_module(photomontage)
 #    add_definitions(-DMODULE_PHOTOMONTAGE)
+    add_core(ui)
 endif(MODULE_PHOTOMONTAGE)
 
 get_property(ALL_MODULE_LIBS GLOBAL PROPERTY MODULE_LIBS)

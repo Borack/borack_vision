@@ -7,7 +7,6 @@ class CustomView : public QGraphicsView
 {
 public:
    CustomView(QWidget *parent = 0);
-
 };
 
 #endif // CUSTOMVIEW_HPP

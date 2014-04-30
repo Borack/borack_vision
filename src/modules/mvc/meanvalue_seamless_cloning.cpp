@@ -39,8 +39,17 @@ void MeanValueSeamlessCloning::startSourceComputation(const MVC::Boundary &b)
       m_contourSourceSpace.push_back(cv::Point(point.x(), point.y()));
    }
    contours.push_back(m_contourSourceSpace);
-   Mesh2d mesh(m_contourSourceSpace);
-   emit displayMesh(mesh.segments());
+   try
+   {
+      Mesh2d mesh(m_contourSourceSpace);
+      emit displayMesh(mesh.segments());
+   }
+   catch(...)
+   {
+      resetCoords();
+      qDebug() << "Nasty! This was not a regular non-intersecting polygon.";
+      return;
+   }
 
 
    //! Create mask for patch

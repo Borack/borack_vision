@@ -6,6 +6,7 @@
 
 
 #include <opencv2/core/core.hpp>
+
 //#define MVC_DEBUG
 
 #ifdef MVC_DEBUG

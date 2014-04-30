@@ -59,6 +59,8 @@ macro(setup_module)
     # Get module name
     get_filename_component(MODULE ${CMAKE_CURRENT_LIST_DIR} NAME)
     project(${MODULE})
+
+    unset(UI_HEADERS)
 endmacro(setup_module)
 
 #--------------------------------------------------------------------------------
@@ -86,9 +88,9 @@ endmacro(add_module)
 #--------------------------------------------------------------------------------
 # Add Utilities
 #--------------------------------------------------------------------------------
-macro(add_util)
-    add_module("../utilities")
-endmacro(add_util)
+macro(add_core NAME)
+    add_module("../core/${NAME}")
+endmacro(add_core)
 
 #--------------------------------------------------------------------------------
 # Add App

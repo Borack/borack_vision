@@ -71,5 +71,23 @@ void PmWindow::setupCombobox()
 
 void PmWindow::runLuminance(bool isMinimum)
 {
+   PixmapPointer pix1 = ui->pmWidget->getPixmap();
+   PixmapPointer pix2 = ui->pmWidget_2->getPixmap();
 
+   PMSourceScene::Strokes strokes1 = ui->pmWidget->strokes();
+   PMSourceScene::Strokes strokes2 = ui->pmWidget_2->strokes();
+
+
+   // TODO:
+   // 1) find for each point the minimum(maximum) luminance color
+   // 2) Assign to each pixel at the strokes position the data cost.
+   // 3) SmoothCost
+   // 4) Run GC and generate composite.
+   foreach (PMSourceScene::Stroke stroke, strokes1)
+   {
+      foreach (QPointF point, stroke)
+      {
+
+      }
+   }
 }

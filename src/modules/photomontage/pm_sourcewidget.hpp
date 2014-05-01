@@ -3,6 +3,7 @@
 
 #include <QWidget>
 #include <QScopedPointer>
+#include <QPixmap>
 
 #include <pm_sourcescene.hpp>
 
@@ -26,6 +27,8 @@ private slots:
 private:
    Ui::PMSourceWidget *ui;
    QScopedPointer<PMSourceScene> m_sScene;
+
+   QScopedPointer<QPixmap> m_pixmap;
 
    static const QString SETTINGS_LAST_PM_SOURCE_PATH;
 };

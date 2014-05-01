@@ -32,16 +32,15 @@ void PMSourceWidget::on_loadBtn_clicked()
 
    if(!sourcePath.isEmpty())
    {
-      QPixmap sourceImage(sourcePath);
-
+      m_pixmap.reset(new QPixmap(sourcePath));
 
       m_sScene.reset(new PMSourceScene(this));
 
       connect(m_sScene.data(),SIGNAL(runSource()), this, SLOT(on_runSource()));
-      m_sScene->setPixmap(sourceImage);
+      m_sScene->setPixmap(*m_pixmap);
 
       ui->graphicsView->setScene(m_sScene.data());
-      ui->graphicsView->fitInView(QRectF(0,0,sourceImage.width(), sourceImage.height()), Qt::KeepAspectRatio);
+      ui->graphicsView->fitInView(QRectF(0,0,m_pixmap->width(), m_pixmap->height()), Qt::KeepAspectRatio);
 
       QSettings settings;
       settings.setValue(SETTINGS_LAST_PM_SOURCE_PATH, sourcePath);

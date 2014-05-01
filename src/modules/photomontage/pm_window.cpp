@@ -12,3 +12,8 @@ PmWindow::~PmWindow()
 {
    delete ui;
 }
+
+void PmWindow::on_runButton_clicked()
+{
+// ui->widget->
+}

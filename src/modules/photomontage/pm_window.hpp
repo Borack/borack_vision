@@ -15,6 +15,9 @@ public:
    explicit PmWindow(QWidget *parent = 0);
    ~PmWindow();
 
+private slots:
+   void on_runButton_clicked();
+
 private:
    Ui::pm_window *ui;
 };

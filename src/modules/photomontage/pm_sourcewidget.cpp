@@ -23,6 +23,11 @@ PMSourceWidget::~PMSourceWidget()
    delete ui;
 }
 
+PixmapPointer PMSourceWidget::getPixmap()
+{
+   return m_pixmap;
+}
+
 void PMSourceWidget::on_loadBtn_clicked()
 {
 

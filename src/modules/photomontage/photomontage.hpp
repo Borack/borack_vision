@@ -4,11 +4,13 @@
 #include <QObject>
 #include <QPixmap>
 
+#include <pm_modes.hpp>
+
 class PhotoMontage : public QObject
 {
    Q_OBJECT
 public:
-   explicit PhotoMontage(const QPixmap &pixmap, QObject *parent = 0);
+   explicit PhotoMontage(const QPixmap &pixmap, const QPixmap &pixmap2, EGraphCut_Objective mode, QObject *parent = 0);
 
 signals:
 

@@ -39,11 +39,25 @@ void PmWindow::on_runButton_clicked()
    }
 
    qDebug() << "Everything is fine";
+
+   switch (m_gcMode) {
+      case EGraphCut_Objective_Minimum_Lumincance:
+         runLuminance(true);
+         break;
+      case EGraphCut_Objective_Maximum_Lumincance:
+         runLuminance(false);
+         break;
+      default:
+         break;
+   }
 }
 
 void PmWindow::on_comboBox_currentIndexChanged(int index)
 {
    m_gcMode = static_cast<EGraphCut_Objective>(ui->comboBox->itemData(index).toInt());
+   ui->pmWidget->setMode(m_gcMode);
+   ui->pmWidget_2->setMode(m_gcMode);
+
    qDebug() << "New gc mode is " << m_gcMode;
 }
 
@@ -53,4 +67,9 @@ void PmWindow::setupCombobox()
    this->ui->comboBox->insertItem(1, "Maximum Luminance", EGraphCut_Objective_Maximum_Lumincance);
 
    this->ui->comboBox->setCurrentIndex(0);
+}
+
+void PmWindow::runLuminance(bool isMinimum)
+{
+
 }

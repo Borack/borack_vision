@@ -22,7 +22,7 @@ GCoptimization::EnergyTermType SmoothCostFn(GCoptimization::SiteID site1, GCopti
 }
 
 //-----------------------------------------------------------------------------
-PhotoMontage::PhotoMontage(const QPixmap &pixmap, QObject *parent)
+PhotoMontage::PhotoMontage(const QPixmap &pixmap, const QPixmap &pixmap2, EGraphCut_Objective mode, QObject *parent)
    : m_inputSource(pixmap)
    , QObject(parent)
 {

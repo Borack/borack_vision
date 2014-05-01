@@ -2,6 +2,7 @@
 #define PM_WINDOW_HPP
 
 #include <QMainWindow>
+#include <photomontage.hpp>
 
 namespace Ui {
 class pm_window;
@@ -22,14 +23,10 @@ private slots:
    
 private:
 
-   enum EGraphCut_Objective
-   {
-       EGraphCut_Objective_Minimum_Lumincance = 0
-      , EGraphCut_Objective_Maximum_Lumincance
-   };
    EGraphCut_Objective m_gcMode;
 
    void setupCombobox();
+   void runLuminance(bool isMinimum);
 
 
 

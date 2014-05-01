@@ -7,12 +7,18 @@
 #include <QPixmap>
 
 #include <pm_sourcescene.hpp>
+#include <pm_modes.hpp>
 
 namespace Ui {
 class PMSourceWidget;
 }
 
 typedef QSharedPointer<QPixmap> PixmapPointer;
+
+enum EBrushType
+{
+   EBrushType_Minimum_Luminance = 0
+};
 
 class PMSourceWidget : public QWidget
 {
@@ -25,10 +31,13 @@ public:
    ~PMSourceWidget();
 
    PixmapPointer getPixmap();
+   void setMode(EGraphCut_Objective gcMode);
 
 private slots:
    void on_loadBtn_clicked();
    void on_runSource();
+
+   void on_brushComboBox_currentIndexChanged(int index);
 
 private:
    Ui::PMSourceWidget *ui;

@@ -13,6 +13,7 @@ set(HEADERS
             pm_sourcescene.hpp
             pm_targetscene.hpp
             pm_window.hpp
+            pm_modes.hpp
 )
 
 set(UI_FILES

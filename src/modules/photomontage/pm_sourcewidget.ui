@@ -41,6 +41,16 @@
          </property>
         </spacer>
        </item>
+       <item>
+        <widget class="QLabel" name="label">
+         <property name="text">
+          <string>Brush</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QComboBox" name="brushComboBox"/>
+       </item>
       </layout>
      </item>
     </layout>

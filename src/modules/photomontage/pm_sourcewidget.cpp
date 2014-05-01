@@ -1,6 +1,7 @@
 #include "pm_sourcewidget.hpp"
 #include "ui_pm_sourcewidget.h"
 
+#include <QComboBox>
 #include <QDebug>
 #include <QFileDialog>
 #include <QFileInfo>
@@ -26,6 +27,18 @@ PMSourceWidget::~PMSourceWidget()
 PixmapPointer PMSourceWidget::getPixmap()
 {
    return m_pixmap;
+}
+
+void PMSourceWidget::setMode(EGraphCut_Objective gcMode)
+{
+   ui->brushComboBox->clear();
+   switch (gcMode) {
+      case EGraphCut_Objective_Minimum_Lumincance:
+         ui->brushComboBox->insertItem(0, "MinLum Brush", EBrushType_Minimum_Luminance);
+         break;
+      default:
+         break;
+   }
 }
 
 void PMSourceWidget::on_loadBtn_clicked()
@@ -55,4 +68,11 @@ void PMSourceWidget::on_loadBtn_clicked()
 void PMSourceWidget::on_runSource()
 {
    qDebug() << "On run on source PM";
+}
+
+
+
+void PMSourceWidget::on_brushComboBox_currentIndexChanged(int index)
+{
+
 }

@@ -3,13 +3,16 @@
 
 #include <pm_sourcewidget.hpp>
 
+#include <QComboBox>
 #include <QDebug>
+#include <QVariant>
 
 PmWindow::PmWindow(QWidget *parent) :
    QMainWindow(parent),
    ui(new Ui::pm_window)
 {
    ui->setupUi(this);
+   setupCombobox();
 }
 
 PmWindow::~PmWindow()
@@ -36,4 +39,18 @@ void PmWindow::on_runButton_clicked()
    }
 
    qDebug() << "Everything is fine";
+}
+
+void PmWindow::on_comboBox_currentIndexChanged(int index)
+{
+   m_gcMode = static_cast<EGraphCut_Objective>(ui->comboBox->itemData(index).toInt());
+   qDebug() << "New gc mode is " << m_gcMode;
+}
+
+void PmWindow::setupCombobox()
+{
+   this->ui->comboBox->insertItem(0, "Minimum Luminance", EGraphCut_Objective_Minimum_Lumincance);
+   this->ui->comboBox->insertItem(1, "Maximum Luminance", EGraphCut_Objective_Maximum_Lumincance);
+
+   this->ui->comboBox->setCurrentIndex(0);
 }

@@ -18,7 +18,21 @@ public:
 private slots:
    void on_runButton_clicked();
 
+   void on_comboBox_currentIndexChanged(int index);
+   
 private:
+
+   enum EGraphCut_Objective
+   {
+       EGraphCut_Objective_Minimum_Lumincance = 0
+      , EGraphCut_Objective_Maximum_Lumincance
+   };
+   EGraphCut_Objective m_gcMode;
+
+   void setupCombobox();
+
+
+
    Ui::pm_window *ui;
 };
 

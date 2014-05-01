@@ -15,6 +15,8 @@ public:
 
    virtual void reset();
 
+   const Strokes& strokes() const;
+
 protected:
    virtual void mousePressEvent(QGraphicsSceneMouseEvent * mouseEvent);
    virtual void mouseMoveEvent(QGraphicsSceneMouseEvent *event);

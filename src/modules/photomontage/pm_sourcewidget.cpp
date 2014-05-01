@@ -41,6 +41,14 @@ void PMSourceWidget::setMode(EGraphCut_Objective gcMode)
    }
 }
 
+const PMSourceScene::Strokes &PMSourceWidget::strokes() const
+{
+   if(m_sScene)
+   {
+      return m_sScene->strokes();
+   }
+}
+
 void PMSourceWidget::resizeEvent(QResizeEvent *)
 {
    if(m_pixmap)
@@ -59,7 +67,6 @@ void PMSourceWidget::on_loadBtn_clicked()
    if(!sourcePath.isEmpty())
    {
       m_pixmap.reset(new QPixmap(sourcePath));
-
       m_sScene.reset(new PMSourceScene(this));
 
       connect(m_sScene.data(),SIGNAL(runSource()), this, SLOT(on_runSource()));

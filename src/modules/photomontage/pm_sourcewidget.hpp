@@ -33,6 +33,8 @@ public:
    PixmapPointer getPixmap();
    void setMode(EGraphCut_Objective gcMode);
 
+   const PMSourceScene::Strokes& strokes() const;
+
 protected:
    virtual void resizeEvent(QResizeEvent *);
 

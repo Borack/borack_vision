@@ -15,6 +15,13 @@ PMSourceScene::PMSourceScene(QObject *parent)
 void PMSourceScene::mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent)
 {
    m_currentStroke.clear();
+//   qDebug() << "Button down pos: " << mouseEvent->buttonDownPos(Qt::AllButtons);
+//   qDebug() << "Button down scene pos: " << mouseEvent->buttonDownScenePos(Qt::AllButtons);
+//   qDebug() << "Button down screen pos: " << mouseEvent->buttonDownScreenPos(Qt::AllButtons);
+//   qDebug() << "Pos: " << mouseEvent->pos();
+   qDebug() << "Scene pos: " << mouseEvent->scenePos();
+//   qDebug() << "Screen pos: " << mouseEvent->screenPos();
+   qDebug() << "";
 }
 
 //-----------------------------------------------------------------------------
@@ -23,7 +30,6 @@ void PMSourceScene::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
    if(event->buttons() != Qt::NoButton)
    {
       m_currentStroke << event->scenePos();
-      m_currentPath = 0;
       drawStrokes();
    }
 }
@@ -58,10 +64,7 @@ void PMSourceScene::drawStrokes()
        }
    }
 
-   if(m_currentPath)
-   {
-      removeItem(m_currentPath);
-   }
+
    m_currentPath = addPath(path,QPen(Qt::blue, 20, Qt::SolidLine, Qt::FlatCap, Qt::BevelJoin));
 }
 
@@ -74,4 +77,9 @@ void PMSourceScene::reset()
       removeItem(m_currentPath);
    }
    m_currentPath = 0;
+}
+
+const PMSourceScene::Strokes &PMSourceScene::strokes() const
+{
+   return m_allStrokes;
 }

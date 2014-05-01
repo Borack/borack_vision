@@ -41,6 +41,14 @@ void PMSourceWidget::setMode(EGraphCut_Objective gcMode)
    }
 }
 
+void PMSourceWidget::resizeEvent(QResizeEvent *)
+{
+   if(m_pixmap)
+   {
+      ui->graphicsView->fitInView(QRectF(0,0,m_pixmap->width(), m_pixmap->height()), Qt::KeepAspectRatio);
+   }
+}
+
 void PMSourceWidget::on_loadBtn_clicked()
 {
 

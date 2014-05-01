@@ -33,6 +33,9 @@ public:
    PixmapPointer getPixmap();
    void setMode(EGraphCut_Objective gcMode);
 
+protected:
+   virtual void resizeEvent(QResizeEvent *);
+
 private slots:
    void on_loadBtn_clicked();
    void on_runSource();

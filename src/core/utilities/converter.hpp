@@ -2,6 +2,7 @@
 #define CONVERTER_HPP
 
 #include <QImage>
+#include <QPixmap>
 #include <opencv2/core/core.hpp>
 
 #include <Eigen/Core>
@@ -14,6 +15,12 @@ public:
      * @brief QImageToCvMat conversion functions. Allocates new memory
      */
     static cv::Mat QImageToCvMat(QImage &qImage);
+
+    /**
+     * @brief QPixmapToCvMat conversion functions. Allocates new memory
+     */
+    static cv::Mat QPixmapToCvMatToCvMat(QPixmap &qPixmap);
+
 
     /**
      * @brief QImageToCvMat conversion functions. Allocates new memory

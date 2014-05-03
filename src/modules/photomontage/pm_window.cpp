@@ -7,6 +7,8 @@
 #include <QDebug>
 #include <QVariant>
 
+#include <assert.h>
+
 PmWindow::PmWindow(QWidget *parent) :
    QMainWindow(parent),
    ui(new Ui::pm_window)
@@ -71,8 +73,16 @@ void PmWindow::setupCombobox()
 
 void PmWindow::runLuminance(bool isMinimum)
 {
+   // FIXME: for now everything is hardcoded to 2 input images => 2 labels
+
    PixmapPointer pix1 = ui->pmWidget->getPixmap();
    PixmapPointer pix2 = ui->pmWidget_2->getPixmap();
+
+   assert(pix1);
+   assert(pix2);
+   assert(pix1->width() == pix2->width());
+   assert(pix1->height() == pix2->height());
+
 
    PMSourceScene::Strokes strokes1 = ui->pmWidget->strokes();
    PMSourceScene::Strokes strokes2 = ui->pmWidget_2->strokes();
@@ -85,9 +95,10 @@ void PmWindow::runLuminance(bool isMinimum)
    // 4) Run GC and generate composite.
    foreach (PMSourceScene::Stroke stroke, strokes1)
    {
+      qDebug() << "A new stroke: ";
       foreach (QPointF point, stroke)
       {
-
+         qDebug() << "Point: "  << point;
       }
    }
 }

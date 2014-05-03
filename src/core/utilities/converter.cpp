@@ -26,6 +26,12 @@ cv::Mat Converter::QImageToCvMat(QImage &qImage)
 
 }
 
+cv::Mat Converter::QPixmapToCvMatToCvMat(QPixmap &qPixmap)
+{
+   QImage qImage = qPixmap.toImage();
+   return QImageToCvMat(qImage);
+}
+
 QImage Converter::CvMatToQImage(const cv::Mat &cvMat)
 {
     if(cvMat.depth() == CV_8U

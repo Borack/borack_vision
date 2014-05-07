@@ -29,11 +29,11 @@ PixmapPointer PMSourceWidget::getPixmap()
    return m_pixmap;
 }
 
-void PMSourceWidget::setMode(EGraphCut_Objective gcMode)
+void PMSourceWidget::setDataTermMode(EGraphCut_DataTerm gcMode)
 {
    ui->brushComboBox->clear();
    switch (gcMode) {
-      case EGraphCut_Objective_Minimum_Lumincance:
+      case EGraphCut_DataTerm_Minimum_Lumincance:
          ui->brushComboBox->insertItem(0, "MinLum Brush", EBrushType_Minimum_Luminance);
          break;
       default:

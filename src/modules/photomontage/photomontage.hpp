@@ -10,7 +10,7 @@ class PhotoMontage : public QObject
 {
    Q_OBJECT
 public:
-   explicit PhotoMontage(const QPixmap &pixmap, const QPixmap &pixmap2, EGraphCut_Objective mode, QObject *parent = 0);
+   explicit PhotoMontage(const QPixmap &pixmap, const QPixmap &pixmap2, EGraphCut_DataTerm mode, QObject *parent = 0);
 
 signals:
 

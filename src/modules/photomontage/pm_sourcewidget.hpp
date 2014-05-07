@@ -31,7 +31,7 @@ public:
    ~PMSourceWidget();
 
    PixmapPointer getPixmap();
-   void setMode(EGraphCut_Objective gcMode);
+   void setDataTermMode(EGraphCut_DataTerm gcMode);
 
    const PMSourceScene::Strokes& strokes() const;
 

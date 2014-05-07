@@ -18,14 +18,17 @@ public:
 
 private slots:
    void on_runButton_clicked();
-
-   void on_comboBox_currentIndexChanged(int index);
    
+   void on_dataComboBox_currentIndexChanged(int index);
+
+   void on_smoothnessComboBox_currentIndexChanged(int index);
+
 private:
 
-   EGraphCut_Objective m_gcMode;
+   EGraphCut_DataTerm m_gcDataTermMode;
+   EGraphCut_SmoothnessTerm m_gcSmoothnessTermMode;
 
-   void setupCombobox();
+   void setupComboboxes();
    void runLuminance(bool isMinimum);
 
 

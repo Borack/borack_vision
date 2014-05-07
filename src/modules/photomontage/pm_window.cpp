@@ -15,14 +15,14 @@
 #include <GCoptimization.h>
 
 #include <assert.h>
-#include <math.h>
+#include <cmath>
 
 PmWindow::PmWindow(QWidget *parent) :
    QMainWindow(parent),
    ui(new Ui::pm_window)
 {
    ui->setupUi(this);
-   setupCombobox();
+   setupComboboxes();
 }
 
 PmWindow::~PmWindow()
@@ -50,11 +50,11 @@ void PmWindow::on_runButton_clicked()
 
    qDebug() << "Everything is fine";
 
-   switch (m_gcMode) {
-      case EGraphCut_Objective_Minimum_Lumincance:
+   switch (m_gcDataTermMode) {
+      case EGraphCut_DataTerm_Minimum_Lumincance:
          runLuminance(true);
          break;
-      case EGraphCut_Objective_Maximum_Lumincance:
+      case EGraphCut_DataTerm_Maximum_Lumincance:
          runLuminance(false);
          break;
       default:
@@ -62,21 +62,37 @@ void PmWindow::on_runButton_clicked()
    }
 }
 
-void PmWindow::on_comboBox_currentIndexChanged(int index)
+void PmWindow::on_dataComboBox_currentIndexChanged(int index)
 {
-   m_gcMode = static_cast<EGraphCut_Objective>(ui->comboBox->itemData(index).toInt());
-   ui->pmWidget->setMode(m_gcMode);
-   ui->pmWidget_2->setMode(m_gcMode);
+   m_gcDataTermMode = static_cast<EGraphCut_DataTerm>(ui->dataComboBox->itemData(index).toInt());
+   ui->pmWidget->setDataTermMode(m_gcDataTermMode);
+   ui->pmWidget_2->setDataTermMode(m_gcDataTermMode);
 
-   qDebug() << "New gc mode is " << m_gcMode;
+   qDebug() << "New gc data term mode is " << m_gcDataTermMode;
 }
 
-void PmWindow::setupCombobox()
+void PmWindow::on_smoothnessComboBox_currentIndexChanged(int index)
 {
-   this->ui->comboBox->insertItem(0, "Minimum Luminance", EGraphCut_Objective_Minimum_Lumincance);
-   this->ui->comboBox->insertItem(1, "Maximum Luminance", EGraphCut_Objective_Maximum_Lumincance);
+   m_gcSmoothnessTermMode = static_cast<EGraphCut_SmoothnessTerm>(ui->smoothnessComboBox->itemData(index).toInt());
 
-   this->ui->comboBox->setCurrentIndex(0);
+   qDebug() << "New gc smoothness term mode is " << m_gcSmoothnessTermMode;
+}
+
+void PmWindow::setupComboboxes()
+{
+   // Smootness Term
+   this->ui->smoothnessComboBox->insertItem(0, "Matching Color", EGraphCut_SmoothnessTerm_Color);
+   this->ui->smoothnessComboBox->insertItem(1, "Matching Gradients", EGraphCut_SmoothnessTerm_Gradients);
+
+   this->ui->smoothnessComboBox->setCurrentIndex(0);
+
+ // Data term
+   this->ui->dataComboBox->insertItem(0, "Minimum Luminance", EGraphCut_DataTerm_Minimum_Lumincance);
+   this->ui->dataComboBox->insertItem(1, "Maximum Luminance", EGraphCut_DataTerm_Maximum_Lumincance);
+
+   this->ui->dataComboBox->setCurrentIndex(0);
+
+
 }
 
 void PmWindow::runLuminance(bool isMinimum)
@@ -125,8 +141,8 @@ void PmWindow::runLuminance(bool isMinimum)
          qDebug() << "A new stroke: ";
          foreach (QPointF point, stroke)
          {
-            const int x = static_cast<int>(std::round(point.x()));
-            const int y = static_cast<int>(std::round(point.y()));
+            const int x = static_cast<int>(round(point.x()));
+            const int y = static_cast<int>(round(point.y()));
             const int site = y*gray1.cols + x;
 
             const int lum1 = gray1.at<uchar>(x,y);
@@ -149,3 +165,4 @@ void PmWindow::runLuminance(bool isMinimum)
       }
    }
 }
+

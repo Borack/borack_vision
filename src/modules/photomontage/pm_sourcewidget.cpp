@@ -62,7 +62,7 @@ void PMSourceWidget::on_loadBtn_clicked()
 
    QSettings settings;
    QString lastPath = QFileInfo(settings.value(SETTINGS_LAST_PM_SOURCE_PATH).toString()).absolutePath() + "/aslkjf"; // workaround;
-   QString sourcePath = QFileDialog::getOpenFileName(this,"Open source image",  lastPath,"Images (*.png *.jpg)");
+   QString sourcePath = QFileDialog::getOpenFileName(this,"Open source image",  lastPath,"Images (*.png *.jpg *.jpeg)");
 
    if(!sourcePath.isEmpty())
    {

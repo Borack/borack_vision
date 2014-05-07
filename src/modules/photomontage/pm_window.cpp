@@ -9,6 +9,7 @@
 
 #include <opencv2/core/core.hpp>
 #include <opencv2/imgproc/imgproc.hpp>
+#include <opencv2/highgui/highgui.hpp>
 
 #include <converter.hpp>
 
@@ -16,6 +17,57 @@
 
 #include <assert.h>
 #include <cmath>
+
+
+struct ForSmoothness
+{
+   std::vector<cv::Mat*> mats;
+};
+
+GCoptimization::EnergyTermType SmoothCostFn(GCoptimization::SiteID site1, GCoptimization::SiteID site2, GCoptimization::LabelID l1, GCoptimization::LabelID l2, void* forSmoothness)
+{
+   if(l1 == l2) return 0;
+
+
+   // Matching color
+   GCoptimization::EnergyTermType energy = 0;
+   ForSmoothness* smoothnessStruct = static_cast<ForSmoothness*>(forSmoothness);
+   assert(l1 < smoothnessStruct->mats.size());
+   assert(l2 < smoothnessStruct->mats.size());
+
+   cv::Mat* mat1 = smoothnessStruct->mats.at(l1);
+   cv::Mat* mat2 = smoothnessStruct->mats.at(l2);
+   assert(mat1->cols == mat2->cols);
+   assert(mat1->rows == mat2->rows);
+
+   const int width = mat1->cols;
+   const int height = mat1->rows;
+
+   cv::Point s1(site1%width, std::floor<int>(site1/width));
+   cv::Point s2(site2%width, std::floor<int>(site2/width));
+
+   assert(mat1->channels() == 4);
+   assert(mat2->channels() == 4);
+
+   cv::Vec4b pixelPInMat1 = mat1->at<cv::Vec4b>(s1);
+   cv::Vec4b pixelPInMat2 = mat2->at<cv::Vec4b>(s1);
+
+   cv::Vec4b pixelQInMat1 = mat1->at<cv::Vec4b>(s2);
+   cv::Vec4b pixelQInMat2 = mat2->at<cv::Vec4b>(s2);
+
+   energy += std::sqrt(
+               std::pow(pixelPInMat1[0] - pixelPInMat2[0], 2.0) +
+               std::pow(pixelPInMat1[1] - pixelPInMat2[1], 2.0) +
+               std::pow(pixelPInMat1[2] - pixelPInMat2[2], 2.0));
+
+   energy += std::sqrt(
+               std::pow(pixelQInMat1[0] - pixelQInMat2[0], 2.0) +
+               std::pow(pixelQInMat1[1] - pixelQInMat2[1], 2.0) +
+               std::pow(pixelQInMat1[2] - pixelQInMat2[2], 2.0));
+
+   return energy;
+
+}
 
 PmWindow::PmWindow(QWidget *parent) :
    QMainWindow(parent),
@@ -134,6 +186,7 @@ void PmWindow::runLuminance(bool isMinimum)
 
    // See here for some implementation details: http://grail.cs.washington.edu/projects/photomontage/release/
 
+   // Setup the Data Costs
    foreach(PMSourceScene::Strokes imageStrokes, allImages)
    {
       foreach (PMSourceScene::Stroke stroke, imageStrokes)
@@ -145,8 +198,8 @@ void PmWindow::runLuminance(bool isMinimum)
             const int y = static_cast<int>(round(point.y()));
             const int site = y*gray1.cols + x;
 
-            const int lum1 = gray1.at<uchar>(x,y);
-            const int lum2 = gray2.at<uchar>(x,y);
+            const uchar lum1 = gray1.at<uchar>(y,x);
+            const uchar lum2 = gray2.at<uchar>(y,x);
 
             if(lum1 < lum2)
             {
@@ -159,10 +212,44 @@ void PmWindow::runLuminance(bool isMinimum)
                gc->setDataCost(site,1,0);
             }
 
-
-            qDebug() << "Point: "  << point;
+//            qDebug() << "Point: "  << point;
          }
       }
    }
+
+   // Setup the DataCosts
+   ForSmoothness forSmoothness;
+   forSmoothness.mats.push_back(&mat1);
+   forSmoothness.mats.push_back(&mat2);
+
+   gc->setSmoothCost(&SmoothCostFn, &forSmoothness);
+
+   qDebug() << "\nBefore optimization energy is %d" << gc->compute_energy();
+   gc->expansion(2);// run expansion for 2 iterations. For swap use gc->swap(num_iterations);
+//   gc->swap(num_labels);
+   qDebug() << "\nAfter optimization energy is %d" << gc->compute_energy();
+
+
+   cv::Mat out(mat1.size(), CV_8UC4);
+   for (int  i = 0; i < gc->numSites(); i++)
+   {
+      int r = i / mat1.cols;
+      int c = i % mat1.cols;
+      int label = gc->whatLabel(i);
+      if(label == 0)
+      {
+         out.at<cv::Vec4b>(r,c) = mat1.at<cv::Vec4b>(r,c);
+      }
+      else if(label == 1)
+      {
+         out.at<cv::Vec4b>(r,c) = mat2.at<cv::Vec4b>(r,c);
+      }
+      else
+      {
+         qDebug() << "ERROR: Not a proper Label!";
+      }
+   }
+
+   cv::imwrite("yees-a-gc-image.png", out);
 }
 

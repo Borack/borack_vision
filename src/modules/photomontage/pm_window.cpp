@@ -165,10 +165,10 @@ void PmWindow::runLuminance(bool isMinimum)
    allImages.push_back(ui->pmWidget->strokes());
    allImages.push_back(ui->pmWidget_2->strokes());
 
-   cv::Mat mat1 = Converter::QPixmapToCvMatToCvMat(*pix1);
+   cv::Mat mat1 = Converter::QPixmapToCvMat(*pix1);
    cv::Mat gray1;
    cv::cvtColor(mat1, gray1, CV_BGR2GRAY);
-   cv::Mat mat2 = Converter::QPixmapToCvMatToCvMat(*pix2);
+   cv::Mat mat2 = Converter::QPixmapToCvMat(*pix2);
    cv::Mat gray2;
    cv::cvtColor(mat2, gray2, CV_BGR2GRAY);
 
@@ -189,11 +189,13 @@ void PmWindow::runLuminance(bool isMinimum)
    // Setup the Data Costs
    foreach(PMSourceScene::Strokes imageStrokes, allImages)
    {
+      int counterPointsInImage= 0;
       foreach (PMSourceScene::Stroke stroke, imageStrokes)
       {
-         qDebug() << "A new stroke: ";
          foreach (QPointF point, stroke)
          {
+            counterPointsInImage++;
+
             const int x = static_cast<int>(round(point.x()));
             const int y = static_cast<int>(round(point.y()));
             const int site = y*gray1.cols + x;
@@ -201,6 +203,7 @@ void PmWindow::runLuminance(bool isMinimum)
             const uchar lum1 = gray1.at<uchar>(y,x);
             const uchar lum2 = gray2.at<uchar>(y,x);
 
+#if 0
             if(lum1 < lum2)
             {
                gc->setDataCost(site,0,0);
@@ -211,10 +214,15 @@ void PmWindow::runLuminance(bool isMinimum)
                gc->setDataCost(site,0,std::abs(lum1-lum2));
                gc->setDataCost(site,1,0);
             }
+#else
+       gc->setDataCost(site, 0, lum1*lum1);
+       gc->setDataCost(site, 1, lum2*lum2);
 
+#endif
 //            qDebug() << "Point: "  << point;
          }
       }
+      qDebug() << "Total points in Image " << counterPointsInImage;
    }
 
    // Setup the DataCosts
@@ -225,23 +233,28 @@ void PmWindow::runLuminance(bool isMinimum)
    gc->setSmoothCost(&SmoothCostFn, &forSmoothness);
 
    qDebug() << "\nBefore optimization energy is %d" << gc->compute_energy();
-   gc->expansion(2);// run expansion for 2 iterations. For swap use gc->swap(num_iterations);
-//   gc->swap(num_labels);
+//   gc->expansion(2);// run expansion for 2 iterations. For swap use gc->swap(num_iterations);
+   gc->swap(num_labels);
    qDebug() << "\nAfter optimization energy is %d" << gc->compute_energy();
 
 
+   int counter0 = 0;
+   int counter1 = 0;
    cv::Mat out(mat1.size(), CV_8UC4);
    for (int  i = 0; i < gc->numSites(); i++)
    {
       int r = i / mat1.cols;
       int c = i % mat1.cols;
       int label = gc->whatLabel(i);
+
       if(label == 0)
       {
+         counter0++;
          out.at<cv::Vec4b>(r,c) = mat1.at<cv::Vec4b>(r,c);
       }
       else if(label == 1)
       {
+         counter1++;
          out.at<cv::Vec4b>(r,c) = mat2.at<cv::Vec4b>(r,c);
       }
       else
@@ -250,6 +263,10 @@ void PmWindow::runLuminance(bool isMinimum)
       }
    }
 
+//   Converter::CvMatToQImage()
+
+   qDebug() << "Label0 == " << counter0;
+   qDebug() << "Label1 == " << counter1;
    cv::imwrite("yees-a-gc-image.png", out);
 }
 

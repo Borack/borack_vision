@@ -19,14 +19,20 @@ public:
     /**
      * @brief QPixmapToCvMat conversion functions. Allocates new memory
      */
-    static cv::Mat QPixmapToCvMatToCvMat(QPixmap &qPixmap);
+    static cv::Mat QPixmapToCvMat(QPixmap &qPixmap);
 
 
     /**
-     * @brief QImageToCvMat conversion functions. Allocates new memory
+     * @brief CvMatToQImage conversion functions. Allocates new memory
      *
      */
     static QImage CvMatToQImage(const cv::Mat& cvMat);
+
+    /**
+     * @brief CvMatToQPixmap conversion functions. Allocates new memory
+     *
+     */
+    static QPixmap CvMatToQPixmap(const cv::Mat& cvMat);
 
 
     static Eigen::Vector4i CvVec4bToEigenVec4i(const cv::Vec4b &vec);

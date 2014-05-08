@@ -26,7 +26,7 @@ cv::Mat Converter::QImageToCvMat(QImage &qImage)
 
 }
 
-cv::Mat Converter::QPixmapToCvMatToCvMat(QPixmap &qPixmap)
+cv::Mat Converter::QPixmapToCvMat(QPixmap &qPixmap)
 {
    QImage qImage = qPixmap.toImage();
    return QImageToCvMat(qImage);
@@ -48,6 +48,12 @@ QImage Converter::CvMatToQImage(const cv::Mat &cvMat)
         qWarning() << "Conversion for this image depth not yet implemented." << Q_FUNC_INFO;
         return QImage();
     }
+}
+
+QPixmap Converter::CvMatToQPixmap(const cv::Mat &cvMat)
+{
+   QImage qImage = CvMatToQImage(cvMat);
+   return QPixmap::fromImage(qImage);
 }
 
 Eigen::Vector4i Converter::CvVec4bToEigenVec4i(const cv::Vec4b &vec)

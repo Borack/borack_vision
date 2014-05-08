@@ -69,6 +69,7 @@ GCoptimization::EnergyTermType SmoothCostFn(GCoptimization::SiteID site1, GCopti
 
 }
 
+
 PmWindow::PmWindow(QWidget *parent) :
    QMainWindow(parent),
    ui(new Ui::pm_window)
@@ -150,7 +151,7 @@ void PmWindow::setupComboboxes()
 void PmWindow::runLuminance(bool isMinimum)
 {
    // FIXME: for now everything is hardcoded to 2 input images => 2 labels
-   const int num_labels = 2;
+   const int num_labels = 2; // ==num of images!
 
    PixmapPointer pix1 = ui->pmWidget->getPixmap();
    PixmapPointer pix2 = ui->pmWidget_2->getPixmap();
@@ -178,6 +179,10 @@ void PmWindow::runLuminance(bool isMinimum)
 
    assert(gc->numSites() == gray1.cols*gray1.rows);
 
+   std::vector<cv::Mat*> grayMats;
+   grayMats.push_back(&gray1);
+   grayMats.push_back(&gray2);
+
    // TODO:
    // 1) find for each point the minimum(maximum) luminance color
    // 2) Assign to each pixel at the strokes position the data cost.
@@ -198,38 +203,29 @@ void PmWindow::runLuminance(bool isMinimum)
 
             const int x = static_cast<int>(round(point.x()));
             const int y = static_cast<int>(round(point.y()));
-            const int site = y*gray1.cols + x;
+            const int site = y*grayMats[0]->cols + x;
 
-            const uchar lum1 = gray1.at<uchar>(y,x);
-            const uchar lum2 = gray2.at<uchar>(y,x);
+            int valueToCompare = grayMats[0]->at<uchar>(y,x);
 
-            const int energy = (lum1-lum2)*(lum1-lum2);
-            if(isMinimum)
+            // get the minimum / maximum luminance
+            for(int i = 1; i< num_labels;i++)
             {
-               if(lum1 < lum2)
+               if(isMinimum)
                {
-                  gc->setDataCost(site,0,0);
-                  gc->setDataCost(site,1,energy);
+                  valueToCompare = std::min<uchar>(valueToCompare, grayMats[i]->at<uchar>(y,x));
                }
                else
                {
-                  gc->setDataCost(site,0,energy);
-                  gc->setDataCost(site,1,0);
+                  valueToCompare = std::max<uchar>(valueToCompare, grayMats[i]->at<uchar>(y,x));
                }
             }
-            else
-            {
-               if(lum1 < lum2)
-               {
-                  gc->setDataCost(site,0,energy);
-                  gc->setDataCost(site,1,0);
-               }
-               else
-               {
-                  gc->setDataCost(site,0,0);
-                  gc->setDataCost(site,1,energy);
-               }
 
+            // calculate the actual data cost
+            for(int i = 0; i< num_labels;i++)
+            {
+               const uchar matLum = grayMats[i]->at<uchar>(y,x);
+               const int energy = (matLum-valueToCompare)*(matLum-valueToCompare);
+               gc->setDataCost(site,i,energy);
             }
          }
       }

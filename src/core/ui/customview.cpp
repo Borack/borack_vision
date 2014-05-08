@@ -10,3 +10,9 @@ CustomView::CustomView(QWidget* parent)
    setupViewport(new QGLWidget(this));
 }
 
+void CustomView::resizeEvent(QResizeEvent *event)
+{
+   QGraphicsView::resizeEvent(event);
+   fitInView(sceneRect(), Qt::KeepAspectRatio);
+}
+

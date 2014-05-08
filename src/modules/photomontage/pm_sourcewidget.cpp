@@ -9,6 +9,8 @@
 #include <QSettings>
 #include <QString>
 
+#include <assert.h>
+
 const QString PMSourceWidget::SETTINGS_LAST_PM_SOURCE_PATH("last_pm_source_path");
 
 PMSourceWidget::PMSourceWidget(QWidget *parent) :
@@ -43,18 +45,8 @@ void PMSourceWidget::setDataTermMode(EGraphCut_DataTerm gcMode)
 
 const PMSourceScene::Strokes &PMSourceWidget::strokes() const
 {
-   if(m_sScene)
-   {
-      return m_sScene->strokes();
-   }
-}
-
-void PMSourceWidget::resizeEvent(QResizeEvent *)
-{
-   if(m_pixmap)
-   {
-      ui->graphicsView->fitInView(QRectF(0,0,m_pixmap->width(), m_pixmap->height()), Qt::KeepAspectRatio);
-   }
+   assert(m_sScene);
+   return m_sScene->strokes();
 }
 
 void PMSourceWidget::on_loadBtn_clicked()

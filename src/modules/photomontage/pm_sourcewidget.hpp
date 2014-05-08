@@ -35,8 +35,6 @@ public:
 
    const PMSourceScene::Strokes& strokes() const;
 
-protected:
-   virtual void resizeEvent(QResizeEvent *);
 
 private slots:
    void on_loadBtn_clicked();

@@ -56,14 +56,14 @@ GCoptimization::EnergyTermType SmoothCostFn(GCoptimization::SiteID site1, GCopti
    cv::Vec4b pixelQInMat2 = mat2->at<cv::Vec4b>(s2);
 
    energy += std::sqrt(
-               std::pow(pixelPInMat1[0] - pixelPInMat2[0], 2.0) +
-               std::pow(pixelPInMat1[1] - pixelPInMat2[1], 2.0) +
-               std::pow(pixelPInMat1[2] - pixelPInMat2[2], 2.0));
+            std::pow(pixelPInMat1[0] - pixelPInMat2[0], 2.0) +
+         std::pow(pixelPInMat1[1] - pixelPInMat2[1], 2.0) +
+         std::pow(pixelPInMat1[2] - pixelPInMat2[2], 2.0));
 
    energy += std::sqrt(
-               std::pow(pixelQInMat1[0] - pixelQInMat2[0], 2.0) +
-               std::pow(pixelQInMat1[1] - pixelQInMat2[1], 2.0) +
-               std::pow(pixelQInMat1[2] - pixelQInMat2[2], 2.0));
+            std::pow(pixelQInMat1[0] - pixelQInMat2[0], 2.0) +
+         std::pow(pixelQInMat1[1] - pixelQInMat2[1], 2.0) +
+         std::pow(pixelQInMat1[2] - pixelQInMat2[2], 2.0));
 
    return energy;
 
@@ -138,7 +138,7 @@ void PmWindow::setupComboboxes()
 
    this->ui->smoothnessComboBox->setCurrentIndex(0);
 
- // Data term
+   // Data term
    this->ui->dataComboBox->insertItem(0, "Minimum Luminance", EGraphCut_DataTerm_Minimum_Lumincance);
    this->ui->dataComboBox->insertItem(1, "Maximum Luminance", EGraphCut_DataTerm_Maximum_Lumincance);
 
@@ -203,25 +203,37 @@ void PmWindow::runLuminance(bool isMinimum)
             const uchar lum1 = gray1.at<uchar>(y,x);
             const uchar lum2 = gray2.at<uchar>(y,x);
 
-#if 0
-            if(lum1 < lum2)
+            const int energy = (lum1-lum2)*(lum1-lum2);
+            if(isMinimum)
             {
-               gc->setDataCost(site,0,0);
-               gc->setDataCost(site,1,std::abs(lum2-lum1));
+               if(lum1 < lum2)
+               {
+                  gc->setDataCost(site,0,0);
+                  gc->setDataCost(site,1,energy);
+               }
+               else
+               {
+                  gc->setDataCost(site,0,energy);
+                  gc->setDataCost(site,1,0);
+               }
             }
             else
             {
-               gc->setDataCost(site,0,std::abs(lum1-lum2));
-               gc->setDataCost(site,1,0);
-            }
-#else
-       gc->setDataCost(site, 0, lum1*lum1);
-       gc->setDataCost(site, 1, lum2*lum2);
+               if(lum1 < lum2)
+               {
+                  gc->setDataCost(site,0,energy);
+                  gc->setDataCost(site,1,0);
+               }
+               else
+               {
+                  gc->setDataCost(site,0,0);
+                  gc->setDataCost(site,1,energy);
+               }
 
-#endif
-//            qDebug() << "Point: "  << point;
+            }
          }
       }
+
       qDebug() << "Total points in Image " << counterPointsInImage;
    }
 
@@ -233,7 +245,7 @@ void PmWindow::runLuminance(bool isMinimum)
    gc->setSmoothCost(&SmoothCostFn, &forSmoothness);
 
    qDebug() << "\nBefore optimization energy is %d" << gc->compute_energy();
-//   gc->expansion(2);// run expansion for 2 iterations. For swap use gc->swap(num_iterations);
+   //   gc->expansion(2);// run expansion for 2 iterations. For swap use gc->swap(num_iterations);
    gc->swap(num_labels);
    qDebug() << "\nAfter optimization energy is %d" << gc->compute_energy();
 

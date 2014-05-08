@@ -2,7 +2,10 @@
 #define PM_WINDOW_HPP
 
 #include <QMainWindow>
+#include <QScopedPointer>
+
 #include <photomontage.hpp>
+#include <pm_targetscene.hpp>
 
 namespace Ui {
 class pm_window;
@@ -34,6 +37,8 @@ private:
 
 
    Ui::pm_window *ui;
+   QScopedPointer<PMTargetScene> m_tScene;
+
 };
 
 #endif // PM_WINDOW_HPP

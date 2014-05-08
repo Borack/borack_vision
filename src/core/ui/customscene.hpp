@@ -2,15 +2,17 @@
 #define CUSTOMSCENE_HPP
 #include <QGraphicsScene>
 
-#include <QPixmap>
-#include <QVector>
-#include <QPointF>
 #include <QGraphicsPixmapItem>
+#include <QPixmap>
+#include <QPointF>
+#include <QVector>
+
 
 
 class CustomScene : public QGraphicsScene
 {
    Q_OBJECT
+
 public:
    explicit CustomScene(QObject *parent = 0);
    virtual ~CustomScene() {}

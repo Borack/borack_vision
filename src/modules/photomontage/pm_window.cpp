@@ -263,10 +263,9 @@ void PmWindow::runLuminance(bool isMinimum)
       }
    }
 
-//   Converter::CvMatToQImage()
-
-   qDebug() << "Label0 == " << counter0;
-   qDebug() << "Label1 == " << counter1;
-   cv::imwrite("yees-a-gc-image.png", out);
+   QPixmap pixmap = Converter::CvMatToQPixmap(out);
+   m_tScene.reset(new PMTargetScene());
+   m_tScene->setPixmap(pixmap);
+   ui->graphicsView->setScene(m_tScene.data());
 }
 

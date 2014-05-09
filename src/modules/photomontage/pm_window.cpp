@@ -43,8 +43,8 @@ GCoptimization::EnergyTermType SmoothCostFn(GCoptimization::SiteID site1, GCopti
    const int width = mat1->cols;
    const int height = mat1->rows;
 
-   cv::Point s1(site1%width, std::floor<int>(site1/width));
-   cv::Point s2(site2%width, std::floor<int>(site2/width));
+   cv::Point s1(site1%width, site1/width);
+   cv::Point s2(site2%width, site2/width);
 
    assert(mat1->channels() == 4);
    assert(mat2->channels() == 4);
@@ -174,14 +174,19 @@ void PmWindow::runLuminance(bool isMinimum)
    cv::cvtColor(mat2, gray2, CV_BGR2GRAY);
 
    assert(gray1.cols == gray2.cols && gray1.rows == gray2.rows);
-
-   GCoptimizationGridGraph* gc = new GCoptimizationGridGraph(mat1.cols, mat1.rows, num_labels);
-
-   assert(gc->numSites() == gray1.cols*gray1.rows);
-
    std::vector<cv::Mat*> grayMats;
    grayMats.push_back(&gray1);
    grayMats.push_back(&gray2);
+
+   //----------------------------------------------------- from here on it is generic, no more knowledge of how many images we process.
+
+   const int width = mat1.cols;
+   const int height = mat1.rows;
+
+   GCoptimizationGridGraph* gc = new GCoptimizationGridGraph(width, height, num_labels);
+
+   assert(gc->numSites() == width*height);
+
 
    // TODO:
    // 1) find for each point the minimum(maximum) luminance color
@@ -203,7 +208,7 @@ void PmWindow::runLuminance(bool isMinimum)
 
             const int x = static_cast<int>(round(point.x()));
             const int y = static_cast<int>(round(point.y()));
-            const int site = y*grayMats[0]->cols + x;
+            const int site = y*width + x;
 
             int valueToCompare = grayMats[0]->at<uchar>(y,x);
 
@@ -251,8 +256,8 @@ void PmWindow::runLuminance(bool isMinimum)
    cv::Mat out(mat1.size(), CV_8UC4);
    for (int  i = 0; i < gc->numSites(); i++)
    {
-      int r = i / mat1.cols;
-      int c = i % mat1.cols;
+      int r = i / width;
+      int c = i % width;
       int label = gc->whatLabel(i);
 
       if(label == 0)

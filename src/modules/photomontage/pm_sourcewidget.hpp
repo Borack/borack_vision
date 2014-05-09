@@ -8,12 +8,16 @@
 
 #include <pm_sourcescene.hpp>
 #include <pm_modes.hpp>
+#include <QPair>
 
 namespace Ui {
 class PMSourceWidget;
 }
 
 typedef QSharedPointer<QPixmap> PixmapPointer;
+
+typedef QPair<PixmapPointer, PMSourceScene::Strokes> PMPair;
+typedef QVector<PMPair> PMVector;
 
 enum EBrushType
 {

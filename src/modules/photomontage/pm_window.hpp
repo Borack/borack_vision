@@ -6,10 +6,12 @@
 
 #include <photomontage.hpp>
 #include <pm_targetscene.hpp>
+#include <pm_sourcewidget.hpp>
 
 namespace Ui {
 class pm_window;
 }
+
 
 class PmWindow : public QMainWindow
 {
@@ -36,7 +38,7 @@ private:
    void setupComboboxes();
    void addANewTab();
 
-   void runLuminance(bool isMinimum);
+   void runLuminance(const PMVector &allInput, bool isMinimum);
 
 
    Ui::pm_window *ui;

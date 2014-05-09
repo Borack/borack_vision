@@ -1,8 +1,6 @@
 #include "pm_window.hpp"
 #include "ui_pm_window.h"
 
-#include <pm_sourcewidget.hpp>
-
 #include <QComboBox>
 #include <QDebug>
 #include <QString>
@@ -91,31 +89,38 @@ PmWindow::~PmWindow()
 void PmWindow::on_runButton_clicked()
 {
 
-
-   PixmapPointer pix1 = dynamic_cast<PMSourceWidget*>(ui->tabWidget->widget(0))->getPixmap();
-   PixmapPointer pix2 = dynamic_cast<PMSourceWidget*>(ui->tabWidget->widget(1))->getPixmap();
-
-   if(!pix1 || !pix2)
+   const int numTabs = ui->tabWidget->count();
+   PMVector allInput;
+   for(int i = 0; i< numTabs-1;i++)
    {
-      qDebug() << "Either input image 1 or 2 is not defined.";
-      return;
+      PMSourceWidget* pmSourceWidget = dynamic_cast<PMSourceWidget*>(ui->tabWidget->widget(i));
+      if(pmSourceWidget && pmSourceWidget->getPixmap())
+      {
+         allInput.push_back(PMPair(pmSourceWidget->getPixmap(), pmSourceWidget->strokes()));
+      }
+
+     // as soon as there are more then 2 images in the list, make sure all images have the same size.
+      if(allInput.size() > 1)
+      {
+         const int latest = allInput.size() -1;
+         if(allInput[latest].first->width() != allInput[latest-1].first->width() ||
+               allInput[latest].first->height() != allInput[latest-1].first->height() )
+         {
+            qFatal("Uhuh, All input images need to have the same size. :-/");
+            return;
+         }
+      }
    }
 
-   if(pix1->width()  != pix2->width()
-         || pix1->height()  != pix2->height())
-   {
-      qDebug() << "The input images do not have the same size.";
-      return;
-   }
 
    qDebug() << "Everything is fine";
 
    switch (m_gcDataTermMode) {
       case EGraphCut_DataTerm_Minimum_Lumincance:
-         runLuminance(true);
+         runLuminance(allInput, true);
          break;
       case EGraphCut_DataTerm_Maximum_Lumincance:
-         runLuminance(false);
+         runLuminance(allInput, false);
          break;
       default:
          break;
@@ -172,10 +177,10 @@ void PmWindow::addANewTab()
    ui->tabWidget->setCurrentIndex(numTabs-1);
 }
 
-void PmWindow::runLuminance(bool isMinimum)
+void PmWindow::runLuminance(const PMVector &allInput, bool isMinimum)
 {
    // FIXME: for now everything is hardcoded to 2 input images => 2 labels
-   const int num_labels = 2; // ==num of images!
+   const int num_labels = allInput.size(); // ==num of images!
 
    PixmapPointer pix1 = dynamic_cast<PMSourceWidget*>(ui->tabWidget->widget(0))->getPixmap();
    PixmapPointer pix2 = dynamic_cast<PMSourceWidget*>(ui->tabWidget->widget(1))->getPixmap();
@@ -199,6 +204,15 @@ void PmWindow::runLuminance(bool isMinimum)
 
    assert(gray1.cols == gray2.cols && gray1.rows == gray2.rows);
    std::vector<cv::Mat*> grayMats;
+
+   // TODO: continue here!
+   foreach(PMPair pair, allInput)
+   {
+      cv::Mat gray;
+      cv::cvtColor(Converter::QPixmapToCvMat(*pair.first),gray,CV_BGR2GRAY);
+      grayMats.push_back(&gray);
+   }
+
    grayMats.push_back(&gray1);
    grayMats.push_back(&gray2);
 

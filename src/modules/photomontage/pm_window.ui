@@ -63,28 +63,8 @@
          <enum>QTabWidget::Rounded</enum>
         </property>
         <property name="currentIndex">
-         <number>1</number>
+         <number>0</number>
         </property>
-        <widget class="QWidget" name="tab">
-         <attribute name="title">
-          <string>Tab 1</string>
-         </attribute>
-         <layout class="QVBoxLayout" name="verticalLayout_3">
-          <item>
-           <widget class="PMSourceWidget" name="pmWidget" native="true"/>
-          </item>
-         </layout>
-        </widget>
-        <widget class="QWidget" name="tab_2">
-         <attribute name="title">
-          <string>Tab 2</string>
-         </attribute>
-         <layout class="QVBoxLayout" name="verticalLayout_4">
-          <item>
-           <widget class="PMSourceWidget" name="pmWidget_2" native="true"/>
-          </item>
-         </layout>
-        </widget>
         <widget class="QWidget" name="addNewTab">
          <attribute name="title">
           <string>+</string>

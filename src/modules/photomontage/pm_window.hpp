@@ -34,6 +34,7 @@ private:
    EGraphCut_SmoothnessTerm m_gcSmoothnessTermMode;
 
    void setupComboboxes();
+   void addANewTab();
 
    void runLuminance(bool isMinimum);
 

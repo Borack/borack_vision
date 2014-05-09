@@ -78,6 +78,8 @@ PmWindow::PmWindow(QWidget *parent) :
    ui(new Ui::pm_window)
 {
    ui->setupUi(this);
+   addANewTab();
+   addANewTab();
    setupComboboxes();
 }
 
@@ -88,8 +90,10 @@ PmWindow::~PmWindow()
 
 void PmWindow::on_runButton_clicked()
 {
-   PixmapPointer pix1 = ui->pmWidget->getPixmap();
-   PixmapPointer pix2 = ui->pmWidget_2->getPixmap();
+
+
+   PixmapPointer pix1 = dynamic_cast<PMSourceWidget*>(ui->tabWidget->widget(0))->getPixmap();
+   PixmapPointer pix2 = dynamic_cast<PMSourceWidget*>(ui->tabWidget->widget(1))->getPixmap();
 
    if(!pix1 || !pix2)
    {
@@ -129,8 +133,6 @@ void PmWindow::on_dataComboBox_currentIndexChanged(int index)
       if(pmSourceWidget)  pmSourceWidget->setDataTermMode(m_gcDataTermMode);
       else qDebug() << "Error, cannot cast to PMSourceWidget";
    }
-//   ui->pmWidget->setDataTermMode(m_gcDataTermMode);
-//   ui->pmWidget_2->setDataTermMode(m_gcDataTermMode);
 
    qDebug() << "New gc data term mode is " << m_gcDataTermMode;
 }
@@ -159,13 +161,24 @@ void PmWindow::setupComboboxes()
 
 }
 
+void PmWindow::addANewTab()
+{
+   // never show latest tab!
+   const int numTabs = ui->tabWidget->count();
+   QString tabName("Source ");
+   tabName.append(QString::number(numTabs));
+   ui->tabWidget->insertTab(numTabs-1,new PMSourceWidget,tabName);
+   dynamic_cast<PMSourceWidget*>(ui->tabWidget->widget(numTabs-1))->setDataTermMode(m_gcDataTermMode);
+   ui->tabWidget->setCurrentIndex(numTabs-1);
+}
+
 void PmWindow::runLuminance(bool isMinimum)
 {
    // FIXME: for now everything is hardcoded to 2 input images => 2 labels
    const int num_labels = 2; // ==num of images!
 
-   PixmapPointer pix1 = ui->pmWidget->getPixmap();
-   PixmapPointer pix2 = ui->pmWidget_2->getPixmap();
+   PixmapPointer pix1 = dynamic_cast<PMSourceWidget*>(ui->tabWidget->widget(0))->getPixmap();
+   PixmapPointer pix2 = dynamic_cast<PMSourceWidget*>(ui->tabWidget->widget(1))->getPixmap();
 
    assert(pix1);
    assert(pix2);
@@ -174,8 +187,8 @@ void PmWindow::runLuminance(bool isMinimum)
 
 
    std::vector<PMSourceScene::Strokes> allImages;
-   allImages.push_back(ui->pmWidget->strokes());
-   allImages.push_back(ui->pmWidget_2->strokes());
+   allImages.push_back(dynamic_cast<PMSourceWidget*>(ui->tabWidget->widget(0))->strokes());
+   allImages.push_back(dynamic_cast<PMSourceWidget*>(ui->tabWidget->widget(1))->strokes());
 
    cv::Mat mat1 = Converter::QPixmapToCvMat(*pix1);
    cv::Mat gray1;
@@ -298,14 +311,7 @@ void PmWindow::on_tabWidget_currentChanged(int index)
    const int numTabs = ui->tabWidget->count();
    if(index == numTabs-1)
    {
-      // never show latest tab!
-      QString tabName("Tab ");
-      tabName.append(QString::number(index+1));
-
-
-      ui->tabWidget->insertTab(index,new PMSourceWidget,tabName);
-      dynamic_cast<PMSourceWidget*>(ui->tabWidget->widget(index))->setDataTermMode(m_gcDataTermMode);
-      ui->tabWidget->setCurrentIndex(index);
+      addANewTab();
    }
    qDebug() << "QTabBar clicked at " << index;
 }

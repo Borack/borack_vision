@@ -3,6 +3,7 @@
 
 #include <QComboBox>
 #include <QDebug>
+#include <QSharedPointer>
 #include <QString>
 #include <QTabBar>
 #include <QTabWidget>
@@ -22,7 +23,7 @@
 
 struct ForSmoothness
 {
-   std::vector<cv::Mat*> mats;
+   std::vector<QSharedPointer<cv::Mat> > mats;
 };
 
 GCoptimization::EnergyTermType SmoothCostFn(GCoptimization::SiteID site1, GCoptimization::SiteID site2, GCoptimization::LabelID l1, GCoptimization::LabelID l2, void* forSmoothness)
@@ -36,8 +37,8 @@ GCoptimization::EnergyTermType SmoothCostFn(GCoptimization::SiteID site1, GCopti
    assert(l1 < smoothnessStruct->mats.size());
    assert(l2 < smoothnessStruct->mats.size());
 
-   cv::Mat* mat1 = smoothnessStruct->mats.at(l1);
-   cv::Mat* mat2 = smoothnessStruct->mats.at(l2);
+   QSharedPointer<cv::Mat> mat1 = smoothnessStruct->mats.at(l1);
+   QSharedPointer<cv::Mat> mat2 = smoothnessStruct->mats.at(l2);
    assert(mat1->cols == mat2->cols);
    assert(mat1->rows == mat2->rows);
 
@@ -78,6 +79,7 @@ PmWindow::PmWindow(QWidget *parent) :
    ui->setupUi(this);
    addANewTab();
    addANewTab();
+   ui->tabWidget->setCurrentIndex(0);
    setupComboboxes();
 }
 
@@ -102,7 +104,7 @@ void PmWindow::on_runButton_clicked()
      // as soon as there are more then 2 images in the list, make sure all images have the same size.
       if(allInput.size() > 1)
       {
-         const int latest = allInput.size() -1;
+         const int latest = allInput.size() - 1;
          if(allInput[latest].first->width() != allInput[latest-1].first->width() ||
                allInput[latest].first->height() != allInput[latest-1].first->height() )
          {
@@ -179,47 +181,38 @@ void PmWindow::addANewTab()
 
 void PmWindow::runLuminance(const PMVector &allInput, bool isMinimum)
 {
+
    // FIXME: for now everything is hardcoded to 2 input images => 2 labels
    const int num_labels = allInput.size(); // ==num of images!
+   if(num_labels == 0) return;
 
-   PixmapPointer pix1 = dynamic_cast<PMSourceWidget*>(ui->tabWidget->widget(0))->getPixmap();
-   PixmapPointer pix2 = dynamic_cast<PMSourceWidget*>(ui->tabWidget->widget(1))->getPixmap();
+//   PixmapPointer pix1 = dynamic_cast<PMSourceWidget*>(ui->tabWidget->widget(0))->getPixmap();
+//   PixmapPointer pix2 = dynamic_cast<PMSourceWidget*>(ui->tabWidget->widget(1))->getPixmap();
 
-   assert(pix1);
-   assert(pix2);
-   assert(pix1->width() == pix2->width());
-   assert(pix1->height() == pix2->height());
+//   assert(pix1);
+//   assert(pix2);
+//   assert(pix1->width() == pix2->width());
+//   assert(pix1->height() == pix2->height());
 
 
-   std::vector<PMSourceScene::Strokes> allImages;
-   allImages.push_back(dynamic_cast<PMSourceWidget*>(ui->tabWidget->widget(0))->strokes());
-   allImages.push_back(dynamic_cast<PMSourceWidget*>(ui->tabWidget->widget(1))->strokes());
+//   std::vector<PMSourceScene::Strokes> allImages;
+//   allImages.push_back(dynamic_cast<PMSourceWidget*>(ui->tabWidget->widget(0))->strokes());
+//   allImages.push_back(dynamic_cast<PMSourceWidget*>(ui->tabWidget->widget(1))->strokes());
 
-   cv::Mat mat1 = Converter::QPixmapToCvMat(*pix1);
-   cv::Mat gray1;
-   cv::cvtColor(mat1, gray1, CV_BGR2GRAY);
-   cv::Mat mat2 = Converter::QPixmapToCvMat(*pix2);
-   cv::Mat gray2;
-   cv::cvtColor(mat2, gray2, CV_BGR2GRAY);
-
-   assert(gray1.cols == gray2.cols && gray1.rows == gray2.rows);
-   std::vector<cv::Mat*> grayMats;
+   std::vector<cv::Mat> grayMats;
 
    // TODO: continue here!
    foreach(PMPair pair, allInput)
    {
       cv::Mat gray;
       cv::cvtColor(Converter::QPixmapToCvMat(*pair.first),gray,CV_BGR2GRAY);
-      grayMats.push_back(&gray);
+      grayMats.push_back(gray);
    }
-
-   grayMats.push_back(&gray1);
-   grayMats.push_back(&gray2);
 
    //----------------------------------------------------- from here on it is generic, no more knowledge of how many images we process.
 
-   const int width = mat1.cols;
-   const int height = mat1.rows;
+   const int width = allInput[0].first->width();
+   const int height = allInput[0].first->height();
 
    GCoptimizationGridGraph* gc = new GCoptimizationGridGraph(width, height, num_labels);
 
@@ -234,10 +227,22 @@ void PmWindow::runLuminance(const PMVector &allInput, bool isMinimum)
 
    // See here for some implementation details: http://grail.cs.washington.edu/projects/photomontage/release/
 
+
+   // Setup the DataCosts
+   ForSmoothness forSmoothness;
+//   forSmoothness.mats.push_back(&mat2);
+
    // Setup the Data Costs
-   foreach(PMSourceScene::Strokes imageStrokes, allImages)
+   foreach(PMPair pair, allInput)
    {
+
+      QSharedPointer<cv::Mat> matPtr;
+      matPtr.reset(new cv::Mat(Converter::QPixmapToCvMat(*pair.first)));
+      forSmoothness.mats.push_back(matPtr);
+
+
       int counterPointsInImage= 0;
+      PMSourceScene::Strokes imageStrokes = pair.second;
       foreach (PMSourceScene::Stroke stroke, imageStrokes)
       {
          foreach (QPointF point, stroke)
@@ -248,25 +253,25 @@ void PmWindow::runLuminance(const PMVector &allInput, bool isMinimum)
             const int y = static_cast<int>(round(point.y()));
             const int site = y*width + x;
 
-            int valueToCompare = grayMats[0]->at<uchar>(y,x);
+            int valueToCompare = grayMats[0].at<uchar>(y,x);
 
             // get the minimum / maximum luminance
             for(int i = 1; i< num_labels;i++)
             {
                if(isMinimum)
                {
-                  valueToCompare = std::min<uchar>(valueToCompare, grayMats[i]->at<uchar>(y,x));
+                  valueToCompare = std::min<uchar>(valueToCompare, grayMats[i].at<uchar>(y,x));
                }
                else
                {
-                  valueToCompare = std::max<uchar>(valueToCompare, grayMats[i]->at<uchar>(y,x));
+                  valueToCompare = std::max<uchar>(valueToCompare, grayMats[i].at<uchar>(y,x));
                }
             }
 
             // calculate the actual data cost
             for(int i = 0; i< num_labels;i++)
             {
-               const uchar matLum = grayMats[i]->at<uchar>(y,x);
+               const uchar matLum = grayMats[i].at<uchar>(y,x);
                const int energy = (matLum-valueToCompare)*(matLum-valueToCompare);
                gc->setDataCost(site,i,energy);
             }
@@ -275,11 +280,6 @@ void PmWindow::runLuminance(const PMVector &allInput, bool isMinimum)
 
       qDebug() << "Total points in Image " << counterPointsInImage;
    }
-
-   // Setup the DataCosts
-   ForSmoothness forSmoothness;
-   forSmoothness.mats.push_back(&mat1);
-   forSmoothness.mats.push_back(&mat2);
 
    gc->setSmoothCost(&SmoothCostFn, &forSmoothness);
 
@@ -291,27 +291,30 @@ void PmWindow::runLuminance(const PMVector &allInput, bool isMinimum)
 
    int counter0 = 0;
    int counter1 = 0;
-   cv::Mat out(mat1.size(), CV_8UC4);
+   cv::Mat out(cv::Size(width,height), CV_8UC4);
    for (int  i = 0; i < gc->numSites(); i++)
    {
       int r = i / width;
       int c = i % width;
       int label = gc->whatLabel(i);
 
-      if(label == 0)
-      {
-         counter0++;
-         out.at<cv::Vec4b>(r,c) = mat1.at<cv::Vec4b>(r,c);
-      }
-      else if(label == 1)
-      {
-         counter1++;
-         out.at<cv::Vec4b>(r,c) = mat2.at<cv::Vec4b>(r,c);
-      }
-      else
-      {
-         qDebug() << "ERROR: Not a proper Label!";
-      }
+
+      out.at<cv::Vec4b>(r,c) = forSmoothness.mats[label]->at<cv::Vec4b>(r,c);
+
+//      if(label == 0)
+//      {
+//         counter0++;
+//         out.at<cv::Vec4b>(r,c) = mat1.at<cv::Vec4b>(r,c);
+//      }
+//      else if(label == 1)
+//      {
+//         counter1++;
+//         out.at<cv::Vec4b>(r,c) = mat2.at<cv::Vec4b>(r,c);
+//      }
+//      else
+//      {
+//         qDebug() << "ERROR: Not a proper Label!";
+//      }
    }
 
    QPixmap pixmap = Converter::CvMatToQPixmap(out);

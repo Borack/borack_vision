@@ -96,9 +96,21 @@ void PmWindow::on_runButton_clicked()
    for(int i = 0; i< numTabs-1;i++)
    {
       PMSourceWidget* pmSourceWidget = dynamic_cast<PMSourceWidget*>(ui->tabWidget->widget(i));
-      if(pmSourceWidget && pmSourceWidget->getPixmap())
+      if(pmSourceWidget)
       {
-         allInput.push_back(PMPair(pmSourceWidget->getPixmap(), pmSourceWidget->strokes()));
+         if(pmSourceWidget->getPixmap())
+         {
+            allInput.push_back(PMPair(pmSourceWidget->getPixmap(), pmSourceWidget->strokes()));
+         }
+         else
+         {
+            qDebug() << "Empty image on tab widget - not looking for any more images. Last image was on tab " << i;
+            break;
+         }
+      }
+      else
+      {
+         qWarning("Cast to PMSourceWidget was *not* successful!");
       }
 
       // as soon as there are more then 2 images in the list, make sure all images have the same size.

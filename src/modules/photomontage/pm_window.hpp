@@ -26,14 +26,16 @@ private slots:
 
    void on_smoothnessComboBox_currentIndexChanged(int index);
 
+   void on_tabWidget_currentChanged(int index);
+
 private:
 
    EGraphCut_DataTerm m_gcDataTermMode;
    EGraphCut_SmoothnessTerm m_gcSmoothnessTermMode;
 
    void setupComboboxes();
-   void runLuminance(bool isMinimum);
 
+   void runLuminance(bool isMinimum);
 
 
    Ui::pm_window *ui;

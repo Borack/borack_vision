@@ -56,8 +56,14 @@
      <layout class="QHBoxLayout" name="horizontalLayout_2">
       <item>
        <widget class="QTabWidget" name="tabWidget">
+        <property name="tabPosition">
+         <enum>QTabWidget::North</enum>
+        </property>
+        <property name="tabShape">
+         <enum>QTabWidget::Rounded</enum>
+        </property>
         <property name="currentIndex">
-         <number>0</number>
+         <number>1</number>
         </property>
         <widget class="QWidget" name="tab">
          <attribute name="title">
@@ -78,6 +84,11 @@
            <widget class="PMSourceWidget" name="pmWidget_2" native="true"/>
           </item>
          </layout>
+        </widget>
+        <widget class="QWidget" name="addNewTab">
+         <attribute name="title">
+          <string>+</string>
+         </attribute>
         </widget>
        </widget>
       </item>

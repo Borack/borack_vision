@@ -5,6 +5,9 @@
 
 #include <QComboBox>
 #include <QDebug>
+#include <QString>
+#include <QTabBar>
+#include <QTabWidget>
 #include <QVariant>
 
 #include <opencv2/core/core.hpp>
@@ -118,8 +121,16 @@ void PmWindow::on_runButton_clicked()
 void PmWindow::on_dataComboBox_currentIndexChanged(int index)
 {
    m_gcDataTermMode = static_cast<EGraphCut_DataTerm>(ui->dataComboBox->itemData(index).toInt());
-   ui->pmWidget->setDataTermMode(m_gcDataTermMode);
-   ui->pmWidget_2->setDataTermMode(m_gcDataTermMode);
+
+   const int numTabs = ui->tabWidget->count();
+   for(int i = 0; i<numTabs-1;i++)// last tab is the '+' tab, do not modify this.
+   {
+      PMSourceWidget* pmSourceWidget = dynamic_cast<PMSourceWidget*>(ui->tabWidget->widget(i));
+      if(pmSourceWidget)  pmSourceWidget->setDataTermMode(m_gcDataTermMode);
+      else qDebug() << "Error, cannot cast to PMSourceWidget";
+   }
+//   ui->pmWidget->setDataTermMode(m_gcDataTermMode);
+//   ui->pmWidget_2->setDataTermMode(m_gcDataTermMode);
 
    qDebug() << "New gc data term mode is " << m_gcDataTermMode;
 }
@@ -282,3 +293,19 @@ void PmWindow::runLuminance(bool isMinimum)
    ui->graphicsView->setScene(m_tScene.data());
 }
 
+void PmWindow::on_tabWidget_currentChanged(int index)
+{
+   const int numTabs = ui->tabWidget->count();
+   if(index == numTabs-1)
+   {
+      // never show latest tab!
+      QString tabName("Tab ");
+      tabName.append(QString::number(index+1));
+
+
+      ui->tabWidget->insertTab(index,new PMSourceWidget,tabName);
+      dynamic_cast<PMSourceWidget*>(ui->tabWidget->widget(index))->setDataTermMode(m_gcDataTermMode);
+      ui->tabWidget->setCurrentIndex(index);
+   }
+   qDebug() << "QTabBar clicked at " << index;
+}

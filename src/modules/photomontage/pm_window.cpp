@@ -182,26 +182,16 @@ void PmWindow::addANewTab()
 void PmWindow::runLuminance(const PMVector &allInput, bool isMinimum)
 {
 
-   // FIXME: for now everything is hardcoded to 2 input images => 2 labels
+   // See here for some implementation details: http://grail.cs.washington.edu/projects/photomontage/release/
    const int num_labels = allInput.size(); // ==num of images!
-   if(num_labels == 0) return;
-
-//   PixmapPointer pix1 = dynamic_cast<PMSourceWidget*>(ui->tabWidget->widget(0))->getPixmap();
-//   PixmapPointer pix2 = dynamic_cast<PMSourceWidget*>(ui->tabWidget->widget(1))->getPixmap();
-
-//   assert(pix1);
-//   assert(pix2);
-//   assert(pix1->width() == pix2->width());
-//   assert(pix1->height() == pix2->height());
-
-
-//   std::vector<PMSourceScene::Strokes> allImages;
-//   allImages.push_back(dynamic_cast<PMSourceWidget*>(ui->tabWidget->widget(0))->strokes());
-//   allImages.push_back(dynamic_cast<PMSourceWidget*>(ui->tabWidget->widget(1))->strokes());
+   if(num_labels == 0)
+   {
+      qWarning("Error: No images specified.");
+       return;
+   }
 
    std::vector<cv::Mat> grayMats;
 
-   // TODO: continue here!
    foreach(PMPair pair, allInput)
    {
       cv::Mat gray;
@@ -209,7 +199,6 @@ void PmWindow::runLuminance(const PMVector &allInput, bool isMinimum)
       grayMats.push_back(gray);
    }
 
-   //----------------------------------------------------- from here on it is generic, no more knowledge of how many images we process.
 
    const int width = allInput[0].first->width();
    const int height = allInput[0].first->height();
@@ -219,18 +208,9 @@ void PmWindow::runLuminance(const PMVector &allInput, bool isMinimum)
    assert(gc->numSites() == width*height);
 
 
-   // TODO:
-   // 1) find for each point the minimum(maximum) luminance color
-   // 2) Assign to each pixel at the strokes position the data cost.
-   // 3) SmoothCost
-   // 4) Run GC and generate composite.
-
-   // See here for some implementation details: http://grail.cs.washington.edu/projects/photomontage/release/
-
 
    // Setup the DataCosts
    ForSmoothness forSmoothness;
-//   forSmoothness.mats.push_back(&mat2);
 
    // Setup the Data Costs
    foreach(PMPair pair, allInput)
@@ -283,14 +263,12 @@ void PmWindow::runLuminance(const PMVector &allInput, bool isMinimum)
 
    gc->setSmoothCost(&SmoothCostFn, &forSmoothness);
 
-   qDebug() << "\nBefore optimization energy is %d" << gc->compute_energy();
-   //   gc->expansion(2);// run expansion for 2 iterations. For swap use gc->swap(num_iterations);
-   gc->swap(num_labels);
-   qDebug() << "\nAfter optimization energy is %d" << gc->compute_energy();
+   qDebug() << "\nBefore optimization energy is " << gc->compute_energy();
+      gc->expansion(2);// run expansion for 2 iterations. For swap use gc->swap(num_iterations);
+//   gc->swap(num_labels);
+   qDebug() << "\nAfter optimization energy is " << gc->compute_energy();
 
 
-   int counter0 = 0;
-   int counter1 = 0;
    cv::Mat out(cv::Size(width,height), CV_8UC4);
    for (int  i = 0; i < gc->numSites(); i++)
    {
@@ -298,23 +276,7 @@ void PmWindow::runLuminance(const PMVector &allInput, bool isMinimum)
       int c = i % width;
       int label = gc->whatLabel(i);
 
-
       out.at<cv::Vec4b>(r,c) = forSmoothness.mats[label]->at<cv::Vec4b>(r,c);
-
-//      if(label == 0)
-//      {
-//         counter0++;
-//         out.at<cv::Vec4b>(r,c) = mat1.at<cv::Vec4b>(r,c);
-//      }
-//      else if(label == 1)
-//      {
-//         counter1++;
-//         out.at<cv::Vec4b>(r,c) = mat2.at<cv::Vec4b>(r,c);
-//      }
-//      else
-//      {
-//         qDebug() << "ERROR: Not a proper Label!";
-//      }
    }
 
    QPixmap pixmap = Converter::CvMatToQPixmap(out);
@@ -330,5 +292,4 @@ void PmWindow::on_tabWidget_currentChanged(int index)
    {
       addANewTab();
    }
-   qDebug() << "QTabBar clicked at " << index;
 }

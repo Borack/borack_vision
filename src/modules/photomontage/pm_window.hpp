@@ -12,6 +12,7 @@ namespace Ui {
 class pm_window;
 }
 
+class GCoptimizationGridGraph;
 
 class PmWindow : public QMainWindow
 {
@@ -38,7 +39,8 @@ private:
    void setupComboboxes();
    void addANewTab();
 
-   void runLuminance(const PMVector &allInput, bool isMinimum);
+   void runLuminance(const PMVector &allInput, GCoptimizationGridGraph *gc, bool isMinimum);
+   void runHard(const PMVector &allInput, GCoptimizationGridGraph *gc);
 
 
    Ui::pm_window *ui;

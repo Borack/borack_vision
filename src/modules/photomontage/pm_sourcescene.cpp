@@ -29,6 +29,7 @@ void PMSourceScene::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
 {
    if(event->buttons() != Qt::NoButton)
    {
+//      qDebug() << "Scene pos: " << event->scenePos();
       m_currentStroke << event->scenePos();
       drawStrokes();
    }

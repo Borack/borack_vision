@@ -101,7 +101,7 @@ void PmWindow::on_runButton_clicked()
          allInput.push_back(PMPair(pmSourceWidget->getPixmap(), pmSourceWidget->strokes()));
       }
 
-     // as soon as there are more then 2 images in the list, make sure all images have the same size.
+      // as soon as there are more then 2 images in the list, make sure all images have the same size.
       if(allInput.size() > 1)
       {
          const int latest = allInput.size() - 1;
@@ -117,16 +117,69 @@ void PmWindow::on_runButton_clicked()
 
    qDebug() << "Everything is fine";
 
+
+   // See here for some implementation details: http://grail.cs.washington.edu/projects/photomontage/release/
+   const int num_labels = allInput.size(); // ==num of images!
+   if(num_labels == 0)
+   {
+      qWarning("Error: No images specified.");
+      return;
+   }
+   const int width = allInput[0].first->width();
+   const int height = allInput[0].first->height();
+
+   GCoptimizationGridGraph* gc = new GCoptimizationGridGraph(width, height, num_labels);
+
+   // Setup smoothness term
+   ForSmoothness forSmoothness;
+   foreach(PMPair pair, allInput)
+   {
+      QSharedPointer<cv::Mat> matPtr;
+      matPtr.reset(new cv::Mat(Converter::QPixmapToCvMat(*pair.first)));
+      forSmoothness.mats.push_back(matPtr);
+   }
+   gc->setSmoothCost(&SmoothCostFn, &forSmoothness);
+
+
+
+   // Setup data term
    switch (m_gcDataTermMode) {
       case EGraphCut_DataTerm_Minimum_Lumincance:
-         runLuminance(allInput, true);
+         runLuminance(allInput,gc, true);
          break;
       case EGraphCut_DataTerm_Maximum_Lumincance:
-         runLuminance(allInput, false);
+         runLuminance(allInput,gc, false);
+         break;
+      case EGraphCut_DataTerm_Hard_Constraint:
+         runHard(allInput, gc);
          break;
       default:
          break;
    }
+
+
+   // ... and optimize!
+   qDebug() << "\nBefore optimization energy is " << gc->compute_energy();
+   gc->expansion(2);// run expansion for 2 iterations. For swap use gc->swap(num_iterations);
+   //   gc->swap(num_labels);
+   qDebug() << "\nAfter optimization energy is " << gc->compute_energy();
+
+
+   // generate output
+   cv::Mat out(cv::Size(width,height), CV_8UC4);
+   for (int  i = 0; i < gc->numSites(); i++)
+   {
+      int r = i / width;
+      int c = i % width;
+      int label = gc->whatLabel(i);
+
+      out.at<cv::Vec4b>(r,c) = forSmoothness.mats[label]->at<cv::Vec4b>(r,c);
+   }
+
+   QPixmap pixmap = Converter::CvMatToQPixmap(out);
+   m_tScene.reset(new PMTargetScene());
+   m_tScene->setPixmap(pixmap);
+   ui->graphicsView->setScene(m_tScene.data());
 }
 
 void PmWindow::on_dataComboBox_currentIndexChanged(int index)
@@ -162,6 +215,7 @@ void PmWindow::setupComboboxes()
    // Data term
    this->ui->dataComboBox->insertItem(0, "Minimum Luminance", EGraphCut_DataTerm_Minimum_Lumincance);
    this->ui->dataComboBox->insertItem(1, "Maximum Luminance", EGraphCut_DataTerm_Maximum_Lumincance);
+   this->ui->dataComboBox->insertItem(2, "Hard Constraint", EGraphCut_DataTerm_Hard_Constraint);
 
    this->ui->dataComboBox->setCurrentIndex(0);
 
@@ -179,19 +233,14 @@ void PmWindow::addANewTab()
    ui->tabWidget->setCurrentIndex(numTabs-1);
 }
 
-void PmWindow::runLuminance(const PMVector &allInput, bool isMinimum)
+void PmWindow::runLuminance(const PMVector &allInput, GCoptimizationGridGraph* gc, bool isMinimum)
 {
 
    // See here for some implementation details: http://grail.cs.washington.edu/projects/photomontage/release/
    const int num_labels = allInput.size(); // ==num of images!
-   if(num_labels == 0)
-   {
-      qWarning("Error: No images specified.");
-       return;
-   }
+   const int width = allInput[0].first->width();
 
    std::vector<cv::Mat> grayMats;
-
    foreach(PMPair pair, allInput)
    {
       cv::Mat gray;
@@ -200,27 +249,9 @@ void PmWindow::runLuminance(const PMVector &allInput, bool isMinimum)
    }
 
 
-   const int width = allInput[0].first->width();
-   const int height = allInput[0].first->height();
-
-   GCoptimizationGridGraph* gc = new GCoptimizationGridGraph(width, height, num_labels);
-
-   assert(gc->numSites() == width*height);
-
-
-
-   // Setup the DataCosts
-   ForSmoothness forSmoothness;
-
    // Setup the Data Costs
    foreach(PMPair pair, allInput)
    {
-
-      QSharedPointer<cv::Mat> matPtr;
-      matPtr.reset(new cv::Mat(Converter::QPixmapToCvMat(*pair.first)));
-      forSmoothness.mats.push_back(matPtr);
-
-
       int counterPointsInImage= 0;
       PMSourceScene::Strokes imageStrokes = pair.second;
       foreach (PMSourceScene::Stroke stroke, imageStrokes)
@@ -257,32 +288,50 @@ void PmWindow::runLuminance(const PMVector &allInput, bool isMinimum)
             }
          }
       }
-
       qDebug() << "Total points in Image " << counterPointsInImage;
    }
+}
 
-   gc->setSmoothCost(&SmoothCostFn, &forSmoothness);
+void PmWindow::runHard(const PMVector &allInput, GCoptimizationGridGraph* gc)
+{
+   // See here for some implementation details: http://grail.cs.washington.edu/projects/photomontage/release/
+   const int num_labels = allInput.size(); // ==num of images!
+   const int width = allInput[0].first->width();
 
-   qDebug() << "\nBefore optimization energy is " << gc->compute_energy();
-      gc->expansion(2);// run expansion for 2 iterations. For swap use gc->swap(num_iterations);
-//   gc->swap(num_labels);
-   qDebug() << "\nAfter optimization energy is " << gc->compute_energy();
+   int currentImage = 0;
 
-
-   cv::Mat out(cv::Size(width,height), CV_8UC4);
-   for (int  i = 0; i < gc->numSites(); i++)
+   // Setup the Data Costs
+   foreach(PMPair pair, allInput)
    {
-      int r = i / width;
-      int c = i % width;
-      int label = gc->whatLabel(i);
+      int counterPointsInImage= 0;
+      PMSourceScene::Strokes imageStrokes = pair.second;
+      foreach (PMSourceScene::Stroke stroke, imageStrokes)
+      {
+         foreach (QPointF point, stroke)
+         {
+            counterPointsInImage++;
 
-      out.at<cv::Vec4b>(r,c) = forSmoothness.mats[label]->at<cv::Vec4b>(r,c);
+            const int x = static_cast<int>(round(point.x()));
+            const int y = static_cast<int>(round(point.y()));
+            const int site = y*width + x;
+
+            // calculate the actual data cost
+            for(int i = 0; i< num_labels;i++)
+            {
+               if(i == currentImage)
+               {
+                  gc->setDataCost(site,i,0);
+               }
+               else
+               {
+                  gc->setDataCost(site,i,883);
+               }
+            }
+         }
+      }
+      qDebug() << "Total points in Image " << counterPointsInImage;
+      currentImage++;
    }
-
-   QPixmap pixmap = Converter::CvMatToQPixmap(out);
-   m_tScene.reset(new PMTargetScene());
-   m_tScene->setPixmap(pixmap);
-   ui->graphicsView->setScene(m_tScene.data());
 }
 
 void PmWindow::on_tabWidget_currentChanged(int index)

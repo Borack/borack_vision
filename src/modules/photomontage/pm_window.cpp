@@ -354,3 +354,14 @@ void PmWindow::on_tabWidget_currentChanged(int index)
       addANewTab();
    }
 }
+
+void PmWindow::on_resetButton_clicked()
+{
+   const int numTabs = ui->tabWidget->count();
+   for(int i = 0; i< numTabs-1;i++)
+   {
+      PMSourceWidget* pmSourceWidget = dynamic_cast<PMSourceWidget*>(ui->tabWidget->widget(i));
+      if(pmSourceWidget)  pmSourceWidget->reset();
+      else qDebug() << "Error, cannot cast to PMSourceWidget." << __PRETTY_FUNCTION__;
+   }
+}

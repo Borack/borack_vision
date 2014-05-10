@@ -31,6 +31,8 @@ private slots:
 
    void on_tabWidget_currentChanged(int index);
 
+   void on_resetButton_clicked();
+
 private:
 
    EGraphCut_DataTerm m_gcDataTermMode;

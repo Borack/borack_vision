@@ -7,7 +7,6 @@
 PMSourceScene::PMSourceScene(QObject *parent)
    : CustomScene(parent)
    , m_pathMode(EPathMode_Curve)
-   , m_currentPath(0)
 {
 }
 
@@ -66,18 +65,18 @@ void PMSourceScene::drawStrokes()
    }
 
 
-   m_currentPath = addPath(path,QPen(Qt::blue, 20, Qt::SolidLine, Qt::FlatCap, Qt::BevelJoin));
+   m_drawnPathes.push_back(addPath(path,QPen(Qt::blue, 20, Qt::SolidLine, Qt::FlatCap, Qt::BevelJoin)));
 }
 
 //-----------------------------------------------------------------------------
 void PMSourceScene::reset()
 {
    m_allStrokes.clear();
-   if(m_currentPath)
+   foreach(QGraphicsPathItem* path , m_drawnPathes)
    {
-      removeItem(m_currentPath);
+      removeItem(path);
    }
-   m_currentPath = 0;
+   m_drawnPathes.clear();
 }
 
 const PMSourceScene::Strokes &PMSourceScene::strokes() const

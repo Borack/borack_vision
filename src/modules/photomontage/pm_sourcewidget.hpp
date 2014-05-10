@@ -38,6 +38,7 @@ public:
    void setDataTermMode(EGraphCut_DataTerm gcMode);
 
    const PMSourceScene::Strokes& strokes() const;
+   void reset();
 
 
 private slots:

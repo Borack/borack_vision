@@ -49,6 +49,11 @@ const PMSourceScene::Strokes &PMSourceWidget::strokes() const
    return m_sScene->strokes();
 }
 
+void PMSourceWidget::reset()
+{
+   m_sScene->reset();
+}
+
 void PMSourceWidget::on_loadBtn_clicked()
 {
 

@@ -46,6 +46,8 @@ void PMSourceScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *)
 //-----------------------------------------------------------------------------
 void PMSourceScene::drawStrokes()
 {
+
+#if 1
    QPainterPath path(m_currentStroke.at(0));
 
    if (m_pathMode == EPathMode_Line) {
@@ -64,8 +66,21 @@ void PMSourceScene::drawStrokes()
        }
    }
 
-
    m_drawnPathes.push_back(addPath(path,QPen(Qt::blue, 20, Qt::SolidLine, Qt::FlatCap, Qt::BevelJoin)));
+
+   int pathCount = path.elementCount();
+   int strokeCount = m_currentStroke.size();
+
+   qDebug() << "Pathcount = " << pathCount << " strokecount " << strokeCount;
+#else
+
+   double rad = 5;
+   foreach(QPointF point, m_currentStroke)
+   {
+      addEllipse(point.x()-rad, point.y()-rad, rad*2.0, rad*2.0,
+               QPen(), QBrush(Qt::SolidPattern));
+   }
+#endif
 }
 
 //-----------------------------------------------------------------------------

@@ -23,13 +23,13 @@
 
 struct ForSmoothness
 {
+   EGraphCut_SmoothnessTerm smoothnessMode;
    std::vector<QSharedPointer<cv::Mat> > mats;
 };
 
 GCoptimization::EnergyTermType SmoothCostFn(GCoptimization::SiteID site1, GCoptimization::SiteID site2, GCoptimization::LabelID l1, GCoptimization::LabelID l2, void* forSmoothness)
 {
    if(l1 == l2) return 0;
-
 
    // Matching color
    GCoptimization::EnergyTermType energy = 0;
@@ -51,21 +51,36 @@ GCoptimization::EnergyTermType SmoothCostFn(GCoptimization::SiteID site1, GCopti
    assert(mat1->channels() == 4);
    assert(mat2->channels() == 4);
 
-   cv::Vec4b pixelPInMat1 = mat1->at<cv::Vec4b>(s1);
-   cv::Vec4b pixelPInMat2 = mat2->at<cv::Vec4b>(s1);
+   if(smoothnessStruct->smoothnessMode == EGraphCut_SmoothnessTerm_Color)
+   {
 
-   cv::Vec4b pixelQInMat1 = mat1->at<cv::Vec4b>(s2);
-   cv::Vec4b pixelQInMat2 = mat2->at<cv::Vec4b>(s2);
+      cv::Vec4b pixelPInMat1 = mat1->at<cv::Vec4b>(s1);
+      cv::Vec4b pixelPInMat2 = mat2->at<cv::Vec4b>(s1);
 
-   energy += std::sqrt(
-            std::pow(pixelPInMat1[0] - pixelPInMat2[0], 2.0) +
-         std::pow(pixelPInMat1[1] - pixelPInMat2[1], 2.0) +
-         std::pow(pixelPInMat1[2] - pixelPInMat2[2], 2.0));
+      cv::Vec4b pixelQInMat1 = mat1->at<cv::Vec4b>(s2);
+      cv::Vec4b pixelQInMat2 = mat2->at<cv::Vec4b>(s2);
 
-   energy += std::sqrt(
-            std::pow(pixelQInMat1[0] - pixelQInMat2[0], 2.0) +
-         std::pow(pixelQInMat1[1] - pixelQInMat2[1], 2.0) +
-         std::pow(pixelQInMat1[2] - pixelQInMat2[2], 2.0));
+      energy += std::sqrt(
+               std::pow(pixelPInMat1[0] - pixelPInMat2[0], 2.0) +
+            std::pow(pixelPInMat1[1] - pixelPInMat2[1], 2.0) +
+            std::pow(pixelPInMat1[2] - pixelPInMat2[2], 2.0));
+
+      energy += std::sqrt(
+               std::pow(pixelQInMat1[0] - pixelQInMat2[0], 2.0) +
+            std::pow(pixelQInMat1[1] - pixelQInMat2[1], 2.0) +
+            std::pow(pixelQInMat1[2] - pixelQInMat2[2], 2.0));
+   }
+
+   else if(smoothnessStruct->smoothnessMode == EGraphCut_SmoothnessTerm_Gradients)
+   {
+      cv::Mat grad1(mat1->size(), CV_8UC3);
+      cv::Mat grad2(mat1->size(), CV_8UC3);
+
+      cv::split
+      cv::Sobel()
+
+   }
+
 
    return energy;
 
@@ -144,6 +159,7 @@ void PmWindow::on_runButton_clicked()
 
    // Setup smoothness term
    ForSmoothness forSmoothness;
+   forSmoothness.smoothnessMode = m_gcSmoothnessTermMode;
    foreach(PMPair pair, allInput)
    {
       QSharedPointer<cv::Mat> matPtr;

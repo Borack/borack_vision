@@ -73,11 +73,15 @@ GCoptimization::EnergyTermType SmoothCostFn(GCoptimization::SiteID site1, GCopti
 
    else if(smoothnessStruct->smoothnessMode == EGraphCut_SmoothnessTerm_Gradients)
    {
-      cv::Mat grad1(mat1->size(), CV_8UC3);
-      cv::Mat grad2(mat1->size(), CV_8UC3);
+      if(std::abs(site1-site2) == 1)
+      {
+         // in horizontal direction;
+         cv::Rect roi1(s1.x-1, s2.y-1, 3,3);
+         cv::Mat roiImg1 = (*mat1.data())(roi1);
 
-      cv::split
-      cv::Sobel()
+         cv::split();
+         cv::Scharr();CV_32F
+      }
 
    }
 

@@ -75,12 +75,40 @@ GCoptimization::EnergyTermType SmoothCostFn(GCoptimization::SiteID site1, GCopti
    {
       if(std::abs(site1-site2) == 1)
       {
-         // in horizontal direction;
-         cv::Rect roi1(s1.x-1, s2.y-1, 3,3);
-         cv::Mat roiImg1 = (*mat1.data())(roi1);
+//         // in horizontal direction;
+//         cv::Rect roi1(s1.x-1, s2.y-1, 3,3);
+//         cv::Mat roiImg1 = (*mat1.data())(roi1);
 
-         cv::split();
-         cv::Scharr();CV_32F
+         cv::Mat scharrOut1;
+         cv::Mat sharrIn;
+         cv::GaussianBlur(*mat1, sharrIn,cv::Size(31,31),1,1);
+         cv::Scharr(sharrIn, scharrOut1,CV_16S,0,1);
+         cv::convertScaleAbs(scharrOut1,scharrOut1);
+
+         cv::Mat scharrOut2;
+         cv::Mat sharrIn2;
+         cv::GaussianBlur(*mat2, sharrIn2,cv::Size(31,31),1,1);
+         cv::Scharr(sharrIn2, scharrOut2,CV_16S,0,1);
+         cv::convertScaleAbs(scharrOut2,scharrOut2);
+
+         cv::Vec4b pixelPInMat1 = scharrOut1.at<cv::Vec4b>(s1);
+         cv::Vec4b pixelPInMat2 = scharrOut2.at<cv::Vec4b>(s1);
+
+         cv::Vec4b pixelQInMat1 = scharrOut1.at<cv::Vec4b>(s2);
+         cv::Vec4b pixelQInMat2 = scharrOut2.at<cv::Vec4b>(s2);
+
+         energy += std::sqrt(
+                  std::pow(pixelPInMat1[0] - pixelPInMat2[0], 2.0) +
+               std::pow(pixelPInMat1[1] - pixelPInMat2[1], 2.0) +
+               std::pow(pixelPInMat1[2] - pixelPInMat2[2], 2.0));
+
+         energy += std::sqrt(
+                  std::pow(pixelQInMat1[0] - pixelQInMat2[0], 2.0) +
+               std::pow(pixelQInMat1[1] - pixelQInMat2[1], 2.0) +
+               std::pow(pixelQInMat1[2] - pixelQInMat2[2], 2.0));
+
+
+
       }
 
    }
@@ -168,7 +196,23 @@ void PmWindow::on_runButton_clicked()
    {
       QSharedPointer<cv::Mat> matPtr;
       matPtr.reset(new cv::Mat(Converter::QPixmapToCvMat(*pair.first)));
-      forSmoothness.mats.push_back(matPtr);
+
+      if(m_gcSmoothnessTermMode == EGraphCut_SmoothnessTerm_Color)
+      {
+         forSmoothness.mats.push_back(matPtr);
+      }
+      else if(m_gcSmoothnessTermMode == EGraphCut_SmoothnessTerm_Gradients)
+      {
+         cv::Mat* scharrOut1 = new cv::Mat();
+         cv::Mat sharrIn;
+         cv::GaussianBlur(*matPtr, sharrIn,cv::Size(31,31),1,1);
+         cv::Scharr(sharrIn, *scharrOut1,CV_16S,0,1);
+         cv::convertScaleAbs(*scharrOut1,*scharrOut1);
+
+         matPtr.reset(scharrOut1);
+         forSmoothness.mats.push_back(matPtr);
+      }
+
    }
    gc->setSmoothCost(&SmoothCostFn, &forSmoothness);
 

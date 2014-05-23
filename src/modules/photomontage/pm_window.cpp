@@ -53,7 +53,7 @@ GCoptimization::EnergyTermType SmoothCostFn(GCoptimization::SiteID site1, GCopti
    assert(mat1->channels() == 4);
    assert(mat2->channels() == 4);
 
-   if(smoothnessStruct->smoothnessMode == EGraphCut_SmoothnessTerm_Color)
+//   if(smoothnessStruct->smoothnessMode == EGraphCut_SmoothnessTerm_Color)
    {
 
       cv::Vec4b pixelPInMat1 = mat1->at<cv::Vec4b>(s1);
@@ -73,7 +73,7 @@ GCoptimization::EnergyTermType SmoothCostFn(GCoptimization::SiteID site1, GCopti
             std::pow(pixelQInMat1[2] - pixelQInMat2[2], 2.0));
    }
 
-   else if(smoothnessStruct->smoothnessMode == EGraphCut_SmoothnessTerm_Gradients)
+//   else if(smoothnessStruct->smoothnessMode == EGraphCut_SmoothnessTerm_Gradients)
    {
 //      qDebug() << "size mats" << smoothnessStruct->mats.size();
 //      qDebug() << "size x gradients" << smoothnessStruct->xGradients.size();
@@ -83,7 +83,7 @@ GCoptimization::EnergyTermType SmoothCostFn(GCoptimization::SiteID site1, GCopti
 
       QSharedPointer<cv::Mat> mat1;
       QSharedPointer<cv::Mat> mat2;
-      if(std::abs(site1-site2) == 1)
+      if(std::abs(site1-site2) != 1)
       {
          mat1 = smoothnessStruct->xGradients.at(l1);
          mat2 = smoothnessStruct->xGradients.at(l2);
@@ -100,15 +100,22 @@ GCoptimization::EnergyTermType SmoothCostFn(GCoptimization::SiteID site1, GCopti
       cv::Vec4b pixelQInMat1 = mat1->at<cv::Vec4b>(s2);
       cv::Vec4b pixelQInMat2 = mat2->at<cv::Vec4b>(s2);
 
-      energy += std::sqrt(
-               std::pow(pixelPInMat1[0] - pixelPInMat2[0], 2.0) +
-            std::pow(pixelPInMat1[1] - pixelPInMat2[1], 2.0) +
-            std::pow(pixelPInMat1[2] - pixelPInMat2[2], 2.0));
+      float a = (pixelPInMat1[0] + pixelPInMat1[1] + pixelPInMat1[2])/3.0f;
+      a += (pixelPInMat2[0] + pixelPInMat2[1] + pixelPInMat2[2])/3.0f;
+      a = std::max<float>(1.0f,a);
 
-      energy += std::sqrt(
-               std::pow(pixelQInMat1[0] - pixelQInMat2[0], 2.0) +
-            std::pow(pixelQInMat1[1] - pixelQInMat2[1], 2.0) +
-            std::pow(pixelQInMat1[2] - pixelQInMat2[2], 2.0));
+
+      energy /= a;
+
+//      energy += std::sqrt(
+//               std::pow(pixelPInMat1[0] - pixelPInMat2[0], 2.0) +
+//            std::pow(pixelPInMat1[1] - pixelPInMat2[1], 2.0) +
+//            std::pow(pixelPInMat1[2] - pixelPInMat2[2], 2.0));
+
+//      energy += std::sqrt(
+//               std::pow(pixelQInMat1[0] - pixelQInMat2[0], 2.0) +
+//            std::pow(pixelQInMat1[1] - pixelQInMat2[1], 2.0) +
+//            std::pow(pixelQInMat1[2] - pixelQInMat2[2], 2.0));
 
    }
 
@@ -413,7 +420,8 @@ void PmWindow::runHard(const PMVector &allInput, GCoptimizationGridGraph* gc)
                }
                else
                {
-                  gc->setDataCost(site,i,883);
+//                  gc->setDataCost(site,i,883);
+                  gc->setDataCost(site,i,88300);
                }
             }
          }

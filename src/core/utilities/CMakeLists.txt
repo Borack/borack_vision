@@ -6,6 +6,7 @@ set(SOURCES
 
 set(HEADERS
         converter.hpp
+        macros.hpp
 )
 
 

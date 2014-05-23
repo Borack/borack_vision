@@ -3,6 +3,7 @@
 
 #include <QComboBox>
 #include <QDebug>
+#include <QSettings>
 #include <QSharedPointer>
 #include <QString>
 #include <QTabBar>
@@ -14,6 +15,7 @@
 #include <opencv2/highgui/highgui.hpp>
 
 #include <converter.hpp>
+#include <macros.hpp>
 
 #include <GCoptimization.h>
 
@@ -139,6 +141,7 @@ PmWindow::PmWindow(QWidget *parent) :
    addANewTab();
    ui->tabWidget->setCurrentIndex(0);
    setupComboboxes();
+
 }
 
 PmWindow::~PmWindow()
@@ -290,6 +293,9 @@ void PmWindow::on_dataComboBox_currentIndexChanged(int index)
       else qDebug() << "Error, cannot cast to PMSourceWidget";
    }
 
+   QSettings settings;
+   settings.setValue(VARIABLE_TO_STRING(m_gcDataTermMode), m_gcDataTermMode);
+
    qDebug() << "New gc data term mode is " << m_gcDataTermMode;
 }
 
@@ -297,23 +303,30 @@ void PmWindow::on_smoothnessComboBox_currentIndexChanged(int index)
 {
    m_gcSmoothnessTermMode = static_cast<EGraphCut_SmoothnessTerm>(ui->smoothnessComboBox->itemData(index).toInt());
 
+   QSettings settings;
+   settings.setValue(VARIABLE_TO_STRING(m_gcSmoothnessTermMode), m_gcSmoothnessTermMode);
+
    qDebug() << "New gc smoothness term mode is " << m_gcSmoothnessTermMode;
 }
 
 void PmWindow::setupComboboxes()
 {
+   QSettings settings;
+   const int smoothnessIndex = settings.value(VARIABLE_TO_STRING(m_gcSmoothnessTermMode)).toInt();
+   const int dataIndex = settings.value(VARIABLE_TO_STRING(m_gcDataTermMode)).toInt();
+
    // Smootness Term
    this->ui->smoothnessComboBox->insertItem(0, "Matching Color", EGraphCut_SmoothnessTerm_Color);
    this->ui->smoothnessComboBox->insertItem(1, "Matching Gradients", EGraphCut_SmoothnessTerm_Gradients);
 
-   this->ui->smoothnessComboBox->setCurrentIndex(0);
 
    // Data term
    this->ui->dataComboBox->insertItem(0, "Minimum Luminance", EGraphCut_DataTerm_Minimum_Lumincance);
    this->ui->dataComboBox->insertItem(1, "Maximum Luminance", EGraphCut_DataTerm_Maximum_Lumincance);
    this->ui->dataComboBox->insertItem(2, "Hard Constraint", EGraphCut_DataTerm_Hard_Constraint);
 
-   this->ui->dataComboBox->setCurrentIndex(0);
+   this->ui->smoothnessComboBox->setCurrentIndex(smoothnessIndex);
+   this->ui->dataComboBox->setCurrentIndex(dataIndex);
 
 
 }

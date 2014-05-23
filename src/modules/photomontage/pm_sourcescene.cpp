@@ -68,10 +68,6 @@ void PMSourceScene::drawStrokes()
 
    m_drawnPathes.push_back(addPath(path,QPen(Qt::blue, 20, Qt::SolidLine, Qt::FlatCap, Qt::BevelJoin)));
 
-   int pathCount = path.elementCount();
-   int strokeCount = m_currentStroke.size();
-
-   qDebug() << "Pathcount = " << pathCount << " strokecount " << strokeCount;
 #else
 
    double rad = 5;

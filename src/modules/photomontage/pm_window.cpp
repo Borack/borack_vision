@@ -328,18 +328,18 @@ void PmWindow::setupComboboxes()
    this->ui->smoothnessComboBox->setCurrentIndex(smoothnessIndex);
    this->ui->dataComboBox->setCurrentIndex(dataIndex);
 
-
 }
 
 void PmWindow::addANewTab()
 {
    // never show latest tab!
    const int numTabs = ui->tabWidget->count();
+   const int tabPosition = numTabs-1;
    QString tabName("Source ");
    tabName.append(QString::number(numTabs));
-   ui->tabWidget->insertTab(numTabs-1,new PMSourceWidget,tabName);
-   dynamic_cast<PMSourceWidget*>(ui->tabWidget->widget(numTabs-1))->setDataTermMode(m_gcDataTermMode);
-   ui->tabWidget->setCurrentIndex(numTabs-1);
+   ui->tabWidget->insertTab(tabPosition,new PMSourceWidget(tabPosition),tabName);
+   dynamic_cast<PMSourceWidget*>(ui->tabWidget->widget(tabPosition))->setDataTermMode(m_gcDataTermMode);
+   ui->tabWidget->setCurrentIndex(tabPosition);
 }
 
 void PmWindow::runLuminance(const PMVector &allInput, GCoptimizationGridGraph* gc, bool isMinimum)

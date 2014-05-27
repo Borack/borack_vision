@@ -31,7 +31,7 @@ class PMSourceWidget : public QWidget
 public:
 
 
-   explicit PMSourceWidget(QWidget *parent = 0);
+   explicit PMSourceWidget(int tabPosition, QWidget *parent = 0);
    ~PMSourceWidget();
 
    PixmapPointer getPixmap();
@@ -48,10 +48,13 @@ private slots:
    void on_brushComboBox_currentIndexChanged(int index);
 
 private:
+
+   void loadImage(const QString &path);
    Ui::PMSourceWidget *ui;
    QScopedPointer<PMSourceScene> m_sScene;
 
    PixmapPointer m_pixmap;
+   int m_tabPosition;
 
    static const QString SETTINGS_LAST_PM_SOURCE_PATH;
 };

@@ -12,6 +12,8 @@ enum EGraphCut_SmoothnessTerm // = Seam
 {
      EGraphCut_SmoothnessTerm_Color= 0
    , EGraphCut_SmoothnessTerm_Gradients
+   , EGraphCut_SmoothnessTerm_Colors_And_Gradients
+   , EGraphCut_SmoothnessTerm_Colors_And_Edges
 };
 
 

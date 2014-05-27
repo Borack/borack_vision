@@ -55,9 +55,9 @@ GCoptimization::EnergyTermType SmoothCostFn(GCoptimization::SiteID site1, GCopti
    assert(mat1->channels() == 4);
    assert(mat2->channels() == 4);
 
-//   if(smoothnessStruct->smoothnessMode == EGraphCut_SmoothnessTerm_Color)
+   if(smoothnessStruct->smoothnessMode == EGraphCut_SmoothnessTerm_Color ||
+         smoothnessStruct->smoothnessMode == EGraphCut_SmoothnessTerm_Colors_And_Edges)
    {
-
       cv::Vec4b pixelPInMat1 = mat1->at<cv::Vec4b>(s1);
       cv::Vec4b pixelPInMat2 = mat2->at<cv::Vec4b>(s1);
 
@@ -75,11 +75,8 @@ GCoptimization::EnergyTermType SmoothCostFn(GCoptimization::SiteID site1, GCopti
             std::pow(pixelQInMat1[2] - pixelQInMat2[2], 2.0));
    }
 
-//   else if(smoothnessStruct->smoothnessMode == EGraphCut_SmoothnessTerm_Gradients)
+   if(smoothnessStruct->smoothnessMode == EGraphCut_SmoothnessTerm_Colors_And_Edges)
    {
-//      qDebug() << "size mats" << smoothnessStruct->mats.size();
-//      qDebug() << "size x gradients" << smoothnessStruct->xGradients.size();
-//      qDebug() << "size y gradients" << smoothnessStruct->yGradients.size();
       assert(smoothnessStruct->mats.size() == smoothnessStruct->xGradients.size());
       assert(smoothnessStruct->mats.size()== smoothnessStruct->yGradients.size());
 
@@ -99,36 +96,14 @@ GCoptimization::EnergyTermType SmoothCostFn(GCoptimization::SiteID site1, GCopti
       cv::Vec4b pixelPInMat1 = mat1->at<cv::Vec4b>(s1);
       cv::Vec4b pixelPInMat2 = mat2->at<cv::Vec4b>(s1);
 
-      cv::Vec4b pixelQInMat1 = mat1->at<cv::Vec4b>(s2);
-      cv::Vec4b pixelQInMat2 = mat2->at<cv::Vec4b>(s2);
-
       float a = (pixelPInMat1[0] + pixelPInMat1[1] + pixelPInMat1[2])/3.0f;
       a += (pixelPInMat2[0] + pixelPInMat2[1] + pixelPInMat2[2])/3.0f;
       a = a == 0 ? 1.0f : std::sqrtf(a);
 
-
       energy /= a;
-
-//      energy += std::sqrt(
-//               std::pow(pixelPInMat1[0] - pixelPInMat2[0], 2.0) +
-//            std::pow(pixelPInMat1[1] - pixelPInMat2[1], 2.0) +
-//            std::pow(pixelPInMat1[2] - pixelPInMat2[2], 2.0));
-
-//      energy += std::sqrt(
-//               std::pow(pixelQInMat1[0] - pixelQInMat2[0], 2.0) +
-//            std::pow(pixelQInMat1[1] - pixelQInMat2[1], 2.0) +
-//            std::pow(pixelQInMat1[2] - pixelQInMat2[2], 2.0));
-
    }
 
-
-
-//   if(energy > 0)
-//   {
-//      qDebug() << "energy: " << energy;
-//   }
    return energy;
-
 }
 
 
@@ -212,13 +187,16 @@ void PmWindow::on_runButton_clicked()
       matPtr.reset(new cv::Mat(Converter::QPixmapToCvMat(*pair.first)));
       forSmoothness.mats.push_back(matPtr);
 
-      if(m_gcSmoothnessTermMode == EGraphCut_SmoothnessTerm_Gradients)
+      if(m_gcSmoothnessTermMode == EGraphCut_SmoothnessTerm_Gradients ||
+            m_gcSmoothnessTermMode == EGraphCut_SmoothnessTerm_Colors_And_Edges ||
+            m_gcSmoothnessTermMode == EGraphCut_SmoothnessTerm_Colors_And_Gradients
+            )
       {
          QSharedPointer<cv::Mat> xGradient(new cv::Mat());
          QSharedPointer<cv::Mat> yGradient(new cv::Mat());
          cv::Mat rgbMat;
          cv::cvtColor(*matPtr,rgbMat, CV_BGRA2BGR);
-//         cv::GaussianBlur(rgbMat, rgbMat,cv::Size(3,3),0,0);
+         cv::GaussianBlur(rgbMat, rgbMat,cv::Size(3,3),0,0);
 
 
          cv::Scharr(rgbMat, *xGradient,CV_16S,1,0);
@@ -318,6 +296,8 @@ void PmWindow::setupComboboxes()
    // Smootness Term
    this->ui->smoothnessComboBox->insertItem(0, "Matching Color", EGraphCut_SmoothnessTerm_Color);
    this->ui->smoothnessComboBox->insertItem(1, "Matching Gradients", EGraphCut_SmoothnessTerm_Gradients);
+   this->ui->smoothnessComboBox->insertItem(2, "Matching Colors and Gradients", EGraphCut_SmoothnessTerm_Colors_And_Gradients);
+   this->ui->smoothnessComboBox->insertItem(3, "Matching Colors and Edges", EGraphCut_SmoothnessTerm_Colors_And_Edges);
 
 
    // Data term

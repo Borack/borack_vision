@@ -104,7 +104,7 @@ GCoptimization::EnergyTermType SmoothCostFn(GCoptimization::SiteID site1, GCopti
 
       float a = (pixelPInMat1[0] + pixelPInMat1[1] + pixelPInMat1[2])/3.0f;
       a += (pixelPInMat2[0] + pixelPInMat2[1] + pixelPInMat2[2])/3.0f;
-      a = std::max<float>(1.0f,a);
+      a = a == 0 ? 1.0f : std::sqrtf(a);
 
 
       energy /= a;
@@ -218,7 +218,7 @@ void PmWindow::on_runButton_clicked()
          QSharedPointer<cv::Mat> yGradient(new cv::Mat());
          cv::Mat rgbMat;
          cv::cvtColor(*matPtr,rgbMat, CV_BGRA2BGR);
-         cv::GaussianBlur(rgbMat, rgbMat,cv::Size(3,3),0,0);
+//         cv::GaussianBlur(rgbMat, rgbMat,cv::Size(3,3),0,0);
 
 
          cv::Scharr(rgbMat, *xGradient,CV_16S,1,0);

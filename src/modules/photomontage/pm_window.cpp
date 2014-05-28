@@ -56,7 +56,8 @@ GCoptimization::EnergyTermType SmoothCostFn(GCoptimization::SiteID site1, GCopti
    assert(mat2->channels() == 4);
 
    if(smoothnessStruct->smoothnessMode == EGraphCut_SmoothnessTerm_Color ||
-         smoothnessStruct->smoothnessMode == EGraphCut_SmoothnessTerm_Colors_And_Edges)
+         smoothnessStruct->smoothnessMode == EGraphCut_SmoothnessTerm_Colors_And_Edges ||
+         smoothnessStruct->smoothnessMode == EGraphCut_SmoothnessTerm_Colors_And_Gradients)
    {
       cv::Vec4b pixelPInMat1 = mat1->at<cv::Vec4b>(s1);
       cv::Vec4b pixelPInMat2 = mat2->at<cv::Vec4b>(s1);
@@ -101,6 +102,41 @@ GCoptimization::EnergyTermType SmoothCostFn(GCoptimization::SiteID site1, GCopti
       a = a == 0 ? 1.0f : std::sqrtf(a);
 
       energy /= a;
+   }
+
+   if(smoothnessStruct->smoothnessMode == EGraphCut_SmoothnessTerm_Gradients
+         || smoothnessStruct->smoothnessMode == EGraphCut_SmoothnessTerm_Colors_And_Gradients)
+   {
+      QSharedPointer<cv::Mat> mat1;
+      QSharedPointer<cv::Mat> mat2;
+      if(std::abs(site1-site2) != 1)
+      {
+         mat1 = smoothnessStruct->xGradients.at(l1);
+         mat2 = smoothnessStruct->xGradients.at(l2);
+      }
+      else
+      {
+         mat1 = smoothnessStruct->yGradients.at(l1);
+         mat2 = smoothnessStruct->yGradients.at(l2);
+      }
+
+      cv::Vec4b pixelPInMat1 = mat1->at<cv::Vec4b>(s1);
+      cv::Vec4b pixelPInMat2 = mat2->at<cv::Vec4b>(s1);
+
+      cv::Vec4b pixelQInMat1 = mat1->at<cv::Vec4b>(s2);
+      cv::Vec4b pixelQInMat2 = mat2->at<cv::Vec4b>(s2);
+
+
+      energy += std::sqrt(
+               std::pow(pixelPInMat1[0] - pixelPInMat2[0], 2.0) +
+            std::pow(pixelPInMat1[1] - pixelPInMat2[1], 2.0) +
+            std::pow(pixelPInMat1[2] - pixelPInMat2[2], 2.0));
+
+      energy += std::sqrt(
+               std::pow(pixelQInMat1[0] - pixelQInMat2[0], 2.0) +
+            std::pow(pixelQInMat1[1] - pixelQInMat2[1], 2.0) +
+            std::pow(pixelQInMat1[2] - pixelQInMat2[2], 2.0));
+
    }
 
    return energy;
@@ -149,7 +185,7 @@ void PmWindow::on_runButton_clicked()
          qWarning("Cast to PMSourceWidget was *not* successful!");
       }
 
-      // as soon as there are more then 2 images in the list, make sure all images have the same size.
+      // as soon as there are more then 1 image in the list, make sure all images have the same size.
       if(allInput.size() > 1)
       {
          const int latest = allInput.size() - 1;
@@ -173,6 +209,9 @@ void PmWindow::on_runButton_clicked()
       qWarning("Error: No images specified.");
       return;
    }
+
+
+
    const int width = allInput[0].first->width();
    const int height = allInput[0].first->height();
 
@@ -322,6 +361,14 @@ void PmWindow::addANewTab()
    ui->tabWidget->setCurrentIndex(tabPosition);
 }
 
+void PmWindow::downscale(float downscaleFactor, const PMVector &input, PMVector &downscaledVector)
+{
+   foreach (PMPair pair, input) {
+     PixmapPointer small(new QPixmap(pair.first->scaled(QSize(100,100), Qt::KeepAspectRatio)));
+
+   }
+}
+
 void PmWindow::runLuminance(const PMVector &allInput, GCoptimizationGridGraph* gc, bool isMinimum)
 {
 
@@ -413,7 +460,7 @@ void PmWindow::runHard(const PMVector &allInput, GCoptimizationGridGraph* gc)
                }
                else
                {
-//                  gc->setDataCost(site,i,883);
+                  //                  gc->setDataCost(site,i,883);
                   gc->setDataCost(site,i,88300);
                }
             }

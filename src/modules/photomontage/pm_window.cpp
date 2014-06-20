@@ -76,34 +76,6 @@ GCoptimization::EnergyTermType SmoothCostFn(GCoptimization::SiteID site1, GCopti
             std::pow(pixelQInMat1[2] - pixelQInMat2[2], 2.0));
    }
 
-   if(smoothnessStruct->smoothnessMode == EGraphCut_SmoothnessTerm_Colors_And_Edges)
-   {
-      assert(smoothnessStruct->mats.size() == smoothnessStruct->xGradients.size());
-      assert(smoothnessStruct->mats.size()== smoothnessStruct->yGradients.size());
-
-      QSharedPointer<cv::Mat> mat1;
-      QSharedPointer<cv::Mat> mat2;
-      if(std::abs(site1-site2) != 1)
-      {
-         mat1 = smoothnessStruct->xGradients.at(l1);
-         mat2 = smoothnessStruct->xGradients.at(l2);
-      }
-      else
-      {
-         mat1 = smoothnessStruct->yGradients.at(l1);
-         mat2 = smoothnessStruct->yGradients.at(l2);
-      }
-
-      cv::Vec4b pixelPInMat1 = mat1->at<cv::Vec4b>(s1);
-      cv::Vec4b pixelPInMat2 = mat2->at<cv::Vec4b>(s1);
-
-      float a = (pixelPInMat1[0] + pixelPInMat1[1] + pixelPInMat1[2])/3.0f;
-      a += (pixelPInMat2[0] + pixelPInMat2[1] + pixelPInMat2[2])/3.0f;
-      a = a == 0 ? 1.0f : std::sqrtf(a);
-
-      energy /= a;
-   }
-
    if(smoothnessStruct->smoothnessMode == EGraphCut_SmoothnessTerm_Gradients
          || smoothnessStruct->smoothnessMode == EGraphCut_SmoothnessTerm_Colors_And_Gradients)
    {
@@ -138,6 +110,35 @@ GCoptimization::EnergyTermType SmoothCostFn(GCoptimization::SiteID site1, GCopti
             std::pow(pixelQInMat1[2] - pixelQInMat2[2], 2.0));
 
    }
+
+   if(smoothnessStruct->smoothnessMode == EGraphCut_SmoothnessTerm_Colors_And_Edges)
+   {
+      assert(smoothnessStruct->mats.size() == smoothnessStruct->xGradients.size());
+      assert(smoothnessStruct->mats.size()== smoothnessStruct->yGradients.size());
+
+      QSharedPointer<cv::Mat> mat1;
+      QSharedPointer<cv::Mat> mat2;
+      if(std::abs(site1-site2) != 1)
+      {
+         mat1 = smoothnessStruct->xGradients.at(l1);
+         mat2 = smoothnessStruct->xGradients.at(l2);
+      }
+      else
+      {
+         mat1 = smoothnessStruct->yGradients.at(l1);
+         mat2 = smoothnessStruct->yGradients.at(l2);
+      }
+
+      cv::Vec4b pixelPInMat1 = mat1->at<cv::Vec4b>(s1);
+      cv::Vec4b pixelPInMat2 = mat2->at<cv::Vec4b>(s1);
+
+      float a = (pixelPInMat1[0] + pixelPInMat1[1] + pixelPInMat1[2])/3.0f;
+      a += (pixelPInMat2[0] + pixelPInMat2[1] + pixelPInMat2[2])/3.0f;
+      a = a == 0 ? 1.0f : sqrtf(a);
+
+      energy /= a;
+   }
+
 
    return energy;
 }
@@ -211,16 +212,21 @@ void PmWindow::on_runButton_clicked()
    }
 
 
+   PMVector downscaledInput;
+   float downscaleFactor;
+   downscale(allInput,downscaledInput,downscaleFactor);
 
    const int width = allInput[0].first->width();
    const int height = allInput[0].first->height();
+   const int downscaledWidth = downscaledInput[0].first->width();
+   const int downscaledHeight = downscaledInput[0].first->height();
 
-   GCoptimizationGridGraph* gc = new GCoptimizationGridGraph(width, height, num_labels);
+   GCoptimizationGridGraph* gc = new GCoptimizationGridGraph(downscaledWidth, downscaledHeight, num_labels);
 
    // Setup smoothness term
    ForSmoothness forSmoothness;
    forSmoothness.smoothnessMode = m_gcSmoothnessTermMode;
-   foreach(PMPair pair, allInput)
+   foreach(PMPair pair, downscaledInput)
    {
       QSharedPointer<cv::Mat> matPtr;
       matPtr.reset(new cv::Mat(Converter::QPixmapToCvMat(*pair.first)));
@@ -261,13 +267,13 @@ void PmWindow::on_runButton_clicked()
    // Setup data term
    switch (m_gcDataTermMode) {
       case EGraphCut_DataTerm_Minimum_Lumincance:
-         runLuminance(allInput,gc, true);
+         runLuminance(downscaledInput,gc, true);
          break;
       case EGraphCut_DataTerm_Maximum_Lumincance:
-         runLuminance(allInput,gc, false);
+         runLuminance(downscaledInput,gc, false);
          break;
       case EGraphCut_DataTerm_Hard_Constraint:
-         runHard(allInput, gc);
+         runHard(downscaledInput, gc);
          break;
       default:
          break;
@@ -281,16 +287,35 @@ void PmWindow::on_runButton_clicked()
    qDebug() << "\nAfter optimization energy is " << gc->compute_energy();
 
 
+   QVector<cv::Mat> fullSizeCVMats;
+   foreach(PMPair pair, allInput)
+   {
+      cv::Mat dst;
+      cv::cvtColor(Converter::QPixmapToCvMat(*pair.first),dst,CV_BGR2RGBA);
+      fullSizeCVMats.push_back(dst);
+   }
+
+
    // generate output
    cv::Mat out(cv::Size(width,height), CV_8UC4);
-   for (int  i = 0; i < gc->numSites(); i++)
+   for(int r = 0; r < out.rows; r++)
    {
-      int r = i / width;
-      int c = i % width;
-      int label = gc->whatLabel(i);
+      for(int c = 0; c < out.cols; c++)
+      {
+         int site = static_cast<int>((r*out.rows*downscaleFactor*downscaleFactor)+(c*downscaleFactor));
+         int label = gc->whatLabel(site);
 
-      out.at<cv::Vec4b>(r,c) = forSmoothness.mats[label]->at<cv::Vec4b>(r,c);
+         out.at<cv::Vec4b>(r,c) = fullSizeCVMats[label].at<cv::Vec4b>(r,c);
+      }
    }
+//   for (int  i = 0; i < gc->numSites(); i++)
+//   {
+//      int r = i / width;
+//      int c = i % width;
+//      int label = gc->whatLabel(i);
+
+//      out.at<cv::Vec4b>(r,c) = forSmoothness.mats[label]->at<cv::Vec4b>(r,c);
+//   }
 
    QPixmap pixmap = Converter::CvMatToQPixmap(out);
    m_tScene.reset(new PMTargetScene());
@@ -361,11 +386,31 @@ void PmWindow::addANewTab()
    ui->tabWidget->setCurrentIndex(tabPosition);
 }
 
-void PmWindow::downscale(float downscaleFactor, const PMVector &input, PMVector &downscaledVector)
+void PmWindow::downscale(const PMVector &input, PMVector &downscaledVector, float &downscaleFactor)
 {
-   foreach (PMPair pair, input) {
-     PixmapPointer small(new QPixmap(pair.first->scaled(QSize(100,100), Qt::KeepAspectRatio)));
+   float factor = -1;
 
+   foreach (PMPair pair, input)
+   {
+      PixmapPointer small(new QPixmap(pair.first->scaled(QSize(100,100), Qt::KeepAspectRatio)));
+      if(factor == -1)
+      {
+         factor = static_cast<float>(small->width())/pair.first->width();
+         downscaleFactor = factor;
+      }
+
+      PMSourceScene::Strokes smallStrokes;
+      foreach(PMSourceScene::Stroke stroke, pair.second)
+      {
+         PMSourceScene::Stroke smallStroke;
+         foreach(QPointF point, stroke)
+         {
+            QPointF smallP(point.x() * factor,point.y() * factor);
+            smallStroke.push_back(smallP);
+         }
+         smallStrokes.push_back(smallStroke);
+      }
+      downscaledVector.push_back(PMPair(small,smallStrokes));
    }
 }
 
@@ -380,7 +425,7 @@ void PmWindow::runLuminance(const PMVector &allInput, GCoptimizationGridGraph* g
    foreach(PMPair pair, allInput)
    {
       cv::Mat gray;
-      cv::cvtColor(Converter::QPixmapToCvMat(*pair.first),gray,CV_BGR2GRAY);
+      cv::cvtColor(Converter::QPixmapToCvMat(*pair.first),gray,CV_BGR2GRAY); // FIXME.. is it RGB .. ?
       grayMats.push_back(gray);
    }
 

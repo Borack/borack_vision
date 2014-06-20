@@ -40,7 +40,7 @@ private:
 
    void setupComboboxes();
    void addANewTab();
-   void downscale(float downscaleFactor, const PMVector& input, PMVector& downscaledVector);
+   void downscale(const PMVector& input, PMVector& downscaledVector, float &downscaleFactor);
 
    void runLuminance(const PMVector &allInput, GCoptimizationGridGraph *gc, bool isMinimum);
    void runHard(const PMVector &allInput, GCoptimizationGridGraph *gc);

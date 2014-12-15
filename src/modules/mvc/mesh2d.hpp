@@ -24,9 +24,17 @@ typedef CGAL::Delaunay_mesher_2<CDT, Criteria> Meshing_engine;
 typedef CDT::Vertex_handle Vertex_handle;
 typedef CDT::Point Point;
 
+//!
+//! \brief  The \class Mesh2d class provides a simple interface for a 2D mesh.
+//!         In these concrete from it is a wrapper around the CGAL library.
+//!         In the future one could go to the PointCloudLibrary for example, which
+//!         is supposed to have a much nicer interface.
+//!
+
 class Mesh2d
 {
 public:
+
 
    Mesh2d(const MVC::Contour &contours);
    MVC::Mesh2d::Segments segments() const;

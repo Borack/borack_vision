@@ -31,6 +31,8 @@ struct ForSmoothness
    std::vector<QSharedPointer<cv::Mat> > yGradients;
 };
 
+//-----------------------------------------------------------------------------
+
 GCoptimization::EnergyTermType SmoothCostFn(GCoptimization::SiteID site1, GCoptimization::SiteID site2, GCoptimization::LabelID l1, GCoptimization::LabelID l2, void* forSmoothness)
 {
    if(l1 == l2) return 0;
@@ -143,6 +145,7 @@ GCoptimization::EnergyTermType SmoothCostFn(GCoptimization::SiteID site1, GCopti
    return energy;
 }
 
+//-----------------------------------------------------------------------------
 
 PmWindow::PmWindow(QWidget *parent) :
    QMainWindow(parent),
@@ -156,10 +159,14 @@ PmWindow::PmWindow(QWidget *parent) :
 
 }
 
+//-----------------------------------------------------------------------------
+
 PmWindow::~PmWindow()
 {
    delete ui;
 }
+
+//-----------------------------------------------------------------------------
 
 void PmWindow::on_runButton_clicked()
 {
@@ -331,6 +338,8 @@ void PmWindow::on_runButton_clicked()
    ui->graphicsView->setScene(m_tScene.data());
 }
 
+//-----------------------------------------------------------------------------
+
 void PmWindow::on_dataComboBox_currentIndexChanged(int index)
 {
    m_gcDataTermMode = static_cast<EGraphCut_DataTerm>(ui->dataComboBox->itemData(index).toInt());
@@ -349,6 +358,8 @@ void PmWindow::on_dataComboBox_currentIndexChanged(int index)
    qDebug() << "New gc data term mode is " << m_gcDataTermMode;
 }
 
+//-----------------------------------------------------------------------------
+
 void PmWindow::on_smoothnessComboBox_currentIndexChanged(int index)
 {
    m_gcSmoothnessTermMode = static_cast<EGraphCut_SmoothnessTerm>(ui->smoothnessComboBox->itemData(index).toInt());
@@ -358,6 +369,8 @@ void PmWindow::on_smoothnessComboBox_currentIndexChanged(int index)
 
    qDebug() << "New gc smoothness term mode is " << m_gcSmoothnessTermMode;
 }
+
+//-----------------------------------------------------------------------------
 
 void PmWindow::setupComboboxes()
 {
@@ -382,6 +395,8 @@ void PmWindow::setupComboboxes()
 
 }
 
+//-----------------------------------------------------------------------------
+
 void PmWindow::addANewTab()
 {
    // never show latest tab!
@@ -393,6 +408,8 @@ void PmWindow::addANewTab()
    dynamic_cast<PMSourceWidget*>(ui->tabWidget->widget(tabPosition))->setDataTermMode(m_gcDataTermMode);
    ui->tabWidget->setCurrentIndex(tabPosition);
 }
+
+//-----------------------------------------------------------------------------
 
 void PmWindow::downscale(const PMVector &input, PMVector &downscaledVector, float &downscaleFactor)
 {
@@ -437,6 +454,8 @@ void PmWindow::downscale(const PMVector &input, PMVector &downscaledVector, floa
       downscaledVector.push_back(PMPair(small,smallStrokes));
    }
 }
+
+//-----------------------------------------------------------------------------
 
 void PmWindow::runLuminance(const PMVector &allInput, GCoptimizationGridGraph* gc, bool isMinimum)
 {
@@ -497,6 +516,8 @@ void PmWindow::runLuminance(const PMVector &allInput, GCoptimizationGridGraph* g
    }
 }
 
+//-----------------------------------------------------------------------------
+
 void PmWindow::runHard(const PMVector &allInput, GCoptimizationGridGraph* gc)
 {
    // See here for some implementation details: http://grail.cs.washington.edu/projects/photomontage/release/
@@ -540,6 +561,8 @@ void PmWindow::runHard(const PMVector &allInput, GCoptimizationGridGraph* gc)
    }
 }
 
+//-----------------------------------------------------------------------------
+
 void PmWindow::on_tabWidget_currentChanged(int index)
 {
    const int numTabs = ui->tabWidget->count();
@@ -548,6 +571,8 @@ void PmWindow::on_tabWidget_currentChanged(int index)
       addANewTab();
    }
 }
+
+//-----------------------------------------------------------------------------
 
 void PmWindow::on_resetButton_clicked()
 {

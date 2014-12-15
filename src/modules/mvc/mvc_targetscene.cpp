@@ -9,10 +9,14 @@ MVCTargetScene::MVCTargetScene(QObject *parent)
 {
 }
 
+//-----------------------------------------------------------------------------
+
 QPointF MVCTargetScene::clickLocation() const
 {
    return m_targetLocation;
 }
+
+//-----------------------------------------------------------------------------
 
 void MVCTargetScene::reset()
 {
@@ -29,6 +33,8 @@ void MVCTargetScene::reset()
    }
 }
 
+//-----------------------------------------------------------------------------
+
 void MVCTargetScene::drawContour(MVC::Boundary boundary)
 {
 
@@ -37,12 +43,16 @@ void MVCTargetScene::drawContour(MVC::Boundary boundary)
    m_polygon = addPolygon(polygon,QPen(Qt::blue, 2, Qt::DashDotLine, Qt::RoundCap));
 }
 
+//-----------------------------------------------------------------------------
+
 void MVCTargetScene::drawFinalPatch(QImage img)
 {
    reset();
    QPixmap pixmap = QPixmap::fromImage(img);
    m_pixmap = addPixmap(pixmap);
 }
+
+//-----------------------------------------------------------------------------
 
 void MVCTargetScene::mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent)
 {
@@ -55,3 +65,5 @@ void MVCTargetScene::mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent)
 #endif // MVC_DEBUG
    emit runTarget();
 }
+
+//-----------------------------------------------------------------------------

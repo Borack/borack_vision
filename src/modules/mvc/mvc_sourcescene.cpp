@@ -12,10 +12,14 @@ MVCSourceScene::MVCSourceScene(QObject *parent)
 {
 }
 
+//-----------------------------------------------------------------------------
+
 MVC::Boundary MVCSourceScene::getBoundary() const
 {
    return m_boundary;
 }
+
+//-----------------------------------------------------------------------------
 
 void MVCSourceScene::mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent)
 {
@@ -41,6 +45,8 @@ void MVCSourceScene::mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent)
    drawPolygon();
 }
 
+//-----------------------------------------------------------------------------
+
 void MVCSourceScene::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
 {
    if(event->buttons() != Qt::NoButton)
@@ -51,11 +57,15 @@ void MVCSourceScene::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
    }
 }
 
+//-----------------------------------------------------------------------------
+
 void MVCSourceScene::mouseReleaseEvent(QGraphicsSceneMouseEvent */*event*/)
 {
     qDebug() << "Mouse released";
     emit runSource();
 }
+
+//-----------------------------------------------------------------------------
 
 void MVCSourceScene::reset()
 {
@@ -73,6 +83,8 @@ void MVCSourceScene::reset()
    m_lines.clear();
 }
 
+//-----------------------------------------------------------------------------
+
 void MVCSourceScene::drawMesh(MVC::Mesh2d::Segments segements)
 {
    foreach(QGraphicsLineItem* line, m_lines)
@@ -87,6 +99,8 @@ void MVCSourceScene::drawMesh(MVC::Mesh2d::Segments segements)
    }
 }
 
+//-----------------------------------------------------------------------------
+
 void MVCSourceScene::drawPolygon()
 {
    if(m_polygon)
@@ -98,3 +112,5 @@ void MVCSourceScene::drawPolygon()
    QPolygonF polygon(m_boundary);
    m_polygon = addPolygon(polygon,QPen(Qt::green, 5, Qt::DashDotLine, Qt::RoundCap));
 }
+
+//-----------------------------------------------------------------------------

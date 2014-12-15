@@ -20,7 +20,7 @@ typedef std::vector<Contour> Contours;
 
 namespace Mesh2d {
    typedef std::vector<QLineF> Segments;
-}
-}
+} // Mesh2d
+} // MVC
 
 #endif // MVC_TYPES_HPP

@@ -22,6 +22,8 @@ MeanValueSeamlessCloning::MeanValueSeamlessCloning(const QPixmap &pixmap, const 
 
 }
 
+//-----------------------------------------------------------------------------
+
 void MeanValueSeamlessCloning::startSourceComputation(const MVC::Boundary &b)
 {
    m_sourceBoundary = b;
@@ -109,6 +111,8 @@ void MeanValueSeamlessCloning::startSourceComputation(const MVC::Boundary &b)
 //   cv::imshow("Source BB", m_sourcePatch);
 
 }
+
+//-----------------------------------------------------------------------------
 
 
 void MeanValueSeamlessCloning::startTargetComputation(const QPointF &clickLoc)
@@ -230,6 +234,8 @@ void MeanValueSeamlessCloning::startTargetComputation(const QPointF &clickLoc)
 
 }
 
+//-----------------------------------------------------------------------------
+
 void MeanValueSeamlessCloning::resetCoords()
 {
    m_colorDifferences.clear();
@@ -240,6 +246,8 @@ void MeanValueSeamlessCloning::resetCoords()
    m_patchMVCCoords.clear();
 
 }
+
+//-----------------------------------------------------------------------------
 
 MeanValueSeamlessCloning::MVCoord MeanValueSeamlessCloning::calculateMVCValues(const cv::Point &interiorPoint)
 {
@@ -305,6 +313,8 @@ MeanValueSeamlessCloning::MVCoord MeanValueSeamlessCloning::calculateMVCValues(c
    return mvc;
 }
 
+//-----------------------------------------------------------------------------
+
 MVC::Boundary MeanValueSeamlessCloning::getBoundary(const std::vector<cv::Point> &contour)
 {
    MVC::Boundary out;
@@ -316,3 +326,5 @@ MVC::Boundary MeanValueSeamlessCloning::getBoundary(const std::vector<cv::Point>
    assert(out.size() == contour.size());
    return out;
 }
+
+//-----------------------------------------------------------------------------

@@ -34,15 +34,21 @@ PMSourceWidget::PMSourceWidget(int tabPosition, QWidget *parent) :
    }
 }
 
+//-----------------------------------------------------------------------------
+
 PMSourceWidget::~PMSourceWidget()
 {
    delete ui;
 }
 
+//-----------------------------------------------------------------------------
+
 PixmapPointer PMSourceWidget::getPixmap()
 {
    return m_pixmap;
 }
+
+//-----------------------------------------------------------------------------
 
 void PMSourceWidget::setDataTermMode(EGraphCut_DataTerm gcMode)
 {
@@ -56,16 +62,22 @@ void PMSourceWidget::setDataTermMode(EGraphCut_DataTerm gcMode)
    }
 }
 
+//-----------------------------------------------------------------------------
+
 const PMSourceScene::Strokes &PMSourceWidget::strokes() const
 {
    assert(m_sScene);
    return m_sScene->strokes();
 }
 
+//-----------------------------------------------------------------------------
+
 void PMSourceWidget::reset()
 {
    m_sScene->reset();
 }
+
+//-----------------------------------------------------------------------------
 
 void PMSourceWidget::on_loadBtn_clicked()
 {
@@ -83,6 +95,8 @@ void PMSourceWidget::on_loadBtn_clicked()
    }
 }
 
+//-----------------------------------------------------------------------------
+
 void PMSourceWidget::on_runSource()
 {
 
@@ -93,12 +107,14 @@ void PMSourceWidget::on_runSource()
    qDebug() << "On run on source PM";
 }
 
-
+//-----------------------------------------------------------------------------
 
 void PMSourceWidget::on_brushComboBox_currentIndexChanged(int index)
 {
 
 }
+
+//-----------------------------------------------------------------------------
 
 void PMSourceWidget::loadImage(const QString &path)
 {
@@ -115,3 +131,5 @@ void PMSourceWidget::loadImage(const QString &path)
    QSettings settings;
    settings.setValue(SETTINGS_LAST_PM_SOURCE_PATH, path);
 }
+
+//-----------------------------------------------------------------------------

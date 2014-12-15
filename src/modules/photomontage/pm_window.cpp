@@ -298,7 +298,7 @@ void PmWindow::on_runButton_clicked()
 
    // generate output
    cv::Mat out(cv::Size(width,height), CV_8UC4);
-   out.setTo(cv::Scalar(0,255,0,0));
+   out.setTo(cv::Scalar(0,255,0,255));
    const int numPixelsCoveredByOneSite = 1.0f/downscaleFactor; // length of the patch. numOfPixels is this squared.
    int curX = 0, curY =0;
    for(int site = 0; site< gc->numSites(); site++)
@@ -322,33 +322,8 @@ void PmWindow::on_runButton_clicked()
       }
    }
 
-//   assert(out.channels() == 4);
-//   assert(downscaledWidth == std::floor(width * downscaleFactor));
-//   assert(downscaledHeight == std::floor(height * downscaleFactor));
-//   for(int r = 0; r < out.rows; r++)
-//   {
-//      for(int c = 0; c < out.cols; c++)
-//      {
-//         int site = ((r*width) + c) * downscaleFactor * downscaleFactor;
-////         int site = static_cast<int>((r*downscaleFactor*downscaledWidth)+(c*downscaleFactor));
-////         qDebug() << "Site: " << site;
-//         site = std::min(site, gc->numSites()-1);
-//         int label = gc->whatLabel(site);
-
-//         assert(fullSizeCVMats[label].channels() == 4);
-//         out.at<cv::Vec4b>(r,c) = fullSizeCVMats[label].at<cv::Vec4b>(r,c);
-//      }
-//   }
 
    cv::imwrite("pm_window_out.png", out);
-//   for (int  i = 0; i < gc->numSites(); i++)
-//   {
-//      int r = i / width;
-//      int c = i % width;
-//      int label = gc->whatLabel(i);
-
-//      out.at<cv::Vec4b>(r,c) = forSmoothness.mats[label]->at<cv::Vec4b>(r,c);
-//   }
 
    QPixmap pixmap = Converter::CvMatToQPixmap(out);
    m_tScene.reset(new PMTargetScene());
@@ -421,28 +396,44 @@ void PmWindow::addANewTab()
 
 void PmWindow::downscale(const PMVector &input, PMVector &downscaledVector, float &downscaleFactor)
 {
-   float factor = -1;
+
+   // We assume that all widths/heights are equal.
+   const int longestSide = std::max(input.first().first->width(), input.first().first->height());
+
+   // We ensure that the inverse value of \a factor is a natural number.
+   // Doing so makes sure that the final result image will have the same size as
+   // the input images
+   if(longestSide < 200) downscaleFactor = 1;
+   else if(longestSide > 200 && longestSide <= 1000) downscaleFactor = 0.5;
+   else if(longestSide > 1000 && longestSide <= 1600) downscaleFactor = 0.25;
+   else downscaleFactor = 0.125;
+
+   assert(downscaleFactor > 0 && downscaleFactor <= 1);
+
+   // Define the new width and height of the downscaled image.
+   const int downscaledWidth = input.first().first->width() * downscaleFactor;
+   const int downscaledHeight= input.first().first->height() * downscaleFactor;
 
    foreach (PMPair pair, input)
    {
-      PixmapPointer small(new QPixmap(pair.first->scaled(QSize(200,200), Qt::KeepAspectRatio)));
-      if(factor == -1)
-      {
-         factor = static_cast<float>(small->width())/pair.first->width();
-         downscaleFactor = factor;
-      }
+      // Create the downscaled images ..
+      PixmapPointer small(new QPixmap(pair.first->scaled(QSize(downscaledWidth, downscaledHeight), Qt::KeepAspectRatio)));
 
+
+      // .. and downscale the strokes
       PMSourceScene::Strokes smallStrokes;
       foreach(PMSourceScene::Stroke stroke, pair.second)
       {
          PMSourceScene::Stroke smallStroke;
          foreach(QPointF point, stroke)
          {
-            QPointF smallP(point.x() * factor,point.y() * factor);
+            QPointF smallP(point.x() * downscaleFactor,point.y() * downscaleFactor);
             smallStroke.push_back(smallP);
          }
          smallStrokes.push_back(smallStroke);
       }
+
+      // Put both together in a output vector
       downscaledVector.push_back(PMPair(small,smallStrokes));
    }
 }

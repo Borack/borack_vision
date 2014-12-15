@@ -8,12 +8,12 @@ class PMTargetScene : public CustomScene
 public:
    PMTargetScene(QObject *parent = 0);
 
-   virtual void reset() {}
+   virtual void reset() override {}
 
 protected:
-   virtual void mousePressEvent(QGraphicsSceneMouseEvent * mouseEvent) {}
-   virtual void mouseMoveEvent(QGraphicsSceneMouseEvent *event) {}
-   virtual void mouseReleaseEvent(QGraphicsSceneMouseEvent *) {}
+   virtual void mousePressEvent(QGraphicsSceneMouseEvent *) override {}
+   virtual void mouseMoveEvent(QGraphicsSceneMouseEvent *) override {}
+   virtual void mouseReleaseEvent(QGraphicsSceneMouseEvent *) override {}
 };
 
 #endif // PM_TARGETSCENE_HPP

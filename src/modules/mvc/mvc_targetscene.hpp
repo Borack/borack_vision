@@ -17,16 +17,16 @@ public:
    virtual ~MVCTargetScene() {}
 
    QPointF clickLocation() const;
-   virtual void reset();
+   virtual void reset() override;
 
 public slots:
    void drawContour(MVC::Boundary boundary);
    void drawFinalPatch(QImage img);
 
 protected:
-   virtual void mousePressEvent(QGraphicsSceneMouseEvent * mouseEvent);
-   virtual void mouseMoveEvent(QGraphicsSceneMouseEvent *event) {}
-   virtual void mouseReleaseEvent(QGraphicsSceneMouseEvent *) {}
+   virtual void mousePressEvent(QGraphicsSceneMouseEvent * mouseEvent) override;
+   virtual void mouseMoveEvent(QGraphicsSceneMouseEvent *) override {}
+   virtual void mouseReleaseEvent(QGraphicsSceneMouseEvent *) override {}
 
 private:
    QGraphicsPolygonItem* m_polygon;

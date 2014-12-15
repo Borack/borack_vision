@@ -27,9 +27,9 @@ signals:
    void runTarget();
 
 protected:
-   virtual void mousePressEvent(QGraphicsSceneMouseEvent * mouseEvent) = 0;
-   virtual void mouseMoveEvent(QGraphicsSceneMouseEvent *event) = 0;
-   virtual void mouseReleaseEvent(QGraphicsSceneMouseEvent *) = 0;
+   virtual void mousePressEvent(QGraphicsSceneMouseEvent * mouseEvent) override  = 0;
+   virtual void mouseMoveEvent(QGraphicsSceneMouseEvent *event) override = 0;
+   virtual void mouseReleaseEvent(QGraphicsSceneMouseEvent *) override = 0;
 
 private:
    QPixmap m_sceneImage;

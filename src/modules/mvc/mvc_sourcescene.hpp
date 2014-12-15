@@ -15,16 +15,16 @@ public:
 
    MVC::Boundary getBoundary() const;
 
-   virtual void reset();
+   virtual void reset() override;
 
 public slots:
    void drawMesh(MVC::Mesh2d::Segments segements);
 
 
 protected:
-   virtual void mousePressEvent(QGraphicsSceneMouseEvent * mouseEvent);
-   virtual void mouseMoveEvent(QGraphicsSceneMouseEvent *event);
-   virtual void mouseReleaseEvent(QGraphicsSceneMouseEvent *);
+   virtual void mousePressEvent(QGraphicsSceneMouseEvent * mouseEvent) override;
+   virtual void mouseMoveEvent(QGraphicsSceneMouseEvent *event) override;
+   virtual void mouseReleaseEvent(QGraphicsSceneMouseEvent *) override;
 
 
 private:

@@ -13,14 +13,14 @@ public:
 
    explicit PMSourceScene(QObject *parent = 0);
 
-   virtual void reset();
+   virtual void reset() override;
 
    const Strokes& strokes() const;
 
 protected:
-   virtual void mousePressEvent(QGraphicsSceneMouseEvent * mouseEvent);
-   virtual void mouseMoveEvent(QGraphicsSceneMouseEvent *event);
-   virtual void mouseReleaseEvent(QGraphicsSceneMouseEvent *);
+   virtual void mousePressEvent(QGraphicsSceneMouseEvent * mouseEvent) override;
+   virtual void mouseMoveEvent(QGraphicsSceneMouseEvent *event) override;
+   virtual void mouseReleaseEvent(QGraphicsSceneMouseEvent *) override;
 
 private:
 

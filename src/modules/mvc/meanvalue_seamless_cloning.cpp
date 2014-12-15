@@ -73,7 +73,7 @@ void MeanValueSeamlessCloning::startSourceComputation(const MVC::Boundary &b)
 
 
    m_contourPatchSpace.reserve(m_contourSourceSpace.size());
-   for(int boundaryVerPos = 0; boundaryVerPos < m_contourSourceSpace.size(); boundaryVerPos++)
+   for(size_t boundaryVerPos = 0; boundaryVerPos < m_contourSourceSpace.size(); boundaryVerPos++)
    {
       cv::Point p(m_contourSourceSpace[boundaryVerPos].x-boundingBox.x,
                   m_contourSourceSpace[boundaryVerPos].y-boundingBox.y);
@@ -131,20 +131,16 @@ void MeanValueSeamlessCloning::startTargetComputation(const QPointF &clickLoc)
    assert(m_contourSourceSpace.size() == m_contourPatchSpace.size());
    m_contourTargetSpace.clear();
    m_contourTargetSpace.reserve(m_contourPatchSpace.size());
-   for(int boundaryVerPos = 0; boundaryVerPos < m_contourPatchSpace.size(); boundaryVerPos++)
+   for(size_t boundaryVerPos = 0; boundaryVerPos < m_contourPatchSpace.size(); boundaryVerPos++)
    {
       cv::Point p(m_contourPatchSpace[boundaryVerPos].x+m_targetClickLocation.x() - static_cast<int>(m_sourcePatch.cols/2.0f),
                   m_contourPatchSpace[boundaryVerPos].y+m_targetClickLocation.y() - static_cast<int>(m_sourcePatch.rows/2.0f));
 
-      if(p.x < 0)
-         p.x = 0;
-      else if(p.y < 0)
-         p.y = 0;
+      if(p.x < 0) p.x = 0;
+      else if(p.y < 0) p.y = 0;
 
-      if(p.x >= m_cvTargetFull.cols)
-         p.x = m_cvTargetFull.cols-1;
-      else if(p.y >= m_cvTargetFull.rows)
-         p.y = m_cvTargetFull.rows-1;
+      if(p.x >= m_cvTargetFull.cols) p.x = m_cvTargetFull.cols-1;
+      else if(p.y >= m_cvTargetFull.rows) p.y = m_cvTargetFull.rows-1;
 
       m_contourTargetSpace.push_back(p);
    }
@@ -176,7 +172,7 @@ void MeanValueSeamlessCloning::startTargetComputation(const QPointF &clickLoc)
    assert(m_contourTargetSpace.size() == m_contourPatchSpace.size());
    m_colorDifferences.clear();
    m_colorDifferences.reserve(m_contourTargetSpace.size());
-   for(int i = 0; i < m_contourSourceSpace.size(); i++ )
+   for(size_t i = 0; i < m_contourSourceSpace.size(); i++ )
    {
 
       Eigen::Vector4i sourceIntensity = Converter::CvVec4bToEigenVec4i(m_cvSourceFull.at<cv::Vec4b>(m_contourSourceSpace[i]));
@@ -195,17 +191,16 @@ void MeanValueSeamlessCloning::startTargetComputation(const QPointF &clickLoc)
    assert(m_colorDifferences.size() == m_contourPatchSpace.size());
 
    //! calculate mv coordinates for each interior coordinate.
-//   cv::Mat finalPatch = targetPatch.clone();
-   for(int i = 0; i< m_patchMVCCoords.size(); i++)
+   for(const auto &mvcCoords : m_patchMVCCoords)
    {
-      const cv::Point& pointInPatchSpace = m_patchMVCCoords[i].first;
+      const cv::Point& pointInPatchSpace = mvcCoords.first;
 
       Eigen::Vector4f r = Eigen::Vector4f::Zero();
-      for(int v=0; v<m_contourPatchSpace.size();v++)
+      for(size_t v=0; v<m_contourPatchSpace.size();v++)
       {
-         for(int channel = 0; channel <4; channel++)
+         for(size_t channel = 0; channel <4; channel++)
          {
-            r[channel] += m_patchMVCCoords[i].second[v] * m_colorDifferences[v][channel];
+            r[channel] += mvcCoords.second[v] * m_colorDifferences[v][channel];
          }
       }
       Eigen::Vector4f sourceIntensity = Converter::CvVec4sbToEigenVec4f(m_sourcePatch.at<cv::Vec4b>(pointInPatchSpace));
@@ -259,7 +254,7 @@ MeanValueSeamlessCloning::MVCoord MeanValueSeamlessCloning::calculateMVCValues(c
    assert(weights.size() == 0);
    double w_total = 0.0f;
 
-   for(int boundaryVerPos = 0; boundaryVerPos < m_contourPatchSpace.size(); boundaryVerPos++)
+   for(size_t boundaryVerPos = 0; boundaryVerPos < m_contourPatchSpace.size(); boundaryVerPos++)
    {
       int boundaryVerPos_before = boundaryVerPos == 0 ? m_contourPatchSpace.size()-1 : boundaryVerPos - 1;
       int boundaryVerPos_after = boundaryVerPos == m_contourPatchSpace.size()-1 ? 0 : boundaryVerPos + 1;
@@ -299,7 +294,7 @@ MeanValueSeamlessCloning::MVCoord MeanValueSeamlessCloning::calculateMVCValues(c
    MVCoord mvc;
    mvc.reserve(m_contourPatchSpace.size());
    double weightsTotal = 0;
-   for(int boundaryVerPos = 0; boundaryVerPos < m_contourPatchSpace.size(); boundaryVerPos++)
+   for(size_t boundaryVerPos = 0; boundaryVerPos < m_contourPatchSpace.size(); boundaryVerPos++)
    {
       weightsTotal += weights[boundaryVerPos] / w_total;
       mvc.push_back(weights[boundaryVerPos] / w_total);
@@ -319,9 +314,10 @@ MVC::Boundary MeanValueSeamlessCloning::getBoundary(const std::vector<cv::Point>
 {
    MVC::Boundary out;
    out.reserve(contour.size());
-   for(int i = 0; i< contour.size(); i++)
+
+   for(const auto &point : contour)
    {
-      out.push_back(QPointF(contour[i].x, contour[i].y));
+      out.push_back(QPointF(point.x, point.y));
    }
    assert(out.size() == contour.size());
    return out;

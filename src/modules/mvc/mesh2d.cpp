@@ -24,16 +24,19 @@ void Mesh2d::init()
    std::vector<Vertex_handle> handles;
    handles.reserve(m_contours.size());
 
-   for(int i = 0; i< m_contours.size(); i++)
+
+   bool isFirst = true;
+   for(const auto &point: m_contours)
    {
-      cv::Point p = m_contours[i];
-
-      handles.push_back(cdt.insert(Point(p.x,p.y)));
-      if(i > 0)
+      handles.push_back(cdt.insert(Point(point.x,point.y)));
+      if(!isFirst)
       {
-         cdt.insert_constraint(handles[i-1], handles[i]);
+         cdt.insert_constraint(handles.back()--, handles.back());
       }
-
+      else
+      {
+         isFirst = false;
+      }
    }
    cdt.insert_constraint(handles[0], handles[m_contours.size()-1]);
 

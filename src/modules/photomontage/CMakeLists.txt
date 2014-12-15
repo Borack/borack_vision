@@ -1,7 +1,6 @@
 setup_module()
 
 set(SOURCES
-            photomontage.cpp
             pm_sourcescene.cpp
             pm_targetscene.cpp
             pm_window.cpp
@@ -9,7 +8,6 @@ set(SOURCES
 )
 
 set(HEADERS
-            photomontage.hpp
             pm_sourcescene.hpp
             pm_targetscene.hpp
             pm_window.hpp

@@ -4,7 +4,6 @@
 #include <QMainWindow>
 #include <QScopedPointer>
 
-#include <photomontage.hpp>
 #include <pm_targetscene.hpp>
 #include <pm_sourcewidget.hpp>
 

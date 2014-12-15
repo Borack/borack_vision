@@ -90,7 +90,7 @@ void PMSourceWidget::on_runSource()
    //       - get the strokes from the PM scene.
    //       - run the appropriate GC on the input images.
    //       - draw the composite into the target scene!
-//   qDebug() << "On run on source PM";
+   qDebug() << "On run on source PM";
 }
 
 

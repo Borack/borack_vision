@@ -216,6 +216,8 @@ void PmWindow::on_runButton_clicked()
    float downscaleFactor;
    downscale(allInput,downscaledInput,downscaleFactor);
 
+   qDebug() << "Downscale factor: " << downscaleFactor;
+
    const int width = allInput[0].first->width();
    const int height = allInput[0].first->height();
    const int downscaledWidth = downscaledInput[0].first->width();
@@ -290,24 +292,55 @@ void PmWindow::on_runButton_clicked()
    QVector<cv::Mat> fullSizeCVMats;
    foreach(PMPair pair, allInput)
    {
-      cv::Mat dst;
-      cv::cvtColor(Converter::QPixmapToCvMat(*pair.first),dst,CV_BGR2RGBA);
-      fullSizeCVMats.push_back(dst);
+      fullSizeCVMats.push_back(Converter::QPixmapToCvMat(*pair.first));
    }
 
 
    // generate output
    cv::Mat out(cv::Size(width,height), CV_8UC4);
-   for(int r = 0; r < out.rows; r++)
+   out.setTo(cv::Scalar(0,255,0,0));
+   const int numPixelsCoveredByOneSite = 1.0f/downscaleFactor; // length of the patch. numOfPixels is this squared.
+   int curX = 0, curY =0;
+   for(int site = 0; site< gc->numSites(); site++)
    {
-      for(int c = 0; c < out.cols; c++)
+      const int label = gc->whatLabel(site);
+      for(int tmpY = 0; tmpY < numPixelsCoveredByOneSite; tmpY++)
       {
-         int site = static_cast<int>((r*out.rows*downscaleFactor*downscaleFactor)+(c*downscaleFactor));
-         int label = gc->whatLabel(site);
+         const int y = tmpY + curY;
+         for(int tmpX = 0; tmpX < numPixelsCoveredByOneSite; tmpX++)
+         {
+            const int x = tmpX + curX;
+            out.at<cv::Vec4b>(y,x) = fullSizeCVMats[label].at<cv::Vec4b>(y,x);
+         }
+      }
 
-         out.at<cv::Vec4b>(r,c) = fullSizeCVMats[label].at<cv::Vec4b>(r,c);
+      curX += numPixelsCoveredByOneSite;
+      if(site != 0 && (site % downscaledWidth ) == 0)
+      {
+         curY += numPixelsCoveredByOneSite;
+         curX = 0;
       }
    }
+
+//   assert(out.channels() == 4);
+//   assert(downscaledWidth == std::floor(width * downscaleFactor));
+//   assert(downscaledHeight == std::floor(height * downscaleFactor));
+//   for(int r = 0; r < out.rows; r++)
+//   {
+//      for(int c = 0; c < out.cols; c++)
+//      {
+//         int site = ((r*width) + c) * downscaleFactor * downscaleFactor;
+////         int site = static_cast<int>((r*downscaleFactor*downscaledWidth)+(c*downscaleFactor));
+////         qDebug() << "Site: " << site;
+//         site = std::min(site, gc->numSites()-1);
+//         int label = gc->whatLabel(site);
+
+//         assert(fullSizeCVMats[label].channels() == 4);
+//         out.at<cv::Vec4b>(r,c) = fullSizeCVMats[label].at<cv::Vec4b>(r,c);
+//      }
+//   }
+
+   cv::imwrite("pm_window_out.png", out);
 //   for (int  i = 0; i < gc->numSites(); i++)
 //   {
 //      int r = i / width;
@@ -392,7 +425,7 @@ void PmWindow::downscale(const PMVector &input, PMVector &downscaledVector, floa
 
    foreach (PMPair pair, input)
    {
-      PixmapPointer small(new QPixmap(pair.first->scaled(QSize(100,100), Qt::KeepAspectRatio)));
+      PixmapPointer small(new QPixmap(pair.first->scaled(QSize(200,200), Qt::KeepAspectRatio)));
       if(factor == -1)
       {
          factor = static_cast<float>(small->width())/pair.first->width();

@@ -107,8 +107,8 @@ void MeanValueSeamlessCloning::startSourceComputation(const MVC::Boundary &b)
 #endif //MVC_DEBUG
 
 
-//   cv::namedWindow( "Source BB", cv::WINDOW_AUTOSIZE );
-//   cv::imshow("Source BB", m_sourcePatch);
+   //   cv::namedWindow( "Source BB", cv::WINDOW_AUTOSIZE );
+   //   cv::imshow("Source BB", m_sourcePatch);
 
 }
 
@@ -161,10 +161,10 @@ void MeanValueSeamlessCloning::startTargetComputation(const QPointF &clickLoc)
    cv::Mat targetPatch = onlyMaskCopied(targetBB);
 
 
-//   cv::namedWindow( "Target BB", cv::WINDOW_AUTOSIZE );
-//   cv::imshow("Target BB", targetPatch);
-//   cv::waitKey(0);
-//   cv::destroyAllWindows();
+   //   cv::namedWindow( "Target BB", cv::WINDOW_AUTOSIZE );
+   //   cv::imshow("Target BB", targetPatch);
+   //   cv::waitKey(0);
+   //   cv::destroyAllWindows();
 
 
    //! Compute the differences along the boundary.
@@ -207,7 +207,7 @@ void MeanValueSeamlessCloning::startTargetComputation(const QPointF &clickLoc)
 
       Eigen::Vector4f finalColor = sourceIntensity + r;
 
-//      qDebug() << "FinalColor: " << finalColor[0] << ", " << finalColor[1] << ", " << finalColor[2] << ", " << finalColor[3];
+      //      qDebug() << "FinalColor: " << finalColor[0] << ", " << finalColor[1] << ", " << finalColor[2] << ", " << finalColor[3];
 
       // clamp to [0,255]
       targetPatch.at<cv::Vec4b>(pointInPatchSpace)[0] = std::min<int>(255, std::max<int>(0,finalColor[0]));
@@ -217,10 +217,10 @@ void MeanValueSeamlessCloning::startTargetComputation(const QPointF &clickLoc)
 
    }
 
-//   cv::namedWindow( "Final Patch", cv::WINDOW_AUTOSIZE );
-//   cv::imshow("Final Patch",onlyMaskCopied );
-//   cv::waitKey(0);
-//   cv::destroyAllWindows();
+   //   cv::namedWindow( "Final Patch", cv::WINDOW_AUTOSIZE );
+   //   cv::imshow("Final Patch",onlyMaskCopied );
+   //   cv::waitKey(0);
+   //   cv::destroyAllWindows();
 
 
 
@@ -263,9 +263,9 @@ MeanValueSeamlessCloning::MVCoord MeanValueSeamlessCloning::calculateMVCValues(c
       Eigen::Vector2f boundaryVertex_i_minus_1(m_contourPatchSpace[boundaryVerPos_before].x, m_contourPatchSpace[boundaryVerPos_before].y);
       Eigen::Vector2f boundaryVertex_i_plus_1(m_contourPatchSpace[boundaryVerPos_after].x, m_contourPatchSpace[boundaryVerPos_after].y);
 
-//      qDebug() << "boundaryVertex_i" << boundaryVertex_i(0) << " " << boundaryVertex_i(1);
-//      qDebug() << "boundaryVertex_i_minus_1" << boundaryVertex_i_minus_1(0) << " " << boundaryVertex_i_minus_1(1);
-//      qDebug() << "point" << point(0) << " " << point(1);
+      //      qDebug() << "boundaryVertex_i" << boundaryVertex_i(0) << " " << boundaryVertex_i(1);
+      //      qDebug() << "boundaryVertex_i_minus_1" << boundaryVertex_i_minus_1(0) << " " << boundaryVertex_i_minus_1(1);
+      //      qDebug() << "point" << point(0) << " " << point(1);
 
       Eigen::Vector2f vec_i_plus_1 = (point - boundaryVertex_i_plus_1).normalized();
       Eigen::Vector2f vec_i = (point - boundaryVertex_i).normalized();
@@ -282,11 +282,11 @@ MeanValueSeamlessCloning::MVCoord MeanValueSeamlessCloning::calculateMVCValues(c
 
       w_total += w_i;
 
-//      qDebug() << "The angle1 is: " << a1;
-//      qDebug() << "The angle2 is: " << a2;
-//      qDebug() << "The total angle is: " << angle;
-//      qDebug() << "The normedDist is: " << normedDist;
-//      qDebug() << "The weight is: " << w_i;
+      //      qDebug() << "The angle1 is: " << a1;
+      //      qDebug() << "The angle2 is: " << a2;
+      //      qDebug() << "The total angle is: " << angle;
+      //      qDebug() << "The normedDist is: " << normedDist;
+      //      qDebug() << "The weight is: " << w_i;
    }
 
 
@@ -299,7 +299,7 @@ MeanValueSeamlessCloning::MVCoord MeanValueSeamlessCloning::calculateMVCValues(c
       weightsTotal += weights[boundaryVerPos] / w_total;
       mvc.push_back(weights[boundaryVerPos] / w_total);
    }
-//   assert(std::abs(weightsTotal - 1.0) < 1e-3);
+   //   assert(std::abs(weightsTotal - 1.0) < 1e-3);
    if(std::abs(weightsTotal - 1.0) > 1e-4)
    {
       qWarning() << "Total weight is not 1.0f: " << weightsTotal;

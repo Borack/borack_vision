@@ -14,13 +14,13 @@ PMSourceScene::PMSourceScene(QObject *parent)
 void PMSourceScene::mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent)
 {
    m_currentStroke.clear();
-//   qDebug() << "Button down pos: " << mouseEvent->buttonDownPos(Qt::AllButtons);
-//   qDebug() << "Button down scene pos: " << mouseEvent->buttonDownScenePos(Qt::AllButtons);
-//   qDebug() << "Button down screen pos: " << mouseEvent->buttonDownScreenPos(Qt::AllButtons);
-//   qDebug() << "Pos: " << mouseEvent->pos();
-//   qDebug() << "Scene pos: " << mouseEvent->scenePos();
-//   qDebug() << "Screen pos: " << mouseEvent->screenPos();
-//   qDebug() << "";
+   //   qDebug() << "Button down pos: " << mouseEvent->buttonDownPos(Qt::AllButtons);
+   //   qDebug() << "Button down scene pos: " << mouseEvent->buttonDownScenePos(Qt::AllButtons);
+   //   qDebug() << "Button down screen pos: " << mouseEvent->buttonDownScreenPos(Qt::AllButtons);
+   //   qDebug() << "Pos: " << mouseEvent->pos();
+   //   qDebug() << "Scene pos: " << mouseEvent->scenePos();
+   //   qDebug() << "Screen pos: " << mouseEvent->screenPos();
+   //   qDebug() << "";
 }
 
 //-----------------------------------------------------------------------------
@@ -28,7 +28,7 @@ void PMSourceScene::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
 {
    if(event->buttons() != Qt::NoButton)
    {
-//      qDebug() << "Scene pos: " << event->scenePos();
+      //      qDebug() << "Scene pos: " << event->scenePos();
       m_currentStroke << event->scenePos();
       drawStrokes();
    }
@@ -51,19 +51,19 @@ void PMSourceScene::drawStrokes()
    QPainterPath path(m_currentStroke.at(0));
 
    if (m_pathMode == EPathMode_Line) {
-       for (int i=1; i<m_currentStroke.size(); ++i) {
-           path.lineTo(m_currentStroke.at(i));
-       }
+      for (int i=1; i<m_currentStroke.size(); ++i) {
+         path.lineTo(m_currentStroke.at(i));
+      }
    } else {
-       int i=1;
-       while (i + 2 < m_currentStroke.size()) {
-           path.cubicTo(m_currentStroke.at(i), m_currentStroke.at(i+1), m_currentStroke.at(i+2));
-           i += 3;
-       }
-       while (i < m_currentStroke.size()) {
-           path.lineTo(m_currentStroke.at(i));
-           ++i;
-       }
+      int i=1;
+      while (i + 2 < m_currentStroke.size()) {
+         path.cubicTo(m_currentStroke.at(i), m_currentStroke.at(i+1), m_currentStroke.at(i+2));
+         i += 3;
+      }
+      while (i < m_currentStroke.size()) {
+         path.lineTo(m_currentStroke.at(i));
+         ++i;
+      }
    }
 
    m_drawnPathes.push_back(addPath(path,QPen(Qt::blue, 20, Qt::SolidLine, Qt::FlatCap, Qt::BevelJoin)));
@@ -74,7 +74,7 @@ void PMSourceScene::drawStrokes()
    foreach(QPointF point, m_currentStroke)
    {
       addEllipse(point.x()-rad, point.y()-rad, rad*2.0, rad*2.0,
-               QPen(), QBrush(Qt::SolidPattern));
+                 QPen(), QBrush(Qt::SolidPattern));
    }
 #endif
 }

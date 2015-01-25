@@ -8,7 +8,11 @@
 #include <QVector>
 
 
-
+//!
+//! \brief  The \class CustomScene class handles all the default interactions with a scene
+//!         It is the common anchor points for all the modules and provides some basic
+//!         functionalities like setting/getting an image to the scene.
+//!
 class CustomScene : public QGraphicsScene
 {
    Q_OBJECT

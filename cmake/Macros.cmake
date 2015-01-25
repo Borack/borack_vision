@@ -12,7 +12,7 @@ endmacro()
 # QT5
 #--------------------------------------------------------------------------------
 macro(find_qt5)
-    find_package(Qt5Core REQUIRED)
+    find_package(Qt5Core CONFIG REQUIRED)
     find_package(Qt5Widgets REQUIRED)
     find_package(Qt5OpenGL REQUIRED)
 

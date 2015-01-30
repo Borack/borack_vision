@@ -7,6 +7,8 @@
 //
 
 #import <UIKit/UIKit.h>
+#import <AVFoundation/AVFoundation.h>
+#import <Accelerate/Accelerate.h>
 
 @interface ViewController : UIViewController
 

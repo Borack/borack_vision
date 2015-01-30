@@ -104,7 +104,7 @@
 				ORGANIZATIONNAME = "Apple Inc";
 				TargetAttributes = {
 					2F360BA117692C4700D9A404 = {
-						DevelopmentTeam = XPSUQMMH5W;
+						DevelopmentTeam = D3M8W2VDKH;
 						SystemCapabilities = {
 							com.apple.InterAppAudio = {
 								enabled = 0;
@@ -264,6 +264,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				PRODUCT_NAME = AVCamManual;
 				PROVISIONING_PROFILE = "";
+				TARGETED_DEVICE_FAMILY = 1;
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
@@ -280,6 +281,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				PRODUCT_NAME = AVCamManual;
 				PROVISIONING_PROFILE = "";
+				TARGETED_DEVICE_FAMILY = 1;
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;

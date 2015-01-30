@@ -4,6 +4,9 @@
 //
 //  Created by Simon Willi on 30/01/15.
 //  Copyright (c) 2015 Simon Willi. All rights reserved.
+
+// camera setup based on
+// http://weblog.invasivecode.com/post/23153661857/a-quasi-real-time-video-processing-on-ios-in#disqus_thread
 //
 
 #import "ViewController.h"

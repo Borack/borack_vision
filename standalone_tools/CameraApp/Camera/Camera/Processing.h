@@ -16,6 +16,7 @@
 
 + (void) halftoneWithInput:(const uint8_t*)input  width:(int) width height:(int)heigth rowBytes:(int)rowBytes outputData:(uint8_t*)output;
 
++ (void) ditheringFloydWidth:(uint8_t*)input  width:(int) width height:(int)heigth rowBytes:(int)rowBytes outputData:(uint8_t*)output;
 @end
 
 //

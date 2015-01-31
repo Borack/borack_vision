@@ -102,7 +102,8 @@ didOutputSampleBuffer:(CMSampleBufferRef)sampleBuffer
 
 - (void)maxFromImage:(const vImage_Buffer)src toImage:(const vImage_Buffer)dst
 {
-    [Processing halftoneWithInput:src.data width:src.width height:src.height rowBytes:src.rowBytes outputData:dst.data];
+//    [Processing halftoneWithInput:src.data width:src.width height:src.height rowBytes:src.rowBytes outputData:dst.data];
+    [Processing ditheringFloydWidth:src.data width:src.width height:src.height rowBytes:src.rowBytes outputData:dst.data];
 }
 
 - (void)didReceiveMemoryWarning {

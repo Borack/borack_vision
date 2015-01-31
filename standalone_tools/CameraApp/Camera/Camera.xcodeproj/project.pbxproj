@@ -14,6 +14,7 @@
 		23D2EE6C1A7C2130004778C8 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 23D2EE6B1A7C2130004778C8 /* Images.xcassets */; };
 		23D2EE6F1A7C2130004778C8 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 23D2EE6D1A7C2130004778C8 /* LaunchScreen.xib */; };
 		23D2EE7B1A7C2131004778C8 /* CameraTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 23D2EE7A1A7C2131004778C8 /* CameraTests.m */; };
+		23D2EE871A7C2A2E004778C8 /* Processing.mm in Sources */ = {isa = PBXBuildFile; fileRef = 23D2EE851A7C2A2E004778C8 /* Processing.mm */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -33,13 +34,15 @@
 		23D2EE621A7C2130004778C8 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		23D2EE631A7C2130004778C8 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
 		23D2EE651A7C2130004778C8 /* ViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
-		23D2EE661A7C2130004778C8 /* ViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
+		23D2EE661A7C2130004778C8 /* ViewController.m */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
 		23D2EE691A7C2130004778C8 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		23D2EE6B1A7C2130004778C8 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		23D2EE6E1A7C2130004778C8 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/LaunchScreen.xib; sourceTree = "<group>"; };
 		23D2EE741A7C2131004778C8 /* CameraTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = CameraTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		23D2EE791A7C2131004778C8 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		23D2EE7A1A7C2131004778C8 /* CameraTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CameraTests.m; sourceTree = "<group>"; };
+		23D2EE851A7C2A2E004778C8 /* Processing.mm */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; fileEncoding = 4; path = Processing.mm; sourceTree = "<group>"; };
+		23D2EE861A7C2A2E004778C8 /* Processing.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 4; path = Processing.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -89,6 +92,8 @@
 				23D2EE6B1A7C2130004778C8 /* Images.xcassets */,
 				23D2EE6D1A7C2130004778C8 /* LaunchScreen.xib */,
 				23D2EE5E1A7C2130004778C8 /* Supporting Files */,
+				23D2EE851A7C2A2E004778C8 /* Processing.mm */,
+				23D2EE861A7C2A2E004778C8 /* Processing.h */,
 			);
 			path = Camera;
 			sourceTree = "<group>";
@@ -219,6 +224,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				23D2EE871A7C2A2E004778C8 /* Processing.mm in Sources */,
 				23D2EE671A7C2130004778C8 /* ViewController.m in Sources */,
 				23D2EE641A7C2130004778C8 /* AppDelegate.m in Sources */,
 				23D2EE611A7C2130004778C8 /* main.m in Sources */,
@@ -412,6 +418,7 @@
 				23D2EE801A7C2131004778C8 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		23D2EE811A7C2131004778C8 /* Build configuration list for PBXNativeTarget "CameraTests" */ = {
 			isa = XCConfigurationList;
@@ -420,6 +427,7 @@
 				23D2EE831A7C2131004778C8 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

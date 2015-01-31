@@ -10,6 +10,7 @@
 //
 
 #import "ViewController.h"
+#import "Processing.h"
 
 @interface ViewController ()
 
@@ -101,8 +102,7 @@ didOutputSampleBuffer:(CMSampleBufferRef)sampleBuffer
 
 - (void)maxFromImage:(const vImage_Buffer)src toImage:(const vImage_Buffer)dst
 {
-    int kernelSize = 7;
-    vImageMin_Planar8(&src, &dst, NULL, 0, 0, kernelSize, kernelSize, kvImageDoNotTile);
+    [Processing halftoneWithInput:src.data width:src.width height:src.height rowBytes:src.rowBytes outputData:dst.data];
 }
 
 - (void)didReceiveMemoryWarning {

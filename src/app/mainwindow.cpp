@@ -7,6 +7,7 @@
 
 #include <mvc_window.hpp>
 #include <pm_window.hpp>
+#include <pb_window.hpp>
 
 const int UI_VERSION = 1;
 
@@ -59,5 +60,15 @@ void MainWindow::on_pmButton_clicked()
 
    m_moduleWindow = new PmWindow;
    m_moduleWindow->show();
+}
 
+void MainWindow::on_pbButton_clicked()
+{
+   if(m_moduleWindow)
+   {
+      m_moduleWindow->close();
+   }
+
+   m_moduleWindow = new PBWindow;
+   m_moduleWindow->show();
 }

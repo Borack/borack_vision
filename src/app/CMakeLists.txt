@@ -45,6 +45,13 @@ if(MODULE_PHOTOMONTAGE)
     add_core(ui)
 endif(MODULE_PHOTOMONTAGE)
 
+option(MODULE_PYRAMID_BLENDING "Build with the 'A multiresolution spline with application to image mosaics' module" ON)
+if(MODULE_PYRAMID_BLENDING)
+    add_module(pyramid_blending)
+#    add_definitions(-DMODULE_PHOTOMONTAGE)
+    add_core(ui)
+endif(MODULE_PYRAMID_BLENDING)
+
 get_property(ALL_MODULE_LIBS GLOBAL PROPERTY MODULE_LIBS)
 message(STATUS "Linking against these internal libraries: ${ALL_MODULE_LIBS}")
 

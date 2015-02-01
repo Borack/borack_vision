@@ -27,6 +27,8 @@ private slots:
 
    void on_pmButton_clicked();
 
+   void on_pbButton_clicked();
+
 private:
    Ui::MainWindow *ui;
    QPointer<QWidget> m_moduleWindow;

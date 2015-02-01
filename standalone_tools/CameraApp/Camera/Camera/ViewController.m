@@ -33,7 +33,9 @@
     
     // Session
     _captureSession = [AVCaptureSession new];
-    [_captureSession setSessionPreset:AVCaptureSessionPresetLow];
+    [_captureSession setSessionPreset:AVCaptureSessionPresetHigh];
+//    [_captureSession setSessionPreset:AVCaptureSessionPresetMedium];
+//    [_captureSession setSessionPreset:AVCaptureSessionPresetLow];
     
     // Capture device
     AVCaptureDevice *inputDevice = [AVCaptureDevice defaultDeviceWithMediaType:AVMediaTypeVideo];
@@ -83,7 +85,7 @@ didOutputSampleBuffer:(CMSampleBufferRef)sampleBuffer
     
     const vImage_Buffer inImage = { lumaBuffer, height, width, bytesPerRow };
     
-    Pixel_8 *outBuffer = (Pixel_8 *)calloc(width*height, sizeof(Pixel_8));
+    Pixel_8 *outBuffer = (Pixel_8 *)malloc(width*height * sizeof(Pixel_8));
     const vImage_Buffer outImage = { outBuffer, height, width, bytesPerRow };
     [self maxFromImage:inImage toImage:outImage];
     

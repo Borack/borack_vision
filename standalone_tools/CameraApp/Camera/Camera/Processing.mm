@@ -77,20 +77,6 @@
 + (void) ditheringFloydWidth:( uint8_t*)input  width:(int) width height:(int)heigth rowBytes:(int)rowBytes outputData:(uint8_t*)output;
 {
     
-    typedef std::vector<double> ColDouble;
-    typedef std::vector<ColDouble> MatDouble;
-    
-    MatDouble eg(heigth);
-    MatDouble ep(heigth);
-    
-    
-    for(int r =0; r< heigth; r++)
-    {
-        eg[r] = ColDouble(width, 0);
-        ep[r] = ColDouble(width, 0);
-    }
-    
-    
     uint8_t * pixel = input;
     for(int r =0; r< heigth; r++)
     {
